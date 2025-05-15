@@ -6,7 +6,7 @@ This repository contains the code and data for the ACE 592 Final Project, which 
 The objective of this project is to investigate the spatial distribution of violent crime across Chicago neighborhoods, focusing on identifying high-risk areas ("hot spots") using spatial analysis techniques. The analysis explores the correlation between crime data and ShotSpotter alerts within a defined proximity range.
 
 ## Data Sources
-- [Violence Reduction - Victims of Homicides and Non-Fatal Shootings](https://data.cityofchicago.org/Public-Safety/Violence-Reduction-Victims-of-Homicides-and-Non-Fa/gumc-mgzr/about_data)
+- [Violence Reduction - Victims of Homicides and Non-Fatal Shootings]([https://data.cityofchicago.org/Public-Safety/Violence-Reduction-Victims-of-Homicides-and-Non-Fa/gumc-mgzr/about_data](https://data.cityofchicago.org/Public-Safety/Violence-Reduction-Victims-of-Homicides-and-Non-Fa/gumc-mgzr/about_data))
 - [Census Data - Selected Socioeconomic Indicators in Chicago](https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2/about_data)
 - [Violence Reduction - ShotSpotter Alerts Historical](https://data.cityofchicago.org/Public-Safety/Violence-Reduction-Shotspotter-Alerts-Historical/3h7q-7mdb/about_data)
 - [Transportation Data](https://data.cityofchicago.org/Transportation/transportation/7ez8-272k/about_data)
