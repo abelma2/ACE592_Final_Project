@@ -17,15 +17,15 @@ faked in pre-rollout years, and it has no valid synthetic-control comparison.
 ShotSpotter worked as a *detector* of gunfire; the claim that it *reduced* gun
 homicides does not survive scrutiny.
 
-**How I get there** — and how you can reproduce it from the data and code below — is
-a sequence of five increasingly demanding causal-inference designs on a
-community-area × year panel of Chicago gun homicides, 2009–2023. The rest of this
-README walks the evidence; [NARRATIVE.md](NARRATIVE.md) is the full write-up.
+**How I get there** — and how you can reproduce it from the data and code below — is a
+sequence of increasingly demanding causal-inference designs on a community-area × year
+panel of Chicago gun homicides, 2009–2023. The figures below walk the evidence in
+order; [NARRATIVE.md](NARRATIVE.md) is the full write-up.
 
 ![OLS headline vs. count-data specifications](plots/specification_comparison.png)
 
-*The OLS headline (+7.4% implied, p < 0.001) collapses to a statistically null
-incidence-rate ratio under both proper count-data models.*
+*The whole story in one figure: the OLS headline (+7.4% implied, p < 0.001) collapses
+to a statistically null incidence-rate ratio under both proper count-data models.*
 
 ## Headline result at a glance
 
@@ -41,9 +41,9 @@ modeling integer homicide counts as a continuous, homoscedastic outcome. On the
 natural multiplicative (count-data) scale, the effect is statistically null.
 
 The full write-up is in **[NARRATIVE.md](NARRATIVE.md)**; the formatted paper is
-**[paper/final_paper.pdf](paper/final_paper.pdf)**. Regenerable result tables live
-in [docs/results_summary_original.md](docs/results_summary_original.md) (original
-pipeline) and [docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
+**[paper/final_paper.pdf](paper/final_paper.pdf)**. Regenerable result tables live in
+[docs/results_summary_original.md](docs/results_summary_original.md) (original pipeline)
+and [docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
 (re-analysis + robustness).
 
 ## Methods & skills demonstrated
@@ -52,8 +52,8 @@ pipeline) and [docs/results_summary_reanalysis.md](docs/results_summary_reanalys
   effects), Callaway–Sant'Anna heterogeneity-robust staggered DiD, cohort-specific
   event study, synthetic control with in-space permutation inference, pre-period
   placebo / falsification tests.
-- **Count-data econometrics:** Poisson and Negative Binomial regression,
-  incidence-rate ratios, clustered standard errors.
+- **Count-data econometrics:** Poisson and Negative Binomial regression (with the
+  dispersion estimated), incidence-rate ratios, clustered standard errors.
 - **Robustness & diagnostics:** joint parallel-trends Wald test, COVID- and
   2016-sensitivity checks, multiple-specification forest plots.
 - **Geospatial analysis:** GeoPandas, choropleth and kernel-density hotspot maps,
@@ -61,6 +61,126 @@ pipeline) and [docs/results_summary_reanalysis.md](docs/results_summary_reanalys
 - **Python data stack:** pandas, NumPy, statsmodels, SciPy, matplotlib, seaborn.
 - **Reproducible research:** a relative-path pipeline that runs from any clone,
   scripted figure generation, and documented data provenance.
+
+## How the analysis works
+
+### 1. The setting: ShotSpotter was deployed where violence already was
+
+![Treatment vs. control community areas](plots/did_map_treatment_control.png)
+
+ShotSpotter coverage (blue) blankets the high-violence South and West sides, while the
+never-treated areas sit elsewhere in the city. The 51 covered community areas averaged
+roughly **nine times** the gun homicides of the 26 uncovered ones *before* deployment.
+Treatment was assigned *because of* violence, not at random — which is the central
+problem every design here has to confront, and the reason the comparison leans
+entirely on the parallel-trends assumption.
+
+### 2. As a detector, the technology works
+
+![Hourly pattern of alerts and homicides](plots/hourly_pattern.png)
+
+ShotSpotter alerts and gun homicides rise and fall together over the day — both
+bottoming out mid-morning and peaking late at night — and they peak in the same summer
+months. The system detects the gunfire it is designed to detect. The question is
+whether *detection* translated into *fewer homicides*.
+
+### 3. The headline says "more homicides" — but it is a modeling artifact
+
+The two-way fixed-effects OLS DiD returns **+2.63 gun homicides per area-year
+(p < 0.001)**. That number is robust to fixed effects, COVID exclusions, and dropping
+2016 — so it looks bulletproof. It is not. Annual homicide counts are small
+non-negative integers whose variance grows with their mean; OLS treats them as
+continuous and equal-variance. Estimated with the right model for counts — Poisson and
+Negative Binomial with the same fixed effects — the effect is **statistically null**
+(IRR ≈ 1.07, p ≈ 0.5; see the headline figure above). The "+2.6" is an artifact of the
+additive scale, not a treatment effect.
+
+### 4. Parallel trends fail
+
+![Cohort-aware event study](plots/event_study_cohort_aware.png)
+
+Every pre-treatment coefficient is large and negative — a clear parallel-trends
+violation, driven by 2016 (a Chicago-wide homicide-record year) sitting next to the
+event-study base period. A joint Wald test rejects parallel trends (F = 19.9,
+p = 0.006). Once the design fails this test, the DiD contrast cannot be read as causal.
+
+### 5. Fake treatment dates produce the same "effect"
+
+![Falsification / placebo test](plots/falsification_plot.png)
+
+If +2.6 were a real treatment effect, assigning *fake* treatment dates years before
+ShotSpotter existed should yield nothing. Instead, the 1999 and 2003 placebos are as
+large and as "significant" (p < 0.01) as the real 2017 estimate. The design captures
+pre-existing trend differences across neighborhoods, not the intervention.
+
+### 6. There is no valid comparison group (synthetic control)
+
+![Synthetic control panels](plots/synthetic_control_panels.png)
+
+For every study neighborhood, the synthetic counterfactual (red) sits far below the
+actual series (blue) — even in the pre-treatment window it was explicitly fit on. No
+weighted combination of the 26 never-treated, lower-violence areas can reproduce a
+high-violence treated unit, so the optimizer collapses onto a single donor and the
+method is **infeasible**. The city left no comparable untreated neighborhood; the
+absence of a counterfactual is itself the finding.
+
+### 7. The modern estimator flips the sign
+
+![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
+
+The gold-standard estimator for staggered rollouts — Callaway & Sant'Anna (2021) —
+returns an overall ATT of **−2.45 (p < 0.01)**, the *opposite* sign of OLS. But it is
+no more credible: its own event study still shows a large, significant pre-treatment
+coefficient at *k* = −1 (the 2016 spike), so the post-period "decline" is mostly a
+mechanical reversion, not an effect.
+
+**The sign of the "effect" is set by the method, not the data:**
+
+| Estimator | Overall effect | Reads as | Survives its own diagnostics? |
+|---|---|---|---|
+| Naive OLS DiD | **+2.63** (p < 0.001) | *more* homicides | No — fails count-data & placebo checks |
+| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | no effect | — (null) |
+| Callaway–Sant'Anna | **−2.45** (p < 0.01) | *fewer* homicides | No — fails pre-trends (k = −1 spike) |
+
+Same panel, same outcome — the estimate runs from a significant *increase* to a
+significant *decrease* depending only on which estimator you pick, and none survives
+its own falsification test. That spread **is** the finding: the data do not pin down a
+causal effect.
+
+## Bottom line
+
+ShotSpotter did what it was built to do — *detect* gunfire that 911 calls miss. But
+across every design that respects the data, there is **no evidence it reduced gun
+homicides**, in either direction. The honest reading is neither "ShotSpotter increased
+violence" (the +2.6 is an artifact of the wrong model) nor "ShotSpotter cut violence"
+(that ignores an anomalous 2016 base year) — it is that **these data simply cannot
+identify a causal effect**, while ruling out the large reduction a $3M detection
+contract was meant to deliver. That null is itself the policy finding, and it is
+consistent with the city's 2023 decision to end the contract. Full argument and
+limitations: [NARRATIVE.md](NARRATIVE.md).
+
+## Limitations & next steps
+
+I'd rather name the soft spots than have a reviewer find them:
+
+- **The identification ceiling is the data, not just the method.** Chicago deployed
+  ShotSpotter in *every* high-violence neighborhood, so there is no untreated unit at
+  the treated units' violence level. No estimator can manufacture a counterfactual the
+  data don't contain — which is why the synthetic control is reported as *infeasible*
+  rather than as a result.
+- **Two event-study implementations.** The cohort event study in
+  `econometric_analysis.py` is a transparent hand-rolled difference-in-means with a
+  bootstrap; `did_callaway_santanna.py` is the packaged, heterogeneity-robust
+  Callaway–Sant'Anna estimator and should be treated as the authoritative
+  staggered-DiD result. The former is kept for intuition, not as the final word.
+- **Inference.** Standard errors cluster on community area (~77 clusters); a
+  wild-cluster bootstrap would be more conservative with this few clusters.
+- **Non-fatal shootings** are still estimated under OLS; re-estimating them as a count
+  model (as done for homicides) is the natural next step and is unlikely to change the
+  qualitative picture.
+- **Scope.** The panel is annual (masking within-year dynamics), and the analysis
+  observes neither police response times, dispatch decisions, nor arrests — the actual
+  channel through which detection could plausibly reduce violence.
 
 ## Repository layout
 
@@ -116,10 +236,9 @@ All inputs are public products of the [Chicago Data Portal](https://data.cityofc
 
 The three large raw files (~110 MB combined) are **git-ignored** to keep the
 repository lightweight and to avoid re-hosting victim-level data. They are freely
-re-downloadable from the links above — drop them into `data/raw/` (the cleaned
-subsets the analysis filters from are derived from these). The analysis itself
-never uses the victim-name columns; the cleaned files in `data/processed/` contain
-only aggregated, de-identified fields.
+re-downloadable from the links above — drop them into `data/raw/`. The analysis never
+uses the victim-name columns; the cleaned files in `data/processed/` contain only
+aggregated, de-identified fields.
 
 ## Reproducing the analysis
 
@@ -137,10 +256,10 @@ pip install -r requirements.txt
 python scripts/did_analysis.py
 
 # 5. Re-analysis + robustness (TWFE, count-data, synthetic control,
-#    pre-period falsification, permutation inference)
+#    pre-period falsification, permutation inference, Callaway–Sant'Anna)
 python scripts/econometric_analysis.py
 python scripts/econometric_robustness.py
-python scripts/did_callaway_santanna.py    # Callaway–Sant'Anna robustness (needs `differences`)
+python scripts/did_callaway_santanna.py    # needs the `differences` package
 
 # 6. Narrative + descriptive figures
 python scripts/make_narrative_plots.py
@@ -148,88 +267,9 @@ python scripts/make_pretty_plots.py
 python scripts/plot_covid_sensitivity.py
 ```
 
-Every script resolves paths relative to its own location, so the pipeline runs
-from any clone with no path edits. (The hotspot maps fetch basemap tiles over the
-network via `contextily`; they degrade gracefully to no-basemap when offline.)
-
-## Why the headline result doesn't hold
-
-![Cohort-aware event study](plots/event_study_cohort_aware.png)
-
-*Every pre-treatment coefficient is large and negative — a clear parallel-trends
-violation driven by 2016 (a Chicago-wide homicide-record year) sitting next to the
-event-study base period. A joint Wald test rejects parallel trends (F = 19.9,
-p = 0.006).*
-
-The +2.6 OLS coefficient survives unit and year fixed effects, so the problem is
-not omitted controls. The problem is everything else — the model family, the
-staggered rollout collapsed into a single 2017 cutoff, and an anomalous base year:
-
-- **Count-data models are null** (Poisson IRR 1.07, p = 0.51; NegBin IRR 1.07, p = 0.55).
-- **Placebos are "significant"** — fake 1999/2003 treatment dates produce effects of
-  similar magnitude, so the design is picking up pre-existing trends, not treatment.
-- **Parallel trends fail** — the joint Wald test rejects (F = 19.9, p = 0.006).
-- **Synthetic control is infeasible** — the 26 never-treated areas are all
-  lower-violence than any treated neighborhood, so there is no valid donor pool.
-- **The modern estimator flips the sign** — Callaway–Sant'Anna (2021), the
-  gold-standard estimator for staggered rollouts, gives an overall ATT of **−2.45**
-  (p < 0.01) — the *opposite* sign of OLS — but its own pre-treatment coefficients
-  still reject parallel trends, so it is no more credible than the rest.
-
-### The sign of the "effect" is set by the method, not the data
-
-| Estimator | Overall effect | Reads as | Survives its own diagnostics? |
-|---|---|---|---|
-| Naive OLS DiD | **+2.63** (p < 0.001) | *more* homicides | No — fails count-data & placebo checks |
-| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | no effect | — (null) |
-| Callaway–Sant'Anna | **−2.45** (p < 0.01) | *fewer* homicides | No — fails pre-trends (k = −1 spike) |
-
-Same panel, same outcome — the estimate runs from a significant *increase* to a
-significant *decrease* depending only on which estimator you pick, and none survives
-its own falsification test. That spread **is** the finding: the data do not pin down a
-causal effect.
-
-![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
-
-*The heterogeneity-robust estimator: the post-period looks negative, but the large
-significant pre-treatment coefficient at k = −1 (the 2016 homicide-record year) means
-the "decline" is mostly a mechanical reversion, not a treatment effect.*
-
-## Bottom line
-
-ShotSpotter did what it was built to do — *detect* gunfire that 911 calls miss. But
-across every design that respects the data, there is **no evidence it reduced gun
-homicides**, in either direction. The honest reading is neither "ShotSpotter
-increased violence" (the +2.6 is an artifact of the wrong model) nor "ShotSpotter cut
-violence" (that ignores an anomalous 2016 base year) — it is that **these data simply
-cannot identify a causal effect**, while ruling out the large reduction a $3M
-detection contract was meant to deliver. That null is itself the policy finding, and
-it is consistent with the city's 2023 decision to end the contract. Full argument and
-limitations: [NARRATIVE.md](NARRATIVE.md).
-
-## Limitations & next steps
-
-I'd rather name the soft spots than have a reviewer find them:
-
-- **The identification ceiling is the data, not just the method.** Chicago deployed
-  ShotSpotter in *every* high-violence neighborhood, so there is no untreated unit at
-  the treated units' violence level. No estimator can manufacture a counterfactual the
-  data don't contain — which is why the synthetic control is reported as *infeasible*
-  (a single-donor corner solution with pre-fit error larger than the outcome) rather
-  than as a result.
-- **Two event-study implementations.** The cohort event study in
-  `econometric_analysis.py` is a transparent hand-rolled difference-in-means with a
-  bootstrap; `did_callaway_santanna.py` is the packaged, heterogeneity-robust
-  Callaway–Sant'Anna estimator and should be treated as the authoritative
-  staggered-DiD result. The former is kept for intuition, not as the final word.
-- **Inference.** Standard errors cluster on community area (~77 clusters); a
-  wild-cluster bootstrap would be more conservative with this few clusters.
-- **Non-fatal shootings** are still estimated under OLS; re-estimating them as a count
-  model (as done for homicides) is the natural next step and is unlikely to change the
-  qualitative picture.
-- **Scope.** The panel is annual (masking within-year dynamics), and the analysis
-  observes neither police response times, dispatch decisions, nor arrests — the actual
-  channel through which detection could plausibly reduce violence.
+Every script resolves paths relative to its own location, so the pipeline runs from any
+clone with no path edits. (The hotspot maps fetch basemap tiles over the network via
+`contextily`; they degrade gracefully to no-basemap when offline.)
 
 ## Contact
 
