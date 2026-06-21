@@ -6,6 +6,7 @@ scipy>=1.10
 matplotlib>=3.7
 seaborn>=0.12
 statsmodels>=0.14
+differences>=0.3
 contextily>=1.4
 python-docx>=1.0
 openpyxl>=3.1

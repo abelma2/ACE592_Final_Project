@@ -153,6 +153,32 @@ def run_count_model(family, label, df=panel):
         return None
 
 
+def estimate_nb_alpha(df):
+    """Estimate the NB2 dispersion parameter rather than fixing it.
+
+    Cameron & Trivedi auxiliary regression: fit Poisson, then OLS-regress
+    ((y - mu)^2 - y) / mu on mu through the origin. The slope is the NB2 alpha
+    in Var(y) = mu + alpha * mu^2.
+    """
+    pois = smf.glm("gun_hom ~ did + C(ca_num) + C(year)", data=df,
+                   family=sm.families.Poisson()).fit()
+    mu = pois.fittedvalues
+    y = df["gun_hom"].astype(float)
+    z = ((y - mu) ** 2 - y) / mu
+    alpha_hat = float(sm.OLS(z, mu).fit().params.iloc[0])
+    return max(alpha_hat, 1e-6)  # GLM NB family requires alpha > 0
+
+
+def run_nb(label, df=panel):
+    """Negative Binomial DiD with the dispersion estimated (not fixed at 1)."""
+    alpha_hat = estimate_nb_alpha(df)
+    res = run_count_model(sm.families.NegativeBinomial(alpha=alpha_hat), label, df)
+    if res is not None:
+        res["alpha"] = alpha_hat
+        print(f"  {'':35s}  estimated dispersion alpha = {alpha_hat:.4f}")
+    return res
+
+
 print("\n--- Poisson ---")
 poisson_res = []
 poisson_res.append(run_count_model(sm.families.Poisson(), "Full panel 2009-2023"))
@@ -161,13 +187,11 @@ poisson_res.append(run_count_model(sm.families.Poisson(), "Excl COVID (2020-21)"
 poisson_res.append(run_count_model(sm.families.Poisson(), "Excl 2016",
                                     panel[panel["year"] != 2016]))
 
-print("\n--- Negative Binomial (alpha=1) ---")
+print("\n--- Negative Binomial (dispersion estimated) ---")
 nb_res = []
-nb_res.append(run_count_model(sm.families.NegativeBinomial(alpha=1.0), "Full panel 2009-2023"))
-nb_res.append(run_count_model(sm.families.NegativeBinomial(alpha=1.0), "Excl COVID (2020-21)",
-                               panel[~panel["year"].isin([2020, 2021])]))
-nb_res.append(run_count_model(sm.families.NegativeBinomial(alpha=1.0), "Excl 2016",
-                               panel[panel["year"] != 2016]))
+nb_res.append(run_nb("Full panel 2009-2023"))
+nb_res.append(run_nb("Excl COVID (2020-21)", panel[~panel["year"].isin([2020, 2021])]))
+nb_res.append(run_nb("Excl 2016", panel[panel["year"] != 2016]))
 
 
 # =====================================================================
@@ -390,14 +414,17 @@ for r in poisson_res:
     sig = "***" if r["p"] < 0.01 else "**" if r["p"] < 0.05 else "*" if r["p"] < 0.1 else ""
     lines.append(f"| {r['label']} | {r['b']:+.4f} | {r['se']:.4f} | {r['p']:.4f}{sig} | "
                  f"{r['irr']:.4f} | [{r['irr_ci'][0]:.4f}, {r['irr_ci'][1]:.4f}] |\n")
-lines.append("\n### Negative Binomial (alpha=1) with two-way FE\n\n")
-lines.append("| Specification | beta | SE | p | IRR | IRR 95% CI |\n")
-lines.append("|---|---|---|---|---|---|\n")
+lines.append("\n### Negative Binomial (dispersion alpha estimated) with two-way FE\n\n")
+lines.append("Dispersion estimated per specification via the Cameron-Trivedi NB2 "
+             "auxiliary regression (not fixed at 1).\n\n")
+lines.append("| Specification | alpha (est.) | beta | SE | p | IRR | IRR 95% CI |\n")
+lines.append("|---|---|---|---|---|---|---|\n")
 for r in nb_res:
     if r is None:
         continue
     sig = "***" if r["p"] < 0.01 else "**" if r["p"] < 0.05 else "*" if r["p"] < 0.1 else ""
-    lines.append(f"| {r['label']} | {r['b']:+.4f} | {r['se']:.4f} | {r['p']:.4f}{sig} | "
+    lines.append(f"| {r['label']} | {r.get('alpha', float('nan')):.3f} | {r['b']:+.4f} | "
+                 f"{r['se']:.4f} | {r['p']:.4f}{sig} | "
                  f"{r['irr']:.4f} | [{r['irr_ci'][0]:.4f}, {r['irr_ci'][1]:.4f}] |\n")
 
 lines.append("\n## 6. Joint Wald Test for Pre-Trends\n\n")

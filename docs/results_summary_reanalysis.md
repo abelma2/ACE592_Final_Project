@@ -116,13 +116,15 @@ Coefficients are on the log-mean scale; IRR = exp(beta).
 | Excl COVID (2020-21) | +0.0136 | 0.1105 | 0.9022 | 1.0137 | [0.8162, 1.2589] |
 | Excl 2016 | +0.0838 | 0.1218 | 0.4912 | 1.0874 | [0.8565, 1.3806] |
 
-### Negative Binomial (alpha=1) with two-way FE
+### Negative Binomial (dispersion alpha estimated) with two-way FE
 
-| Specification | beta | SE | p | IRR | IRR 95% CI |
-|---|---|---|---|---|---|
-| Full panel 2009-2023 | -0.0302 | 0.1524 | 0.8427 | 0.9702 | [0.7197, 1.3079] |
-| Excl COVID (2020-21) | -0.0835 | 0.1590 | 0.5997 | 0.9199 | [0.6736, 1.2564] |
-| Excl 2016 | -0.0286 | 0.1676 | 0.8644 | 0.9718 | [0.6997, 1.3497] |
+Dispersion estimated per specification via the Cameron-Trivedi NB2 auxiliary regression (not fixed at 1).
+
+| Specification | alpha (est.) | beta | SE | p | IRR | IRR 95% CI |
+|---|---|---|---|---|---|---|
+| Full panel 2009-2023 | 0.021 | +0.0668 | 0.1111 | 0.5476 | 1.0691 | [0.8599, 1.3292] |
+| Excl COVID (2020-21) | 0.024 | +0.0141 | 0.1145 | 0.9018 | 1.0142 | [0.8103, 1.2694] |
+| Excl 2016 | 0.020 | +0.0740 | 0.1241 | 0.5508 | 1.0769 | [0.8443, 1.3734] |
 
 ## 6. Joint Wald Test for Pre-Trends
 
@@ -162,3 +164,50 @@ p-value = fraction of placebos with absolute gap >= absolute treated gap.
 > See NARRATIVE.md §5.5.
 
 Figure: `plots/synthetic_control_inference.png`
+
+## 8. Callaway-Sant'Anna (heterogeneity-robust staggered DiD)
+
+The modern estimator for staggered adoption (Callaway & Sant'Anna 2021),
+estimated with the `differences` package on group-time ATTs and aggregated
+to an overall effect and an event study. Standard errors cluster by
+community area (analytic influence-function inference).
+
+### Overall ATT
+
+| Control group | Overall ATT | SE |
+|---|---|---|
+| Never-treated | -2.453 | 0.893 |
+| Not-yet-treated | -2.508 | 0.898 |
+
+### Event-study ATT(k), never-treated control
+
+| k (years from install) | ATT | SE | 95% CI |
+|---|---|---|---|
+| -8 | +0.300 | 0.630 | [-0.935, +1.535] |
+| -7 | +0.091 | 0.612 | [-1.108, +1.291] |
+| -6 | +0.912 | 0.592 | [-0.249, +2.073] |
+| -5 | -0.542 | 0.604 | [-1.725, +0.641] |
+| -4 | -1.165 | 0.616 | [-2.373, +0.043] |
+| -3 | +0.161 | 0.523 | [-0.864, +1.185] |
+| -2 | +1.168 | 0.627 | [-0.060, +2.396] |
+| -1 | +4.922 | 1.079 | [+2.807, +7.037] |
+| +0 | -1.948 | 0.948 | [-3.807, -0.089] |
+| +1 | -4.652 | 0.946 | [-6.506, -2.799] |
+| +2 | -3.827 | 1.194 | [-6.167, -1.486] |
+| +3 | +0.101 | 1.024 | [-1.906, +2.109] |
+| +4 | -0.428 | 0.954 | [-2.297, +1.441] |
+| +5 | -2.985 | 1.143 | [-5.226, -0.744] |
+| +6 | -4.839 | 2.345 | [-9.434, -0.243] |
+
+> **What this adds.** The Callaway-Sant'Anna overall ATT is -2.45 — *negative*, the opposite sign of the naive OLS DiD
+> (+2.63) and of the null count-data models. The estimate is not credible as a
+> treatment effect: the event study still shows a large, significant PRE-treatment
+> coefficient at k = -1 (the 2016 homicide-record year, one period before the 2017
+> cohort), so parallel trends fail even under the heterogeneity-robust estimator and
+> the post-period 'decline' is largely a mechanical reversion from that spike.
+> **The takeaway is the consistency of the inconsistency:** across OLS (+2.63),
+> Poisson/NegBin (null), and Callaway-Sant'Anna (negative), the *sign* of the
+> estimated effect is set by the choice of method, not by the data — which is the
+> project's central point that no design credibly identifies a causal effect.
+
+Figure: `plots/callaway_santanna_event_study.png`

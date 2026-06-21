@@ -33,7 +33,7 @@ incidence-rate ratio under both proper count-data models.*
 |---|---|---|---|
 | **OLS DiD** | +2.63 gun homicides / area-year | [+1.38, +3.88] | **<0.001*** |
 | **Poisson DiD** (two-way fixed effects) | IRR 1.07 | [0.87, 1.33] | 0.51 (ns) |
-| **Negative Binomial DiD** | IRR 0.97 | [0.72, 1.31] | 0.84 (ns) |
+| **Negative Binomial DiD** (dispersion estimated) | IRR 1.07 | [0.86, 1.33] | 0.55 (ns) |
 
 The +2.63 OLS coefficient is *robust* to adding community-area and year fixed
 effects — it does **not** come from a missing-controls problem. It comes from
@@ -49,8 +49,9 @@ pipeline) and [docs/results_summary_reanalysis.md](docs/results_summary_reanalys
 ## Methods & skills demonstrated
 
 - **Causal inference:** difference-in-differences (pooled and two-way fixed
-  effects), cohort-specific staggered-rollout event study, synthetic control
-  with in-space permutation inference, pre-period placebo / falsification tests.
+  effects), Callaway–Sant'Anna heterogeneity-robust staggered DiD, cohort-specific
+  event study, synthetic control with in-space permutation inference, pre-period
+  placebo / falsification tests.
 - **Count-data econometrics:** Poisson and Negative Binomial regression,
   incidence-rate ratios, clustered standard errors.
 - **Robustness & diagnostics:** joint parallel-trends Wald test, COVID- and
@@ -86,6 +87,7 @@ pipeline) and [docs/results_summary_reanalysis.md](docs/results_summary_reanalys
 │   ├── did_analysis.py                OLS DiD, event study, t-tests
 │   ├── econometric_analysis.py        TWFE DiD, cohort event study, synthetic control
 │   ├── econometric_robustness.py      Poisson/NegBin DiD, pre-trend Wald, permutation SC
+│   ├── did_callaway_santanna.py       Callaway–Sant'Anna heterogeneity-robust DiD
 │   ├── make_narrative_plots.py        Specification-comparison + falsification figures
 │   ├── make_pretty_plots.py           Descriptive figures (monthly, hourly, hotspots)
 │   └── plot_covid_sensitivity.py
@@ -138,6 +140,7 @@ python scripts/did_analysis.py
 #    pre-period falsification, permutation inference)
 python scripts/econometric_analysis.py
 python scripts/econometric_robustness.py
+python scripts/did_callaway_santanna.py    # Callaway–Sant'Anna robustness (needs `differences`)
 
 # 6. Narrative + descriptive figures
 python scripts/make_narrative_plots.py
@@ -162,12 +165,35 @@ The +2.6 OLS coefficient survives unit and year fixed effects, so the problem is
 not omitted controls. The problem is everything else — the model family, the
 staggered rollout collapsed into a single 2017 cutoff, and an anomalous base year:
 
-- **Count-data models are null** (Poisson IRR 1.07, p = 0.51; NegBin IRR 0.97, p = 0.84).
+- **Count-data models are null** (Poisson IRR 1.07, p = 0.51; NegBin IRR 1.07, p = 0.55).
 - **Placebos are "significant"** — fake 1999/2003 treatment dates produce effects of
   similar magnitude, so the design is picking up pre-existing trends, not treatment.
 - **Parallel trends fail** — the joint Wald test rejects (F = 19.9, p = 0.006).
 - **Synthetic control is infeasible** — the 26 never-treated areas are all
   lower-violence than any treated neighborhood, so there is no valid donor pool.
+- **The modern estimator flips the sign** — Callaway–Sant'Anna (2021), the
+  gold-standard estimator for staggered rollouts, gives an overall ATT of **−2.45**
+  (p < 0.01) — the *opposite* sign of OLS — but its own pre-treatment coefficients
+  still reject parallel trends, so it is no more credible than the rest.
+
+### The sign of the "effect" is set by the method, not the data
+
+| Estimator | Overall effect | Reads as | Survives its own diagnostics? |
+|---|---|---|---|
+| Naive OLS DiD | **+2.63** (p < 0.001) | *more* homicides | No — fails count-data & placebo checks |
+| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | no effect | — (null) |
+| Callaway–Sant'Anna | **−2.45** (p < 0.01) | *fewer* homicides | No — fails pre-trends (k = −1 spike) |
+
+Same panel, same outcome — the estimate runs from a significant *increase* to a
+significant *decrease* depending only on which estimator you pick, and none survives
+its own falsification test. That spread **is** the finding: the data do not pin down a
+causal effect.
+
+![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
+
+*The heterogeneity-robust estimator: the post-period looks negative, but the large
+significant pre-treatment coefficient at k = −1 (the 2016 homicide-record year) means
+the "decline" is mostly a mechanical reversion, not a treatment effect.*
 
 ## Bottom line
 
@@ -180,6 +206,30 @@ cannot identify a causal effect**, while ruling out the large reduction a $3M
 detection contract was meant to deliver. That null is itself the policy finding, and
 it is consistent with the city's 2023 decision to end the contract. Full argument and
 limitations: [NARRATIVE.md](NARRATIVE.md).
+
+## Limitations & next steps
+
+I'd rather name the soft spots than have a reviewer find them:
+
+- **The identification ceiling is the data, not just the method.** Chicago deployed
+  ShotSpotter in *every* high-violence neighborhood, so there is no untreated unit at
+  the treated units' violence level. No estimator can manufacture a counterfactual the
+  data don't contain — which is why the synthetic control is reported as *infeasible*
+  (a single-donor corner solution with pre-fit error larger than the outcome) rather
+  than as a result.
+- **Two event-study implementations.** The cohort event study in
+  `econometric_analysis.py` is a transparent hand-rolled difference-in-means with a
+  bootstrap; `did_callaway_santanna.py` is the packaged, heterogeneity-robust
+  Callaway–Sant'Anna estimator and should be treated as the authoritative
+  staggered-DiD result. The former is kept for intuition, not as the final word.
+- **Inference.** Standard errors cluster on community area (~77 clusters); a
+  wild-cluster bootstrap would be more conservative with this few clusters.
+- **Non-fatal shootings** are still estimated under OLS; re-estimating them as a count
+  model (as done for homicides) is the natural next step and is unlikely to change the
+  qualitative picture.
+- **Scope.** The panel is annual (masking within-year dynamics), and the analysis
+  observes neither police response times, dispatch decisions, nor arrests — the actual
+  channel through which detection could plausibly reduce violence.
 
 ## Contact
 
