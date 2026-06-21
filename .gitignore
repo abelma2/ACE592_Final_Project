@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Node (paper tooling, if any)
+node_modules/
+
+# Office lock/temp files
+~$*
+
+# Large raw data — re-downloadable from the Chicago Data Portal (see README "Data").
+# Excluded to keep the repo lightweight and to avoid re-hosting victim-level PII.
+data/raw/Violence_Reduction_-_Victims_of_Homicides_and_Non-Fatal_Shootings_20250513.csv
+data/raw/Violence_Reduction_-_Shotspotter_Alerts_-_Historical_20250408.csv
+data/raw/transportation_20250415.csv
