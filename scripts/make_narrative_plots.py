@@ -131,9 +131,13 @@ pois_irr = float(np.exp(pois_b))
 pois_irr_lo = float(np.exp(pois_ci[0]))
 pois_irr_hi = float(np.exp(pois_ci[1]))
 
-# Negative Binomial
+# Negative Binomial — dispersion estimated (Cameron-Trivedi NB2 auxiliary regression),
+# not fixed at 1, to match scripts/econometric_robustness.py.
+_mu = pois.fittedvalues
+_z = ((panel_main["gun_hom"].astype(float) - _mu) ** 2 - panel_main["gun_hom"]) / _mu
+nb_alpha = max(float(sm.OLS(_z, _mu).fit().params.iloc[0]), 1e-6)
 nb = smf.glm("gun_hom ~ did + C(ca_num) + C(year)", data=panel_main,
-             family=sm.families.NegativeBinomial(alpha=1.0)).fit(
+             family=sm.families.NegativeBinomial(alpha=nb_alpha)).fit(
     cov_type="cluster", cov_kwds={"groups": panel_main["ca_num"]})
 nb_b = nb.params["did"]
 nb_se = nb.bse["did"]
@@ -182,9 +186,12 @@ ax.spines["left"].set_visible(False)
 ax.tick_params(axis="y", length=0)
 
 # Takeaway moved to figure-level text below the axes (no longer competes for axis space)
+_red = round((1 - pois_irr_lo) * 100)
+_inc = round((pois_irr_hi - 1) * 100)
 fig.text(0.5, 0.07,
-         "Takeaway: the OLS headline (+7.4%, p < 0.001) collapses under count-data models —\n"
-         "both proper specifications span anywhere from a 13% reduction to a 33% increase.",
+         f"Takeaway: the OLS headline implies a large positive effect (IRR = {ols_irr:.2f}, p < 0.001),\n"
+         f"but both count-data models are null (IRR ≈ {pois_irr:.2f}) — "
+         f"a {_red}% reduction to a {_inc}% increase.",
          fontsize=10, color="#333333", style="italic", ha="center", va="bottom")
 
 add_source_note(fig, SOURCE_DEFAULT,

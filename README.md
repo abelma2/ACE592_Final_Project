@@ -24,8 +24,9 @@ order; [NARRATIVE.md](NARRATIVE.md) is the full write-up.
 
 ![OLS headline vs. count-data specifications](plots/specification_comparison.png)
 
-*The whole story in one figure: the OLS headline (+7.4% implied, p < 0.001) collapses
-to a statistically null incidence-rate ratio under both proper count-data models.*
+*The whole story in one figure: the OLS headline implies a large positive effect
+(IRR ≈ 1.35, p < 0.001) but collapses to a statistically null incidence-rate ratio
+(≈ 1.07) under both proper count-data models.*
 
 ## Headline result at a glance
 
