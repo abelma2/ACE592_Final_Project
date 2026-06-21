@@ -12,7 +12,7 @@ Adds three improvements that the prior script left on the table:
      compares the post-treatment gap of each treated unit to the placebo
      distribution.
 
-Appends the new tables to RESULTS_SUMMARY_V2.md.
+Appends the new tables to docs/results_summary_reanalysis.md.
 """
 import os
 import sys
@@ -389,10 +389,10 @@ print(f"\n  SAVED: synthetic_control_inference.png")
 
 
 # =====================================================================
-# APPEND TO RESULTS_SUMMARY_V2.md
+# APPEND TO docs/results_summary_reanalysis.md
 # =====================================================================
 print("\n" + "=" * 72)
-print("APPENDING TO RESULTS_SUMMARY_V2.md")
+print("APPENDING TO docs/results_summary_reanalysis.md")
 print("=" * 72)
 
 lines = []
@@ -462,10 +462,20 @@ lines.append("> that synthetic control is infeasible for these data, not that th
 lines.append("> See NARRATIVE.md §5.5.\n")
 lines.append("\nFigure: `plots/synthetic_control_inference.png`\n")
 
-with open(os.path.join(P, "docs", "results_summary_reanalysis.md"), "a", encoding="utf-8") as f:
-    f.write("".join(lines))
+# Idempotent write: strip any prior robustness layer before re-appending, so re-running
+# this script does not duplicate Sections 5-8. (econometric_analysis.py writes Sections 1-4
+# in overwrite mode; this script appends 5-7; did_callaway_santanna.py appends 8 — run in
+# that order.)
+doc_path = os.path.join(P, "docs", "results_summary_reanalysis.md")
+existing = open(doc_path, encoding="utf-8").read() if os.path.exists(doc_path) else ""
+marker = "\n---\n# Robustness Layer"
+idx = existing.find(marker)
+if idx != -1:
+    existing = existing[:idx].rstrip() + "\n"
+with open(doc_path, "w", encoding="utf-8") as f:
+    f.write(existing + "".join(lines))
 
-print("  Appended results to docs/results_summary_reanalysis.md")
+print("  Wrote robustness results to docs/results_summary_reanalysis.md")
 print("\n" + "=" * 72)
 print("DONE")
 print("=" * 72)

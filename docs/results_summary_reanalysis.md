@@ -178,6 +178,7 @@ community area (analytic influence-function inference).
 |---|---|---|
 | Never-treated | -2.453 | 0.893 |
 | Not-yet-treated | -2.508 | 0.898 |
+| Never-treated, **excl. 2016** | +1.895 | 0.724 |
 
 ### Event-study ATT(k), never-treated control
 
@@ -199,15 +200,15 @@ community area (analytic influence-function inference).
 | +5 | -2.985 | 1.143 | [-5.226, -0.744] |
 | +6 | -4.839 | 2.345 | [-9.434, -0.243] |
 
-> **What this adds.** The Callaway-Sant'Anna overall ATT is -2.45 — *negative*, the opposite sign of the naive OLS DiD
-> (+2.63) and of the null count-data models. The estimate is not credible as a
-> treatment effect: the event study still shows a large, significant PRE-treatment
-> coefficient at k = -1 (the 2016 homicide-record year, one period before the 2017
-> cohort), so parallel trends fail even under the heterogeneity-robust estimator and
-> the post-period 'decline' is largely a mechanical reversion from that spike.
-> **The takeaway is the consistency of the inconsistency:** across OLS (+2.63),
-> Poisson/NegBin (null), and Callaway-Sant'Anna (negative), the *sign* of the
-> estimated effect is set by the choice of method, not by the data — which is the
-> project's central point that no design credibly identifies a causal effect.
+> **What this adds — read the sign with care.** The Callaway-Sant'Anna overall ATT
+> is -2.45 (never-treated) / -2.51 (not-yet-treated) — negative,
+> the opposite sign of OLS. But this is **not** evidence that 'the estimator determines
+> the sign.' The negative is driven almost entirely by the single 2016 record-homicide
+> year sitting at the k = -1 baseline: excluding 2016 gives +1.89 (SE 0.72),
+> the *same* sign as OLS. The event study confirms this — only the k = -1 (2016)
+> pre-coefficient is significant; the rest hover at zero. So the honest reading is not
+> that estimators mysteriously disagree, but that the estimate is dominated by one
+> anomalous year on top of a design with no valid control group — i.e. the causal
+> effect is **not identifiable** from these data, in either direction.
 
 Figure: `plots/callaway_santanna_event_study.png`

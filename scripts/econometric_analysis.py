@@ -11,7 +11,7 @@ Implements four analyses that the original did_analysis.py omits:
      1999, 2003, and 2007 using the 1991-2008 panel and confirm that
      null effects emerge
 
-Updates RESULTS_SUMMARY_V2.md with the new estimates and writes plots
+Updates docs/results_summary_reanalysis.md with the new estimates and writes plots
 to the plots/ directory.
 """
 import os
@@ -485,10 +485,10 @@ print("  SAVED: event_study_cohort_aware.png")
 
 
 # =====================================================================
-# WRITE RESULTS_SUMMARY_V2.md
+# WRITE docs/results_summary_reanalysis.md
 # =====================================================================
 print("\n" + "=" * 72)
-print("WRITING RESULTS_SUMMARY_V2.md")
+print("WRITING docs/results_summary_reanalysis.md")
 print("=" * 72)
 
 lines = []

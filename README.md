@@ -24,9 +24,10 @@ order; [NARRATIVE.md](NARRATIVE.md) is the full write-up.
 
 ![OLS headline vs. count-data specifications](plots/specification_comparison.png)
 
-*The whole story in one figure: the OLS headline implies a large positive effect
-(IRR ≈ 1.35, p < 0.001) but collapses to a statistically null incidence-rate ratio
-(≈ 1.07) under both proper count-data models.*
+*The whole story in one figure. The OLS effect is the additive +2.63 coefficient shown
+on the multiplicative scale for comparison (implied IRR ≈ 1.35, p < 0.001); the Poisson
+and Negative Binomial points are genuinely-estimated incidence-rate ratios. Both
+count-data models collapse the headline to a statistically null IRR ≈ 1.07.*
 
 ## Headline result at a glance
 
@@ -70,8 +71,9 @@ and [docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
 ![Treatment vs. control community areas](plots/did_map_treatment_control.png)
 
 ShotSpotter coverage (blue) blankets the high-violence South and West sides, while the
-never-treated areas sit elsewhere in the city. The 51 covered community areas averaged
-roughly **nine times** the gun homicides of the 26 uncovered ones *before* deployment.
+never-treated areas sit elsewhere in the city. Before deployment, the 51 covered areas
+averaged roughly **4.6 times** the gun homicides *per area* of the 26 uncovered ones
+(about nine times in aggregate, since there are nearly twice as many covered areas).
 Treatment was assigned *because of* violence, not at random — which is the central
 problem every design here has to confront, and the reason the comparison leans
 entirely on the parallel-trends assumption.
@@ -92,27 +94,32 @@ The two-way fixed-effects OLS DiD returns **+2.63 gun homicides per area-year
 2016 — so it looks bulletproof. It is not. Annual homicide counts are small
 non-negative integers whose variance grows with their mean; OLS treats them as
 continuous and equal-variance. Estimated with the right model for counts — Poisson and
-Negative Binomial with the same fixed effects — the effect is **statistically null**
-(IRR ≈ 1.07, p ≈ 0.5; see the headline figure above). The "+2.6" is an artifact of the
-additive scale, not a treatment effect.
+Negative Binomial with the same fixed effects — the effect is **statistically null**: a
+small, non-significant *positive* point estimate (IRR ≈ 1.07, p ≈ 0.5; see the headline
+figure above), not the dramatic +2.6 the additive scale implies. The count models agree
+with OLS in *direction* but shrink the effect to noise on the natural multiplicative
+scale.
 
 ### 4. Parallel trends fail
 
 ![Cohort-aware event study](plots/event_study_cohort_aware.png)
 
-Every pre-treatment coefficient is large and negative — a clear parallel-trends
-violation, driven by 2016 (a Chicago-wide homicide-record year) sitting next to the
-event-study base period. A joint Wald test rejects parallel trends (F = 19.9,
-p = 0.006). Once the design fails this test, the DiD contrast cannot be read as causal.
+In this cohort event study every pre-treatment coefficient is large and negative — an
+artifact of 2016 (a Chicago-wide homicide-record year) sitting next to the base period.
+The robust evidence is a joint Wald test on the pre-treatment coefficients, which is
+invariant to the base year and rejects parallel trends (F = 19.9, p = 0.006). Once the
+design fails this test, the DiD contrast cannot be read as causal.
 
 ### 5. Fake treatment dates produce the same "effect"
 
 ![Falsification / placebo test](plots/falsification_plot.png)
 
 If +2.6 were a real treatment effect, assigning *fake* treatment dates years before
-ShotSpotter existed should yield nothing. Instead, the 1999 and 2003 placebos are as
-large and as "significant" (p < 0.01) as the real 2017 estimate. The design captures
-pre-existing trend differences across neighborhoods, not the intervention.
+ShotSpotter existed should yield nothing. Instead, the 1999 and 2003 placebos come back
+statistically significant (p < 0.01) and of comparable magnitude (β = −1.34 and −1.93).
+They are opposite-signed, but that is the point: a design that manufactures "significant"
+effects in years before the program existed is capturing pre-existing trend differences
+across neighborhoods, not the intervention.
 
 ### 6. There is no valid comparison group (synthetic control)
 
@@ -125,39 +132,44 @@ high-violence treated unit, so the optimizer collapses onto a single donor and t
 method is **infeasible**. The city left no comparable untreated neighborhood; the
 absence of a counterfactual is itself the finding.
 
-### 7. The modern estimator flips the sign
+### 7. The "modern estimator" sign rides on a single year
 
 ![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
 
 The gold-standard estimator for staggered rollouts — Callaway & Sant'Anna (2021) —
-returns an overall ATT of **−2.45 (p < 0.01)**, the *opposite* sign of OLS. But it is
-no more credible: its own event study still shows a large, significant pre-treatment
-coefficient at *k* = −1 (the 2016 spike), so the post-period "decline" is mostly a
-mechanical reversion, not an effect.
+returns an overall ATT of **−2.45 (p < 0.01)** on the full panel, the *opposite* sign of
+OLS. But that negative is not a property of the method: it is driven almost entirely by
+the 2016 record-homicide year sitting at the *k* = −1 baseline. **Exclude 2016 and the
+same estimator returns +1.90 (p < 0.01) — back to the sign of OLS.** The event study
+makes this visible: only the *k* = −1 (2016) pre-coefficient is significant; the rest
+hover at zero.
 
-**The sign of the "effect" is set by the method, not the data:**
+So read honestly, the estimators do not show a mysterious "method-determined sign":
 
-| Estimator | Overall effect | Reads as | Survives its own diagnostics? |
-|---|---|---|---|
-| Naive OLS DiD | **+2.63** (p < 0.001) | *more* homicides | No — fails count-data & placebo checks |
-| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | no effect | — (null) |
-| Callaway–Sant'Anna | **−2.45** (p < 0.01) | *fewer* homicides | No — fails pre-trends (k = −1 spike) |
+| Estimator | Full panel | What actually moves it |
+|---|---|---|
+| Naive OLS DiD | **+2.63** (p < 0.001) | additive scale, inflated by high-count areas |
+| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | positive in sign, but null on the multiplicative scale |
+| Callaway–Sant'Anna | **−2.45** (p < 0.01) | flips to **+1.90** once the 2016 outlier year is dropped |
 
-Same panel, same outcome — the estimate runs from a significant *increase* to a
-significant *decrease* depending only on which estimator you pick, and none survives
-its own falsification test. That spread **is** the finding: the data do not pin down a
-causal effect.
+OLS and the count models actually agree in *direction* (both positive); only Callaway–
+Sant'Anna goes negative, and only because of one anomalous year. The real lesson is not
+"any answer is possible," but that every estimate is dominated by a single outlier year
+on top of a design with **no valid control group** (Step 6) and a **failed pre-trend
+test** (Step 4). With no clean counterfactual, the causal effect is simply **not
+identifiable from these data** — in either direction.
 
 ## Bottom line
 
 ShotSpotter did what it was built to do — *detect* gunfire that 911 calls miss. But
-across every design that respects the data, there is **no evidence it reduced gun
-homicides**, in either direction. The honest reading is neither "ShotSpotter increased
-violence" (the +2.6 is an artifact of the wrong model) nor "ShotSpotter cut violence"
-(that ignores an anomalous 2016 base year) — it is that **these data simply cannot
-identify a causal effect**, while ruling out the large reduction a $3M detection
-contract was meant to deliver. That null is itself the policy finding, and it is
-consistent with the city's 2023 decision to end the contract. Full argument and
+across every design that respects the data, there is **no credible evidence of an effect
+on gun homicides in either direction**. The honest reading is neither "ShotSpotter
+increased violence" (the +2.6 is an artifact of the additive scale) nor "ShotSpotter cut
+violence" (that reads a 2016-driven CS estimate too literally) — it is that, with no
+valid control group and a pre-period dominated by one outlier year, **these data simply
+cannot identify a causal effect**. They are also inconsistent with the large reduction a
+$3M detection contract was meant to deliver. That non-result is itself the policy
+finding, and it is consistent with the city's 2023 decision to end the contract. Full argument and
 limitations: [NARRATIVE.md](NARRATIVE.md).
 
 ## Limitations & next steps

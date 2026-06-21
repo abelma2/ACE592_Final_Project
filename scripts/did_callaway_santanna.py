@@ -27,7 +27,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-import matplotlib.patches as mpatches
 
 warnings.filterwarnings("ignore")
 
@@ -143,6 +142,20 @@ print(f"\n  Overall ATT (never-treated control):    {overall_nt:+.3f}  (SE {over
 print(f"  Overall ATT (not-yet-treated control):  {overall_ny:+.3f}  (SE {overall_ny_se:.3f})")
 print("  (Compare: naive OLS DiD = +2.63; Poisson/NegBin = statistically null.)")
 
+# Robustness: is the negative sign a property of the estimator, or of one anomalous year?
+# 2016 was a Chicago-wide homicide-record year that sits at the k=-1 baseline for the 2017
+# cohort. Drop 2016 and re-estimate; if the sign flips back to positive, the negative ATT is
+# a single-year artifact, not evidence that "the method determines the sign".
+cs_data_no16 = (panel[panel["year"] != 2016][["ca_num", "year", "gun_hom", "cohort"]]
+                .set_index(["ca_num", "year"]).sort_index())
+att_no16 = ATTgt(data=cs_data_no16, cohort_column="cohort")
+att_no16.fit(formula="gun_hom", control_group="never_treated", progress_bar=False)
+simple_no16 = att_no16.aggregate("simple")
+overall_no16 = float(simple_no16.iloc[0, 0])
+overall_no16_se = float(simple_no16.iloc[0, 1])
+print(f"  Overall ATT (never-treated, EXCL. 2016): {overall_no16:+.3f}  (SE {overall_no16_se:.3f})"
+      "   <- sign vs. full panel shows the 2016 dependence")
+
 # Event-study aggregation (never-treated control)
 ev = att_nt.aggregate("event")
 ev.columns = ["att", "se", "lower", "upper", "sig"]
@@ -183,8 +196,8 @@ ax.text(-0.4, ax.get_ylim()[1] * 0.96, "ShotSpotter installed",
 ax.set_xlabel("Years relative to ShotSpotter installation (cohort-specific)")
 ax.set_ylabel("ATT: Gun homicides per community-area-year\n(Callaway-Sant'Anna, never-treated control)")
 ax.set_title("Callaway-Sant'Anna Event Study (heterogeneity-robust staggered DiD)\n"
-             f"Overall ATT = {overall_nt:+.2f} (SE {overall_nt_se:.2f}) — "
-             "sign flips vs. naive OLS (+2.63); pre-trends still fail",
+             f"Overall ATT = {overall_nt:+.2f} (SE {overall_nt_se:.2f}); "
+             f"flips to {overall_no16:+.2f} when 2016 is excluded — the sign rides on one year",
              fontweight="bold")
 
 legend_handles = [
@@ -219,7 +232,8 @@ lines.append("### Overall ATT\n\n")
 lines.append("| Control group | Overall ATT | SE |\n")
 lines.append("|---|---|---|\n")
 lines.append(f"| Never-treated | {overall_nt:+.3f} | {overall_nt_se:.3f} |\n")
-lines.append(f"| Not-yet-treated | {overall_ny:+.3f} | {overall_ny_se:.3f} |\n\n")
+lines.append(f"| Not-yet-treated | {overall_ny:+.3f} | {overall_ny_se:.3f} |\n")
+lines.append(f"| Never-treated, **excl. 2016** | {overall_no16:+.3f} | {overall_no16_se:.3f} |\n\n")
 lines.append("### Event-study ATT(k), never-treated control\n\n")
 lines.append("| k (years from install) | ATT | SE | 95% CI |\n")
 lines.append("|---|---|---|---|\n")
@@ -227,22 +241,31 @@ for _, r in ev.iterrows():
     lines.append(f"| {int(r['k']):+d} | {r['att']:+.3f} | {r['se']:.3f} | "
                  f"[{r['lower']:+.3f}, {r['upper']:+.3f}] |\n")
 lines.append("\n")
-lines.append("> **What this adds.** The Callaway-Sant'Anna overall ATT is "
-             f"{overall_nt:+.2f} — *negative*, the opposite sign of the naive OLS DiD\n")
-lines.append("> (+2.63) and of the null count-data models. The estimate is not credible as a\n")
-lines.append("> treatment effect: the event study still shows a large, significant PRE-treatment\n")
-lines.append("> coefficient at k = -1 (the 2016 homicide-record year, one period before the 2017\n")
-lines.append("> cohort), so parallel trends fail even under the heterogeneity-robust estimator and\n")
-lines.append("> the post-period 'decline' is largely a mechanical reversion from that spike.\n")
-lines.append("> **The takeaway is the consistency of the inconsistency:** across OLS (+2.63),\n")
-lines.append("> Poisson/NegBin (null), and Callaway-Sant'Anna (negative), the *sign* of the\n")
-lines.append("> estimated effect is set by the choice of method, not by the data — which is the\n")
-lines.append("> project's central point that no design credibly identifies a causal effect.\n")
+lines.append("> **What this adds — read the sign with care.** The Callaway-Sant'Anna overall ATT\n")
+lines.append(f"> is {overall_nt:+.2f} (never-treated) / {overall_ny:+.2f} (not-yet-treated) — negative,\n")
+lines.append("> the opposite sign of OLS. But this is **not** evidence that 'the estimator determines\n")
+lines.append("> the sign.' The negative is driven almost entirely by the single 2016 record-homicide\n")
+lines.append(f"> year sitting at the k = -1 baseline: excluding 2016 gives {overall_no16:+.2f} "
+             f"(SE {overall_no16_se:.2f}),\n")
+lines.append("> the *same* sign as OLS. The event study confirms this — only the k = -1 (2016)\n")
+lines.append("> pre-coefficient is significant; the rest hover at zero. So the honest reading is not\n")
+lines.append("> that estimators mysteriously disagree, but that the estimate is dominated by one\n")
+lines.append("> anomalous year on top of a design with no valid control group — i.e. the causal\n")
+lines.append("> effect is **not identifiable** from these data, in either direction.\n")
 lines.append("\nFigure: `plots/callaway_santanna_event_study.png`\n")
 
-with open(os.path.join(P, "docs", "results_summary_reanalysis.md"), "a", encoding="utf-8") as f:
-    f.write("".join(lines))
-print("  Appended Section 8 to docs/results_summary_reanalysis.md")
+# Idempotent write: strip any prior Section 8 before re-appending (so re-running this
+# script does not duplicate the section). Run order: econometric_analysis (writes 1-4) ->
+# econometric_robustness (appends 5-7) -> this script (appends 8).
+doc_path = os.path.join(P, "docs", "results_summary_reanalysis.md")
+existing = open(doc_path, encoding="utf-8").read() if os.path.exists(doc_path) else ""
+marker = "\n## 8. Callaway-Sant'Anna"
+idx = existing.find(marker)
+if idx != -1:
+    existing = existing[:idx].rstrip() + "\n"
+with open(doc_path, "w", encoding="utf-8") as f:
+    f.write(existing + "".join(lines))
+print("  Wrote Section 8 to docs/results_summary_reanalysis.md")
 print("\n" + "=" * 72)
 print("DONE")
 print("=" * 72)
