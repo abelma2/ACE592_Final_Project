@@ -11,11 +11,13 @@ reduce gun homicides?
 **The finding.** No — and, more importantly, *the data cannot credibly show that it
 did or didn't.* A naive difference-in-differences says ShotSpotter areas saw **more**
 gun homicides (+2.6 per area-year, p < 0.001). But that headline is a statistical
-artifact: it evaporates the moment homicide *counts* are modeled correctly, it fails
+artifact: it collapses to a null once homicide *counts* are modeled correctly, it fails
 a parallel-trends test, it reproduces equally "significant" effects when treatment is
-faked in pre-rollout years, and it has no valid synthetic-control comparison.
-ShotSpotter worked as a *detector* of gunfire; the claim that it *reduced* gun
-homicides does not survive scrutiny.
+faked in pre-rollout years, it has no valid synthetic-control comparison, and even the
+modern Callaway–Sant'Anna estimator only turns it negative because of a single outlier
+year. With no clean control group and a pre-period dominated by one anomalous year,
+these data cannot identify a causal effect in either direction. ShotSpotter worked as a
+*detector* of gunfire; that it *reduced* gun homicides is not a claim the data support.
 
 **How I get there** — and how you can reproduce it from the data and code below — is a
 sequence of increasingly demanding causal-inference designs on a community-area × year
