@@ -4,19 +4,23 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Methods](https://img.shields.io/badge/methods-DiD%20%7C%20event%20study%20%7C%20synthetic%20control-orange.svg)
 
-Did Chicago's ShotSpotter gunshot-detection system (rolled out across 51 of 77
-community areas in 2017–2018, cancelled in 2023) actually reduce gun homicides?
-This project answers that question with a sequence of increasingly demanding
-causal-inference designs — and shows how a headline result that looks
-statistically bulletproof can completely collapse once the right model is used.
+**The question.** Did Chicago's ShotSpotter gunshot-detection system — deployed
+across 51 of 77 community areas in 2017–2018 and cancelled in 2023 — actually
+reduce gun homicides?
 
-**Headline finding:** a naive difference-in-differences says ShotSpotter areas
-saw *more* gun homicides (+2.6 per area-year, p < 0.001). But that result is a
-count-data misspecification artifact: under Poisson/Negative-Binomial regression
-it vanishes, the design fails a parallel-trends test, it produces equally
-"significant" placebo effects in pre-rollout years, and synthetic control has no
-valid donor pool. **No specification that respects the data can identify a causal
-effect in either direction.**
+**The finding.** No — and, more importantly, *the data cannot credibly show that it
+did or didn't.* A naive difference-in-differences says ShotSpotter areas saw **more**
+gun homicides (+2.6 per area-year, p < 0.001). But that headline is a statistical
+artifact: it evaporates the moment homicide *counts* are modeled correctly, it fails
+a parallel-trends test, it reproduces equally "significant" effects when treatment is
+faked in pre-rollout years, and it has no valid synthetic-control comparison.
+ShotSpotter worked as a *detector* of gunfire; the claim that it *reduced* gun
+homicides does not survive scrutiny.
+
+**How I get there** — and how you can reproduce it from the data and code below — is
+a sequence of five increasingly demanding causal-inference designs on a
+community-area × year panel of Chicago gun homicides, 2009–2023. The rest of this
+README walks the evidence; [NARRATIVE.md](NARRATIVE.md) is the full write-up.
 
 ![OLS headline vs. count-data specifications](plots/specification_comparison.png)
 
@@ -165,9 +169,17 @@ staggered rollout collapsed into a single 2017 cutoff, and an anomalous base yea
 - **Synthetic control is infeasible** — the 26 never-treated areas are all
   lower-violence than any treated neighborhood, so there is no valid donor pool.
 
-The robust conclusion: ShotSpotter worked as a *detection* instrument but the data
-cannot support a *violence-reduction* claim. See [NARRATIVE.md](NARRATIVE.md) for
-the complete argument and limitations.
+## Bottom line
+
+ShotSpotter did what it was built to do — *detect* gunfire that 911 calls miss. But
+across every design that respects the data, there is **no evidence it reduced gun
+homicides**, in either direction. The honest reading is neither "ShotSpotter
+increased violence" (the +2.6 is an artifact of the wrong model) nor "ShotSpotter cut
+violence" (that ignores an anomalous 2016 base year) — it is that **these data simply
+cannot identify a causal effect**, while ruling out the large reduction a $3M
+detection contract was meant to deliver. That null is itself the policy finding, and
+it is consistent with the city's 2023 decision to end the contract. Full argument and
+limitations: [NARRATIVE.md](NARRATIVE.md).
 
 ## Contact
 
