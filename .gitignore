@@ -30,6 +30,16 @@ desktop.ini
 # Node (paper tooling, if any)
 node_modules/
 
+# LaTeX build artifacts (final_paper.tex is the source; final_paper.pdf is the output)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+paper/pass*.log
+
 # Office lock/temp files
 ~$*
 
