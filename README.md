@@ -1,28 +1,44 @@
-# ShotSpotter & Gun Homicide in Chicago — A Difference-in-Differences Study
+# Detection Without Identification: ShotSpotter & Gun Homicide in Chicago
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![Methods](https://img.shields.io/badge/methods-DiD%20%7C%20event%20study%20%7C%20synthetic%20control-orange.svg)
+![Methods](https://img.shields.io/badge/methods-DiD%20%7C%20event%20study%20%7C%20synthetic%20control%20%7C%20placement%20model-orange.svg)
 
-**The question.** Did Chicago's ShotSpotter gunshot-detection system — deployed
-across 51 of 77 community areas in 2017–2018 and cancelled in 2023 — actually
-reduce gun homicides?
+**The question.** Chicago's ShotSpotter gunshot-detection system was deployed across
+51 of 77 community areas in 2017–2018 and cancelled in 2023. That gunshot detection
+*doesn't* reduce gun violence is, by now, well established — including for Chicago at the
+police-district level (Connealy et al. 2024, *J. Experimental Criminology*) and nationally
+(Doucette et al. 2021, *J. Urban Health*). So this project asks a sharper, methodological
+question: **can the community-area data that most local policy argument relies on even
+*identify* such an effect — and what happens when a standard evaluation is run on them
+without asking?**
 
-**The finding.** No — and, more importantly, *the data cannot credibly show that it
-did or didn't.* A naive difference-in-differences says ShotSpotter areas saw **more**
-gun homicides (+2.6 per area-year, p < 0.001). But that headline is a statistical
-artifact: it collapses to a null once homicide *counts* are modeled correctly, it fails
-a parallel-trends test, it reproduces equally "significant" effects when treatment is
-faked in pre-rollout years, it has no valid synthetic-control comparison, and even the
-modern Callaway–Sant'Anna estimator only turns it negative because of a single outlier
-year. With no clean control group and a pre-period dominated by one anomalous year,
-these data cannot identify a causal effect in either direction. ShotSpotter worked as a
-*detector* of gunfire; that it *reduced* gun homicides is not a claim the data support.
+**The finding.** It cannot, and the way a routine evaluation fails is the point. A naive
+difference-in-differences says ShotSpotter areas saw **more** gun homicides (+2.6 per
+area-year, p < 0.001). But that headline is a statistical artifact: it collapses to a null
+once homicide *counts* are modeled correctly, it fails a parallel-trends test, it
+reproduces equally "significant" effects when treatment is faked in pre-rollout years, it
+has no valid synthetic-control comparison, and even the modern Callaway–Sant'Anna estimator
+only turns it negative because of a single outlier year. With no clean control group and a
+pre-period dominated by one anomalous year, these data cannot identify a causal effect in
+either direction. This is a worked cautionary case in the LaLonde (1986) tradition: a
+coefficient can survive fixed effects and robustness restrictions and still fail every
+condition a causal reading requires.
+
+**What the data *do* show.** A placement model pins down *why* no counterfactual exists:
+ShotSpotter was sited where violence, structural disadvantage, and — even conditional on
+those — the **Black and Hispanic share** of a neighborhood were highest, and so tightly
+that no comparable untreated neighborhood remains. The design rules out a large *deterrence*
+effect, but cannot exclude the survival-channel benefit a boundary regression discontinuity
+attributes to faster emergency response — a magnitude that sits *inside* the confidence
+interval this panel can resolve.
 
 **How I get there** — and how you can reproduce it from the data and code below — is a
 sequence of increasingly demanding causal-inference designs on a community-area × year
-panel of Chicago gun homicides, 2009–2023. The figures below walk the evidence in
-order; [NARRATIVE.md](NARRATIVE.md) is the full write-up.
+panel of Chicago gun homicides, 2009–2023, plus a cross-sectional model of *treatment
+assignment* itself. The figures below walk the evidence in order; the formatted paper is
+[paper/final_paper.pdf](paper/final_paper.pdf) and [NARRATIVE.md](NARRATIVE.md) is the
+long-form write-up.
 
 ![OLS headline vs. count-data specifications](plots/specification_comparison.png)
 
@@ -46,9 +62,11 @@ natural multiplicative (count-data) scale, the effect is statistically null.
 
 The full write-up is in **[NARRATIVE.md](NARRATIVE.md)**; the formatted paper is
 **[paper/final_paper.pdf](paper/final_paper.pdf)**. Regenerable result tables live in
-[docs/results_summary_original.md](docs/results_summary_original.md) (original pipeline)
-and [docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
-(re-analysis + robustness).
+[docs/results_summary_original.md](docs/results_summary_original.md) (original pipeline),
+[docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
+(re-analysis + robustness), and
+[docs/results_summary_placement.md](docs/results_summary_placement.md)
+(treatment-assignment / equity model).
 
 ## Methods & skills demonstrated
 
@@ -56,6 +74,11 @@ and [docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
   effects), Callaway–Sant'Anna heterogeneity-robust staggered DiD, cohort-specific
   event study, synthetic control with in-space permutation inference, pre-period
   placebo / falsification tests.
+- **Selection / treatment-assignment modeling:** cross-sectional linear-probability
+  and logistic models of *which* neighborhoods got ShotSpotter, standardized-effect
+  balance tables, propensity-score overlap / common-support diagnostics, and an equity
+  test of whether racial composition predicts placement conditional on violence and
+  disadvantage.
 - **Count-data econometrics:** Poisson and Negative Binomial regression (with the
   dispersion estimated), incidence-rate ratios, clustered standard errors.
 - **Robustness & diagnostics:** joint parallel-trends Wald test, COVID- and
@@ -123,7 +146,33 @@ They are opposite-signed, but that is the point: a design that manufactures "sig
 effects in years before the program existed is capturing pre-existing trend differences
 across neighborhoods, not the intervention.
 
-### 6. There is no valid comparison group (synthetic control)
+### 6. Placement was predictable — and it tracked race, not just violence
+
+![What distinguished ShotSpotter areas](plots/placement_coefficients.png)
+
+Why is there no counterfactual? Because treatment was *nearly deterministic*. A
+cross-sectional model of ShotSpotter placement across all 77 community areas shows that
+structural disadvantage — the hardship index (AUC 0.93) and low per-capita income (0.92) —
+separates covered from uncovered areas even more sharply than the pre-period gun-homicide
+*count* itself (0.79). And placement mapped onto Chicago's racial geography: ShotSpotter
+areas are on average **49% Black and 32% Hispanic, versus 14% and 17%** in never-treated
+areas, and — conditional on violence, hardship, and income — a one-SD increase in the Black
+share still raises the probability of placement by +33 points (p = 0.002) and the Hispanic
+share by +28 (p = 0.003). Race, hardship, and violence are deeply entangled in a segregated
+city, so this is a descriptive pattern, not proof that race drove siting *independently* of
+disadvantage — but it is the concentrated-surveillance pattern advocacy groups described.
+
+![Propensity-score overlap](plots/placement_propensity_overlap.png)
+
+The consequence for identification is stark. A propensity model separates the two groups
+with an AUC of 0.94, and the six highest-violence study neighborhoods all sit at a placement
+propensity of **≥ 0.97 — a band no never-treated area reaches.** This is the selection-side
+view of the next step: the city installed ShotSpotter in essentially every highest-violence,
+highest-hardship neighborhood, leaving no comparable untreated unit from which to build a
+counterfactual. (Racial composition is measured from the 2019–2023 ACS, a proxy for the
+persistent pre-rollout composition.)
+
+### 7. There is no valid comparison group (synthetic control)
 
 ![Synthetic control panels](plots/synthetic_control_panels.png)
 
@@ -134,7 +183,7 @@ high-violence treated unit, so the optimizer collapses onto a single donor and t
 method is **infeasible**. The city left no comparable untreated neighborhood; the
 absence of a counterfactual is itself the finding.
 
-### 7. The "modern estimator" sign rides on a single year
+### 8. The "modern estimator" sign rides on a single year
 
 ![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
 
@@ -157,7 +206,7 @@ So read honestly, the estimators do not show a mysterious "method-determined sig
 OLS and the count models actually agree in *direction* (both positive); only Callaway–
 Sant'Anna goes negative, and only because of one anomalous year. The real lesson is not
 "any answer is possible," but that every estimate is dominated by a single outlier year
-on top of a design with **no valid control group** (Step 6) and a **failed pre-trend
+on top of a design with **no valid control group** (Step 7) and a **failed pre-trend
 test** (Step 4). With no clean counterfactual, the causal effect is simply **not
 identifiable from these data** — in either direction.
 
@@ -169,10 +218,13 @@ on gun homicides in either direction**. The honest reading is neither "ShotSpott
 increased violence" (the +2.6 is an artifact of the additive scale) nor "ShotSpotter cut
 violence" (that reads a 2016-driven CS estimate too literally) — it is that, with no
 valid control group and a pre-period dominated by one outlier year, **these data simply
-cannot identify a causal effect**. They are also inconsistent with the large reduction a
-$3M detection contract was meant to deliver. That non-result is itself the policy
-finding, and it is consistent with the city's 2023 decision to end the contract. Full argument and
-limitations: [NARRATIVE.md](NARRATIVE.md).
+cannot identify a causal effect**. They rule out a large *deterrence* effect — a broad,
+sustained drop in shootings of the kind a $3M detection contract was meant to deliver — but
+not the smaller, survival-channel mortality benefit a boundary regression discontinuity
+attributes to faster emergency response, a magnitude that falls *inside* the interval this
+panel can resolve. That non-result is itself the policy finding, and it is consistent with
+the city's 2023 decision to end the contract. Full argument and limitations:
+[NARRATIVE.md](NARRATIVE.md).
 
 ## Limitations & next steps
 
@@ -183,6 +235,11 @@ I'd rather name the soft spots than have a reviewer find them:
   the treated units' violence level. No estimator can manufacture a counterfactual the
   data don't contain — which is why the synthetic control is reported as *infeasible*
   rather than as a result.
+- **The placement model is descriptive.** It documents *that* siting tracked disadvantage,
+  violence, and racial composition, and quantifies the resulting lack of common support —
+  but with 77 heavily collinear units it does not identify a causal assignment rule, and its
+  racial-composition measure is the 2019–2023 ACS used as a proxy for the (highly
+  persistent) pre-rollout composition.
 - **Two event-study implementations.** The cohort event study in
   `econometric_analysis.py` is a transparent hand-rolled difference-in-means with a
   bootstrap; `did_callaway_santanna.py` is the packaged, heterogeneity-robust
@@ -223,16 +280,19 @@ I'd rather name the soft spots than have a reviewer find them:
 │   ├── econometric_analysis.py        TWFE DiD, cohort event study, synthetic control
 │   ├── econometric_robustness.py      Poisson/NegBin DiD, pre-trend Wald, permutation SC
 │   ├── did_callaway_santanna.py       Callaway–Sant'Anna heterogeneity-robust DiD
+│   ├── placement_model.py             Treatment-assignment / equity model + propensity overlap
 │   ├── make_narrative_plots.py        Specification-comparison + falsification figures
 │   ├── make_pretty_plots.py           Descriptive figures (monthly, hourly, hotspots)
 │   └── plot_covid_sensitivity.py
 │
 ├── plots/                             All generated figures (PNG, 200 DPI)
 ├── paper/
-│   └── final_paper.pdf                Formatted paper
+│   ├── final_paper.tex / .pdf         Formatted paper (LaTeX source + PDF)
+│   └── methods_memo.tex / .pdf        ~8-page methods-memo version
 └── docs/
     ├── results_summary_original.md    Original DiD tables (from did_analysis.py)
     ├── results_summary_reanalysis.md  Re-analysis + robustness tables (econometric_*.py)
+    ├── results_summary_placement.md   Placement / equity model tables (placement_model.py)
     ├── Pov_data_table.docx            Poverty summary table (generated by clean_poverty.ipynb)
     └── shotspotter_analysis.docx      Original course write-up
 ```
@@ -248,6 +308,7 @@ All inputs are public products of the [Chicago Data Portal](https://data.cityofc
 | `transportation_*.csv` | [Transportation network](https://data.cityofchicago.org/Transportation/transportation/7ez8-272k/about_data) (street overlays only) | No — download |
 | `CommAreas_*.geojson` | [Community Areas](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Community-Areas-current-/cauq-8yn6) | Yes |
 | `Census_Data_-_Selected_socioeconomic_indicators_*.csv` | [Census — socioeconomic indicators](https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2/about_data) | Yes |
+| `ACS_5yr_race_by_community_area_2023.csv` | [ACS 5-Year Data by Community Area](https://data.cityofchicago.org/d/t68z-cikk) (racial composition for the placement model) | Yes |
 
 The three large raw files (~110 MB combined) are **git-ignored** to keep the
 repository lightweight and to avoid re-hosting victim-level data. They are freely
@@ -276,7 +337,11 @@ python scripts/econometric_analysis.py
 python scripts/econometric_robustness.py
 python scripts/did_callaway_santanna.py    # needs the `differences` package
 
-# 6. Narrative + descriptive figures
+# 6. Placement / equity model (treatment-assignment LPM + logit, propensity
+#    overlap, racial-composition equity test)
+python scripts/placement_model.py
+
+# 7. Narrative + descriptive figures
 python scripts/make_narrative_plots.py
 python scripts/make_pretty_plots.py
 python scripts/plot_covid_sensitivity.py
