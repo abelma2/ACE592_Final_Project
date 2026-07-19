@@ -30,7 +30,7 @@
 
 \title{\vspace{-1.5em}\textbf{Detection Without Identification:\\
 ShotSpotter and Gun Homicide in Chicago, 2009--2023}}
-\author{Austin Belman\\
+\author{Austin Belman and Kameron Nelson\\
 \small University of Illinois Urbana--Champaign\\
 \small ACE 592 Final Project}
 \date{}
@@ -149,7 +149,9 @@ police-district level in Chicago (Connealy et al., 2024) and across metropolitan
 nationally (Doucette et al., 2021) find no reduction in shootings, homicides, or case
 clearance---only faster detection and more recovered evidence---and a Chicago district-level
 study finds detection even slowed dispatch and lowered arrest probability (Topper \&
-Ferrazares, 2024). The one channel with a credible claim to benefit is medical: a boundary
+Ferrazares, 2024). A 2026 meta-analysis of 44 estimates across eight studies pools to a null
+relative incidence-rate ratio of $1.02$ (95\% CI $[0.90, 1.16]$; Huff, Dunlap, \& Pearson,
+2026). The one channel with a credible claim to benefit is medical: a boundary
 regression discontinuity attributes a lower shooting-fatality rate inside coverage to faster
 emergency response (University of Chicago Crime Lab, 2024, not peer-reviewed). Against that
 backdrop, the question this paper takes up is not whether detection deters homicides---the
@@ -332,7 +334,11 @@ hover around $1.07$ with confidence intervals consistent with anywhere from a 13
 reduction to a 33\% increase in homicides. Because the estimated Negative Binomial
 dispersion is small ($\alpha \approx 0.02$)---the counts are only mildly
 overdispersed---the Negative Binomial IRRs land essentially on top of the Poisson
-estimates.
+estimates. They also land essentially on top of the meta-analytic pooled effect for
+gunshot detection (relative IRR $1.02$, 95\% CI $[0.90, 1.16]$; Huff, Dunlap, \& Pearson,
+2026), estimated with the same incidence-rate-ratio metric---evidence that the
+multiplicative-scale null is a property of the intervention, not an artifact of this
+particular panel.
 
 \begin{table}[H]
 \centering
@@ -570,11 +576,13 @@ share $+28$ points ($p = 0.003$), while violence and hardship themselves turn in
 Race, hardship, and violence are deeply entangled in a segregated city, and with 77 areas the
 design cannot separate them cleanly, so this is \emph{not} evidence that race drove siting
 independently of disadvantage. What it shows, descriptively, is that ShotSpotter placement
-tracked Chicago's racial geography at least as tightly as it tracked violence or
-hardship---the concentrated-surveillance pattern advocacy groups described. (Community-area
-race is measured from the 2019--2023 ACS, which post-dates the rollout; because Chicago's
-neighborhood racial composition is highly persistent, we read it as a proxy for the
-pre-rollout map.)
+tracked Chicago's racial geography at least as tightly as it tracked violence or hardship.
+That coverage blankets the city's highest-Black-and-Latino police districts is already
+documented (MacArthur Justice Center, 2021; Office of Inspector General, 2021); our marginal
+contribution is the \emph{conditional} result---that racial composition predicts placement
+even once pre-period violence and hardship are held fixed. (Community-area race is measured
+from the 2019--2023 ACS, which post-dates the rollout; because Chicago's neighborhood racial
+composition is highly persistent, we read it as a proxy for the pre-rollout map.)
 
 \begin{figure}[H]
 \centering
@@ -736,7 +744,17 @@ packaged Callaway--Sant'Anna estimator, which should be treated as the authorita
 staggered-DiD result. The placement model is cross-sectional and descriptive: it documents
 the selection pattern but does not identify a causal siting rule, and its racial-composition
 measure is drawn from the 2019--2023 ACS, a proxy for the pre-rollout composition that
-relies on the persistence of Chicago's neighborhood racial geography. And the analysis
+relies on the persistence of Chicago's neighborhood racial geography. A subtler caveat
+applies to the count models that carry the headline null: the Poisson and Negative Binomial
+DiD use two-way fixed effects, and under a staggered rollout a two-way fixed-effects PPML
+inherits the same heterogeneity-weighting problem as linear TWFE, placing potentially
+negative weights on some treated cells (Moreau-Kastler, 2025). The heterogeneity-robust
+estimator we do report---Callaway--Sant'Anna---is linear and does not transfer to the
+multiplicative outcome the count argument itself calls for; the appropriate tool is a
+nonlinear, heterogeneity-robust count estimator (Wooldridge, 2023; Moreau-Kastler, 2025),
+which we leave to follow-up. This does not rescue a causal reading---if anything it is one
+more reason the effect is not cleanly identified---but the reported incidence-rate ratio is
+best read as a pooled two-way-FE summary, not a heterogeneity-robust ATT. And the analysis
 observes neither police response times, dispatch decisions, nor arrests---the actual channel
 through which detection could plausibly reduce violence.
 
@@ -821,6 +839,10 @@ Goodman-Bacon, A. (2021). Difference-in-differences with variation in treatment 
 Harcourt, B. E. (2019). \emph{Against prediction: Profiling, policing, and punishing in
 an actuarial age}. University of Chicago Press.
 
+Huff, J., Dunlap, B., \& Pearson, R. L., Jr. (2026). Does acoustic gunshot detection
+technology reduce crime? A systematic review and meta-analysis. \emph{American Journal of
+Criminal Justice}. Advance online publication.
+
 Irvin-Erickson, Y., Bai, B., Gurvis, A., \& Mohr, E. (2016). \emph{The effect of gun
 violence on local economies}. Urban Institute.
 
@@ -830,6 +852,13 @@ Mortality Weekly Report, 67}.
 
 LaLonde, R. J. (1986). Evaluating the econometric evaluations of training programs with
 experimental data. \emph{American Economic Review, 76}(4), 604--620.
+
+MacArthur Justice Center. (2021). \emph{ShotSpotter generated over 40,000 dead-end police
+deployments in Chicago in 21 months, according to new study}. Northwestern Pritzker School
+of Law.
+
+Moreau-Kastler, N. (2025). \emph{Proportional treatment effects in staggered settings: An
+approach for Poisson PML}. Working paper, Sciences Po.
 
 Office of Inspector General, City of Chicago. (2021, August 24). \emph{The Chicago Police
 Department's use of ShotSpotter technology}.
@@ -848,15 +877,19 @@ Thompson, P. S., Lawrence, D. S., \& La Vigne, N. G. (2020). Securing officer bu
 a beneficial technology increases workload: Best practices for implementing gunshot
 detection technology. \emph{ACJS Today, 46}(1), 1--7.
 
-Topper, M., \& Ferrazares, T. (2024). \emph{The unintended consequences of policing
-technology: Evidence from ShotSpotter}. Working paper (SSRN 4828813).
+Topper, M., \& Ferrazares, T. (2024). The unintended consequences of policing technology:
+Evidence from ShotSpotter. Forthcoming, \emph{Journal of Human Resources} (SSRN 4828813).
 
 University of Chicago Crime Lab. (2024). Op-ed and replication analysis of ShotSpotter and
 shooting fatality in Chicago [not peer-reviewed]. Replication code:
 \url{https://github.com/uchicago-urbanlabs-crimelab/shotspotter-op-ed}.
 
 Wilson, D. B. (2022). The relative incident rate ratio effect size for count-based impact
-evaluations. \emph{Journal of Quantitative Criminology}.
+evaluations: When an odds ratio is not an odds ratio. \emph{Journal of Quantitative
+Criminology, 38}(2), 323--341.
+
+Wooldridge, J. M. (2023). Simple approaches to nonlinear difference-in-differences with
+panel data. \emph{The Econometrics Journal, 26}(3), C31--C66.
 
 \end{flushleft}
 

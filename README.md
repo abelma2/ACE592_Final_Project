@@ -8,7 +8,8 @@
 51 of 77 community areas in 2017–2018 and cancelled in 2023. That gunshot detection
 *doesn't* reduce gun violence is, by now, well established — including for Chicago at the
 police-district level (Connealy et al. 2024, *J. Experimental Criminology*) and nationally
-(Doucette et al. 2021, *J. Urban Health*). So this project asks a sharper, methodological
+(Doucette et al. 2021, *J. Urban Health*), with a 2026 meta-analysis of 44 estimates
+pooling to a null (Huff, Dunlap & Pearson 2026, *Am. J. Criminal Justice*). So this project asks a sharper, methodological
 question: **can the community-area data that most local policy argument relies on even
 *identify* such an effect — and what happens when a standard evaluation is run on them
 without asking?**
@@ -160,7 +161,9 @@ areas, and — conditional on violence, hardship, and income — a one-SD increa
 share still raises the probability of placement by +33 points (p = 0.002) and the Hispanic
 share by +28 (p = 0.003). Race, hardship, and violence are deeply entangled in a segregated
 city, so this is a descriptive pattern, not proof that race drove siting *independently* of
-disadvantage — but it is the concentrated-surveillance pattern advocacy groups described.
+disadvantage — but it is the concentrated-surveillance pattern the MacArthur Justice Center
+and the city's Inspector General already documented; our marginal addition is the
+*conditional* result (race predicts placement even after violence and hardship are held fixed).
 
 ![Propensity-score overlap](plots/placement_propensity_overlap.png)
 
