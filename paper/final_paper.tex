@@ -2,7 +2,7 @@
 
 % ---------------------------------------------------------------------------
 % Detection Without Identification: ShotSpotter and Gun Homicide in Chicago
-% ACE 592 Final Project -- Austin Belman
+% ACE 592 Final Project -- Austin Belman and Kameron Nelson
 % Built from NARRATIVE.md and the analysis pipeline in this repository.
 % Compile: pdflatex final_paper.tex  (run twice for cross-references)
 % ---------------------------------------------------------------------------
@@ -89,7 +89,9 @@ firearm violence is the chronic underreporting of gunfire: research finds that o
 20\% of shootings are reported to law enforcement (Irvin-Erickson et al., 2016; Carr \&
 Doleac, 2016). In response, cities have turned to
 gunshot-detection technology---most notably ShotSpotter---to close that measurement gap
-and improve real-time awareness of gunfire (Choi, Librett, \& Collins, 2014).
+and improve real-time awareness of gunfire (Choi, Librett, \& Collins, 2014). This paper
+uses Chicago's deployment of that technology not to re-evaluate it, but to ask what the
+public data most policy debate relies on can---and cannot---identify.
 
 Chicago piloted ShotSpotter in 2012 in two small zones, expanded to full district
 coverage in 2016, and signed a three-year, \$3 million contract to widen coverage in
@@ -107,7 +109,10 @@ evidence (Connealy et al., 2024); a national panel of large metropolitan countie
 the same null for firearm homicides and arrests (Doucette et al., 2021); and a
 district-level study finds that, if anything, the technology slowed dispatch and lowered
 arrest probability (Topper \& Ferrazares, 2024). Replicating that null is not this paper's
-contribution.
+contribution. What no prior evaluation has done is run the design at the community-area
+level---the 77-unit geography in which Chicago's open data are published and its policy
+debate is conducted, finer than the police districts of the existing Chicago evaluations
+(Connealy et al., 2024; Topper \& Ferrazares, 2024).
 
 Our question is instead a methodological one: can the public, community-area-level data
 that dominate policy debate \emph{identify} such an effect at all, and what happens when a
@@ -203,7 +208,9 @@ areas plus the city total).
 
 The ShotSpotter dataset reveals the staggered rollout structure that the analysis
 exploits: 21 community areas appear in the data beginning in early 2017 and 30 between
-mid-2017 and mid-2018, leaving 26 never-treated areas. The original project pipeline
+mid-2017 and mid-2018, leaving 26 never-treated areas. Treatment status is inferred from
+alert presence, so a community area counts as treated when district-level sensor coverage
+reached any part of it. The original project pipeline
 collapses both cohorts to a single 2017 cutoff---the standard convention, but one that
 biases pooled estimates when treatment timing varies (Goodman-Bacon, 2021), motivating
 the cohort-aware estimators below. Homicide and alert data are aggregated to the
@@ -280,16 +287,20 @@ Alert volume in covered neighborhoods is enormous: roughly 222,000 alerts across
 seven years and 51 communities, with the heaviest-coverage areas (Austin, West
 Englewood, Englewood, North Lawndale) generating 8,000--15,000 alerts each. Both alert
 volume and homicide counts peak in the same months (May--August) and the same hours (10
-PM to 1 AM); Figure~\ref{fig:hourly} shows the within-day co-movement. As a
-\emph{measurement instrument}, ShotSpotter works. The open question is whether detection
-translated into fewer homicides.
+PM to 1 AM); Figure~\ref{fig:hourly} shows the within-day co-movement. That co-movement is
+expected---detected gunfire and gun homicide share the same late-night diurnal cycle---so we
+read the figure only as validation that the sensor network captures the gunfire it was
+purchased to capture, not as a finding in its own right. As a \emph{measurement
+instrument}, ShotSpotter works. The question these data must answer is whether detection
+translated into fewer homicides---and whether they can answer it at all.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{hourly_pattern.png}
 \caption{ShotSpotter alerts and gun homicides rise and fall together over the day, both
-bottoming out mid-morning and peaking late at night. The system detects the gunfire it
-is designed to detect.}
+bottoming out mid-morning and peaking late at night---an expected co-movement, shown as
+validation of the sensor network rather than as a finding. The system detects the gunfire
+it is designed to detect.}
 \label{fig:hourly}
 \end{figure}
 
@@ -545,10 +556,15 @@ The paper has so far asserted that ShotSpotter was assigned because of pre-exist
 violence. Because that selection is the hinge of every identification problem here, we
 estimate it directly, modeling ShotSpotter placement across all 77 community areas as a
 function of pre-period (2009--2016) gun-homicide levels and the 2008--2012 Census
-socioeconomic indicators. Two facts emerge. First, placement tracks structural
+socioeconomic indicators. One caveat governs the exercise: the city's siting decision was
+administrative and made at the police-district level---the OIG documents deployment across
+twelve districts---so community-area treatment is the neighborhood-level footprint of that
+coarser choice, and the model describes what that footprint tracks, not 77 independent
+siting decisions. Two facts emerge. First, placement tracks structural
 disadvantage even more tightly than the homicide count itself (Figure~\ref{fig:placement}):
-the hardship index separates treated from never-treated areas with an AUC of $0.93$ and
-per-capita income with $0.92$, against $0.79$ for the pre-period gun-homicide count, and
+the hardship index separates treated from never-treated areas with an AUC of $0.93$, and
+per-capita income and unemployment each with $0.92$, against $0.79$ for the pre-period
+gun-homicide count, and
 once hardship is held fixed the violence count adds essentially nothing (its coefficient is
 statistically insignificant). Violence and disadvantage are entangled---the same
 neighborhoods score high on both---so this does not say violence was irrelevant; it says
@@ -560,8 +576,10 @@ model on pre-period violence, hardship, and income separates the two groups with
 $0.94$; the median propensity is $0.97$ for ShotSpotter areas against $0.19$ for
 never-treated areas; and the six highest-violence study neighborhoods all carry a placement
 propensity of at least $0.97$---a band that \emph{no} never-treated area reaches
-(Figure~\ref{fig:overlap}). This is the selection-side statement of the counterfactual
-problem: the city installed ShotSpotter in essentially every highest-violence,
+(Figure~\ref{fig:overlap}). The natural comparison---neighborhoods similar in pre-period
+violence that did not receive ShotSpotter---therefore does not exist in Chicago, which is
+exactly why the synthetic control below cannot be constructed. This is the selection-side
+statement of the counterfactual problem: the city installed ShotSpotter in essentially every highest-violence,
 highest-hardship neighborhood, leaving no comparably situated untreated unit from which to
 build a counterfactual for the units the study is about.
 
@@ -704,7 +722,7 @@ noise, the 2016 anomaly, or the pre-existing trend differences across neighborho
 falls far short of the reduction a \$3 million detection contract was meant to deliver.
 
 % ===========================================================================
-\section{Why Detection Did Not Reduce Violence}
+\section{Why Detection Would Not Be Expected to Reduce Violence}
 
 Three explanations are consistent with this empirical pattern.
 
@@ -757,6 +775,15 @@ more reason the effect is not cleanly identified---but the reported incidence-ra
 best read as a pooled two-way-FE summary, not a heterogeneity-robust ATT. And the analysis
 observes neither police response times, dispatch decisions, nor arrests---the actual channel
 through which detection could plausibly reduce violence.
+
+The comparison a credible design needs---similarly violent places without detection---must
+therefore be built outside the community-area frame, and the existing literature shows how:
+Connealy et al. (2024) construct it by matching Chicago police districts, and Doucette et
+al. (2021) by comparing metropolitan counties nationally; both recover the null this panel
+cannot identify. Within Chicago, three designs would do better with data the city has not
+released: a geographic regression discontinuity at sensor-coverage boundaries (which
+requires the unreleased coverage polygons), estimation at census-tract-by-month resolution,
+and direct measurement of the response-time mechanism around each activation date.
 
 % ===========================================================================
 \section{Conclusion}
@@ -858,7 +885,7 @@ deployments in Chicago in 21 months, according to new study}. Northwestern Pritz
 of Law.
 
 Moreau-Kastler, N. (2025). \emph{Proportional treatment effects in staggered settings: An
-approach for Poisson PML}. Working paper, Sciences Po.
+approach for Poisson pseudo-maximum likelihood}. Working paper, Sciences Po.
 
 Office of Inspector General, City of Chicago. (2021, August 24). \emph{The Chicago Police
 Department's use of ShotSpotter technology}.

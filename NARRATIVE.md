@@ -69,7 +69,7 @@ Separately from these outcome models, we estimate a cross-sectional model of *tr
 
 ### 5.1 ShotSpotter detected what it was designed to detect
 
-Alert volume in covered neighborhoods is enormous: 222,000 alerts across roughly seven years and 51 communities, with the heaviest-coverage areas (Austin, West Englewood, Englewood, North Lawndale) generating 8,000–15,000 alerts each. Both alert volume and homicide counts peak in the same months (May–August) and the same hours (10 PM to 1 AM), confirming that the system detects the activity it claims to detect. As a *measurement instrument*, ShotSpotter works.
+Alert volume in covered neighborhoods is enormous: 222,000 alerts across roughly seven years and 51 communities, with the heaviest-coverage areas (Austin, West Englewood, Englewood, North Lawndale) generating 8,000–15,000 alerts each. Both alert volume and homicide counts peak in the same months (May–August) and the same hours (10 PM to 1 AM) — an expected pattern, since alerts and homicides both track the diurnal cycle of gunfire, and read here only as validation that the system detects the activity it claims to detect. As a *measurement instrument*, ShotSpotter works.
 
 ### 5.2 The headline OLS DiD is positive — but disappears under count-data regression
 
