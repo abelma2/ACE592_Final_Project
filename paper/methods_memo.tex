@@ -2,7 +2,7 @@
 
 % ---------------------------------------------------------------------------
 % Detection Without Identification -- methods-memo version (~8 pp.)
-% Austin Belman. Single-author, single-spaced working paper.
+% Austin Belman and Kameron Nelson. Single-spaced working-paper version of the full paper.
 % Compile: pdflatex methods_memo.tex  (run twice for cross-references)
 % ---------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@
 
 \title{\vspace{-1.5em}\textbf{Detection Without Identification: A Validity Assessment of the
 ShotSpotter Difference-in-Differences Design in Chicago, 2009--2023}}
-\author{Austin Belman}
+\author{Austin Belman and Kameron Nelson}
 \date{June 2026}
 
 \begin{document}
@@ -37,7 +37,7 @@ ShotSpotter Difference-in-Differences Design in Chicago, 2009--2023}}
 \noindent
 A two-way fixed-effects difference-in-differences regression of Chicago gun homicides on
 ShotSpotter installation returns a positive, statistically significant estimate of
-$+2.63$ homicides per community-area-year ($p < 0.001$). I show that the estimate is an
+$+2.63$ homicides per community-area-year ($p < 0.001$). We show that the estimate is an
 artifact of two choices rather than a treatment effect. Modeling integer homicide counts
 with ordinary least squares inflates the coefficient; estimated by Poisson or Negative
 Binomial regression with the same fixed effects, the effect falls to an incidence-rate
@@ -50,8 +50,8 @@ never-treated community areas are lower-violence than any treated neighborhood, 
 donor pool reproduces a treated unit. The Callaway and Sant'Anna (2021) estimator returns
 a negative overall effect that reverses sign when a single outlier year (2016) is
 dropped. Across every design the data do not identify a causal effect of ShotSpotter on
-gun homicides in either direction, and they are inconsistent with the large reduction a
-\$3 million detection contract was expected to produce. The methodological lesson
+gun homicides in either direction, and they are inconsistent with a large deterrence
+effect of the kind a \$3 million detection contract was expected to produce. The methodological lesson
 generalizes: a coefficient can survive fixed effects and robustness restrictions and
 still reflect specification choice and a design without a valid counterfactual.
 \end{abstract}
@@ -66,11 +66,14 @@ acted on that premise. The city expanded ShotSpotter to 51 of its 77 community a
 audit found that alerts rarely produced investigative evidence (Office of Inspector
 General, 2021).
 
-The policy question is whether the program reduced gun violence. The methodological
-question, which I treat as primary, is whether the available data can answer the policy
-question at all. I estimate the effect of ShotSpotter installation on gun homicides using
-a community-area-by-year panel for 2009 to 2023, and I hold each estimate against the
-assumptions its design requires. The headline difference-in-differences estimate is
+The policy question is whether the program reduced gun violence---and for Chicago it is
+largely settled: district-level (Connealy et al., 2024) and national (Doucette et al.,
+2021) evaluations find no crime-reduction effect, so the contribution here is the
+identification assessment, not the null. The methodological question, which we treat as
+primary, is whether the available data can answer the policy question at all. We estimate
+the effect of ShotSpotter installation on gun homicides using a community-area-by-year
+panel for 2009 to 2023, and we hold each estimate against the assumptions its design
+requires. The headline difference-in-differences estimate is
 positive and significant. It does not survive correct modeling of the outcome, a test of
 parallel pre-trends, a placebo on pre-rollout years, or a check on the adequacy of the
 comparison group. The contribution is the demonstration itself: a worked case in which a
@@ -112,7 +115,7 @@ Difference-in-differences identifies a causal effect only if treated and control
 would have followed parallel paths absent treatment. Chicago's data strain that condition
 from the start. The treated areas began the period with roughly nine times the control
 areas' homicide rate, so the comparison rests on parallel trends rather than on
-comparable levels. I test the conditions the design needs and report each test against the
+comparable levels. We test the conditions the design needs and report each test against the
 threat it addresses (Table~\ref{tab:threats}).
 
 \begin{table}[H]
@@ -301,13 +304,17 @@ a reduction, because reading the negative event-study coefficients literally ign
 the base year is anomalous. The count-data confidence interval spans a 13\% reduction to a
 33\% increase, the full policy-relevant range.
 
-One conclusion survives. The data are inconsistent with a large reduction. An intervention
-large enough to justify a \$3 million detection contract would leave negative
-post-treatment coefficients with intervals excluding zero, stability across
+One conclusion survives. The data are inconsistent with a large \emph{deterrence} effect.
+An intervention large enough to justify a \$3 million detection contract would leave
+negative post-treatment coefficients with intervals excluding zero, stability across
 specifications, and a clearer signal in the higher-powered non-fatal-shooting series,
-which carries about 30,000 events. None of these appears. Whatever effect ShotSpotter had
-on homicides was too small to separate from noise, from the 2016 anomaly, and from
-pre-existing trend differences across neighborhoods.
+which carries about 30,000 events. None of these appears. These data bound only the
+deterrence channel, however: a survival-channel mortality benefit of the size a boundary
+regression discontinuity attributes to faster emergency response (University of Chicago
+Crime Lab, 2024; not peer-reviewed) lies inside the count-model confidence interval and
+would be invisible in an area-by-year homicide panel. Whatever effect ShotSpotter had on
+homicides through deterrence was too small to separate from noise, from the 2016 anomaly,
+and from pre-existing trend differences across neighborhoods.
 
 \section{A better-identified design}
 
@@ -355,6 +362,16 @@ Choi, K. S., Librett, M., \& Collins, T. J. (2014). An empirical evaluation: Gun
 detection system and its effectiveness on police practices. \emph{Police Practice and
 Research, 15}(1), 48--61.
 
+Connealy, N. T., Piza, E. L., Arietti, R. A., Carter, J. G., \& Mohler, G. (2024).
+Staggered deployment of gunshot detection technology in Chicago, IL: A matched
+quasi-experiment of gun violence outcomes. \emph{Journal of Experimental Criminology,
+20}(4), 1027--1053.
+
+Doucette, M. L., Green, C., Necci Dineen, J., Shapiro, D., \& Raissian, K. M. (2021).
+Impact of ShotSpotter technology on firearm homicides and arrests among large
+metropolitan counties: A longitudinal analysis, 1999--2016. \emph{Journal of Urban
+Health, 98}(5), 609--621.
+
 Goodman-Bacon, A. (2021). Difference-in-differences with variation in treatment timing.
 \emph{Journal of Econometrics, 225}(2), 254--277.
 
@@ -363,6 +380,9 @@ violence on local economies}. Urban Institute.
 
 Office of Inspector General, City of Chicago. (2021, August 24). \emph{The Chicago Police
 Department's use of ShotSpotter technology}.
+
+University of Chicago Crime Lab. (2024). Op-ed and replication analysis of ShotSpotter and
+shooting fatality in Chicago [not peer-reviewed].
 
 \end{flushleft}
 

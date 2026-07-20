@@ -8,7 +8,8 @@
 51 of 77 community areas in 2017–2018 and cancelled in 2023. That gunshot detection
 *doesn't* reduce gun violence is, by now, well established — including for Chicago at the
 police-district level (Connealy et al. 2024, *J. Experimental Criminology*) and nationally
-(Doucette et al. 2021, *J. Urban Health*). So this project asks a sharper, methodological
+(Doucette et al. 2021, *J. Urban Health*), with a 2026 meta-analysis of 44 estimates
+pooling to a null (Huff, Dunlap & Pearson 2026, *Am. J. Criminal Justice*). So this project asks a sharper, methodological
 question: **can the community-area data that most local policy argument relies on even
 *identify* such an effect — and what happens when a standard evaluation is run on them
 without asking?**
@@ -33,7 +34,7 @@ effect, but cannot exclude the survival-channel benefit a boundary regression di
 attributes to faster emergency response — a magnitude that sits *inside* the confidence
 interval this panel can resolve.
 
-**How I get there** — and how you can reproduce it from the data and code below — is a
+**How we get there** — and how you can reproduce it from the data and code below — is a
 sequence of increasingly demanding causal-inference designs on a community-area × year
 panel of Chicago gun homicides, 2009–2023, plus a cross-sectional model of *treatment
 assignment* itself. The figures below walk the evidence in order; the formatted paper is
@@ -160,7 +161,9 @@ areas, and — conditional on violence, hardship, and income — a one-SD increa
 share still raises the probability of placement by +33 points (p = 0.002) and the Hispanic
 share by +28 (p = 0.003). Race, hardship, and violence are deeply entangled in a segregated
 city, so this is a descriptive pattern, not proof that race drove siting *independently* of
-disadvantage — but it is the concentrated-surveillance pattern advocacy groups described.
+disadvantage — but it is the concentrated-surveillance pattern the MacArthur Justice Center
+and the city's Inspector General already documented; our marginal addition is the
+*conditional* result (race predicts placement even after violence and hardship are held fixed).
 
 ![Propensity-score overlap](plots/placement_propensity_overlap.png)
 
@@ -191,7 +194,7 @@ The gold-standard estimator for staggered rollouts — Callaway & Sant'Anna (202
 returns an overall ATT of **−2.45 (p < 0.01)** on the full panel, the *opposite* sign of
 OLS. But that negative is not a property of the method: it is driven almost entirely by
 the 2016 record-homicide year sitting at the *k* = −1 baseline. **Exclude 2016 and the
-same estimator returns +1.90 (p < 0.01) — back to the sign of OLS.** The event study
+same estimator returns +1.90 (SE 0.72) — back to the sign of OLS.** The event study
 makes this visible: only the *k* = −1 (2016) pre-coefficient is significant; the rest
 hover at zero.
 
@@ -228,7 +231,7 @@ the city's 2023 decision to end the contract. Full argument and limitations:
 
 ## Limitations & next steps
 
-I'd rather name the soft spots than have a reviewer find them:
+We'd rather name the soft spots than have a reviewer find them:
 
 - **The identification ceiling is the data, not just the method.** Chicago deployed
   ShotSpotter in *every* high-violence neighborhood, so there is no untreated unit at
@@ -353,7 +356,9 @@ clone with no path edits. (The hotspot maps fetch basemap tiles over the network
 
 ## Contact
 
-Austin Belman — abelma2@illinois.edu
+Austin Belman — abelma2@illinois.edu (repository maintainer)
+
+Paper co-authored with Kameron Nelson.
 
 ## License
 
