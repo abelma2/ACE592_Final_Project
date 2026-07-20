@@ -384,9 +384,11 @@ heterogeneity at the neighborhood level: individual before/after changes in the
 gun-homicide rate range from about $-2\%$ (West Englewood) to $+62\%$ (South Shore), and
 even the pooled estimate ($+23\%$, excluding COVID) carries a wide interval.
 For completeness, non-fatal gunshot injuries (a four-times-larger sample) yield $\beta =
-+7.51$ under OLS ($p = 0.009$), but should be re-estimated under Poisson for the same
-reason; that exercise is left to follow-up work and is unlikely to overturn the
-qualitative pattern.
++7.51$ under OLS ($p = 0.009$)---and the count-data correction is even starker there:
+estimated as Poisson or Negative Binomial with the same fixed effects, the point estimate
+flips \emph{below} one and is statistically null in every specification (IRRs
+$0.84$--$0.92$, $p \geq 0.23$). The higher-powered outcome delivers the same verdict as
+the homicide series: the additive OLS coefficient is a scale artifact.
 
 \begin{figure}[H]
 \centering
@@ -522,7 +524,14 @@ Callaway--Sant'Anna estimator is precisely the tool the staggered-adoption liter
 prescribes to remove the negative weighting that can flip a two-way fixed-effects
 coefficient under heterogeneous timing (Goodman-Bacon, 2021; de Chaisemartin \&
 D'Haultf\oe uille, 2020). That even it returns a sign contingent on a single year confirms
-the parameter is not identified in these data, rather than restoring it.
+the parameter is not identified in these data, rather than restoring it. A
+Goodman--Bacon decomposition of the staggered two-way fixed-effects estimate ($+2.48$,
+cohort-specific timing) locates the problem precisely: the ``forbidden'' comparison of
+the 2018 cohort against the already-treated 2017 cohort carries only $4.6\%$ of the
+weight, and the weighted 2$\times$2 components reproduce the aggregate exactly
+(Figure~\ref{fig:bacon}). Negative-weighting contamination is therefore minor in this
+panel---the instability comes from the 2016 anomaly and the absence of a valid control
+group, not from the staggered aggregation itself.
 
 \begin{table}[H]
 \centering
@@ -547,6 +556,16 @@ Never-treated, excl.\ 2016    & $+1.895$ & 0.724 \\
 rides on the single 2016 pre-coefficient; dropping 2016 flips the overall estimate back
 to the sign of OLS.}
 \label{fig:cs}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{bacon_decomposition.png}
+\caption{Goodman--Bacon decomposition of the staggered TWFE estimate. The ``forbidden''
+already-treated comparison (red diamond) carries only 4.6\% of the weight; the weighted
+2$\times$2 components reproduce the aggregate coefficient exactly. The estimate's
+instability is not staggered-timing contamination.}
+\label{fig:bacon}
 \end{figure}
 
 \subsection{The selection mechanism: what predicted placement}
@@ -754,9 +773,11 @@ itself cannot identify a clean treatment effect from these data, because the cit
 generate the counterfactual we need---Chicago neighborhoods with ShotSpotter-eligible
 violence levels but no ShotSpotter installation. Beyond that, several caveats are worth
 naming explicitly. The panel is annual, masking within-year dynamics. Standard errors
-cluster on community area (about 77 clusters); a wild-cluster bootstrap would be more
-conservative with this few clusters. The non-fatal-shootings outcome is still estimated
-under OLS and should be re-estimated as a count model. Two event-study implementations
+cluster on community area (about 77 clusters); a restricted wild-cluster bootstrap
+(Cameron, Gelbach, \& Miller, 2008; 999 Rademacher replications) returns $p \approx
+0.001$ for the OLS DiD in every specification, so the headline coefficient is not an
+artifact of thin-cluster inference---the problem is the specification and the design,
+not the standard errors. Two event-study implementations
 are reported---a transparent hand-rolled difference-in-means kept for intuition, and the
 packaged Callaway--Sant'Anna estimator, which should be treated as the authoritative
 staggered-DiD result. The placement model is cross-sectional and descriptive: it documents
@@ -829,6 +850,10 @@ controlling our most pressing crime problem}. Oxford University Press.
 
 Callaway, B., \& Sant'Anna, P. H. C. (2021). Difference-in-differences with multiple time
 periods. \emph{Journal of Econometrics, 225}(2), 200--230.
+
+Cameron, A. C., Gelbach, J. B., \& Miller, D. L. (2008). Bootstrap-based improvements for
+inference with clustered errors. \emph{Review of Economics and Statistics, 90}(3),
+414--427.
 
 Cameron, A. C., \& Trivedi, P. K. (2013). \emph{Regression analysis of count data} (2nd
 ed.). Cambridge University Press.
