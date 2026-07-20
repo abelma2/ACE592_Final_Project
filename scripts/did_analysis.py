@@ -619,7 +619,9 @@ max_hi = max(d["hi"] for d in forest_data)
 xlim_right = max_hi + 18
 
 for i, d in enumerate(forest_data):
-    color = C_GREEN if d["lo"] < 0 else C_RED
+    # red = CI excludes zero (significant increase); neutral gray = CI spans zero.
+    # Gray rather than green: red/green is the classic colorblind-unsafe pairing.
+    color = COLORS["neutral"] if d["lo"] < 0 else C_RED
     if i == n - 1:
         color = "#333333"
         ax.axhline(i, color="#eeeeee", lw=8, zorder=0)
@@ -696,11 +698,19 @@ for group in ["Other (no ShotSpotter)", "Other ShotSpotter",
         subset.plot(ax=ax, color=color_map[group],
                     edgecolor="#666666", linewidth=0.4)
 
-# Labels for original 6 and controls only
+# Labels for original 6 and controls only. Adjacent centroids collide for a few
+# neighbor pairs (West Englewood/Englewood), so nudge those labels apart.
+LABEL_OFFSETS = {
+    "West Englewood": (-0.022, -0.006),
+    "Englewood": (0.016, 0.006),
+    "Irving Park": (0.010, -0.004),
+    "Portage Park": (-0.010, 0.004),
+}
 label_groups = ["Original 6 (ShotSpotter)", "Control (highest-hardship non-SS)"]
 for _, row in gdf_plot[gdf_plot["group"].isin(label_groups)].iterrows():
     c = row.geometry.centroid
-    ax.text(c.x, c.y, row["ca_name"], fontsize=6.5, ha="center", va="center",
+    dx, dy = LABEL_OFFSETS.get(row["ca_name"], (0.0, 0.0))
+    ax.text(c.x + dx, c.y + dy, row["ca_name"], fontsize=6.5, ha="center", va="center",
             fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.18", fc="white", alpha=0.85, ec="none"))
 
