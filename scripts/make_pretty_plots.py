@@ -378,7 +378,9 @@ def plot_hourly():
 
     h1, l1 = ax1.get_legend_handles_labels()
     h2, l2 = ax2.get_legend_handles_labels()
-    ax1.legend(h1 + h2, l1 + l2, loc='upper left', frameon=True,
+    # upper center: both series occupy the upper corners (alerts peak at hour 0-2,
+    # homicides at hour 19-23), so the top-middle band is the only clear region.
+    ax1.legend(h1 + h2, l1 + l2, loc='upper center', frameon=True,
                framealpha=0.9, edgecolor='#cccccc')
 
     ax1.set_title(

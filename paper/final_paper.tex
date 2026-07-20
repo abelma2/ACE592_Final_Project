@@ -11,6 +11,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage{mathptmx}            % Times-like serif
+\usepackage{microtype}           % better justification; eliminates most overfull boxes
 \usepackage{setspace}
 \usepackage{graphicx}
 \graphicspath{{../plots/}}
@@ -152,11 +153,11 @@ violence (Harcourt, 2019; Raphael \& Stoll, 2013).
 The evaluation record on gunshot detection is, by now, fairly settled. Studies at the
 police-district level in Chicago (Connealy et al., 2024) and across metropolitan counties
 nationally (Doucette et al., 2021) find no reduction in shootings, homicides, or case
-clearance---only faster detection and more recovered evidence---and a Chicago district-level
+clearance---only faster detection and more recovered evidence. A Chicago district-level
 study finds detection even slowed dispatch and lowered arrest probability (Topper \&
-Ferrazares, 2024). A 2026 meta-analysis of 44 estimates across eight studies pools to a null
-relative incidence-rate ratio of $1.02$ (95\% CI $[0.90, 1.16]$; Huff, Dunlap, \& Pearson,
-2026). The one channel with a credible claim to benefit is medical: a boundary
+Ferrazares, 2024), and a 2026 meta-analysis of 44 estimates across eight studies pools to a
+null relative incidence-rate ratio of $1.02$ (95\% CI $[0.90, 1.16]$; Huff, Dunlap, \&
+Pearson, 2026). The one channel with a credible claim to benefit is medical: a boundary
 regression discontinuity attributes a lower shooting-fatality rate inside coverage to faster
 emergency response (University of Chicago Crime Lab, 2024, not peer-reviewed). Against that
 backdrop, the question this paper takes up is not whether detection deters homicides---the
@@ -405,8 +406,8 @@ null IRR $\approx 1.07$.}
 \centering
 \includegraphics[width=0.82\textwidth]{forest_plot_effects.png}
 \caption{Neighborhood-level before/after change in the gun-homicide rate (excluding
-COVID), with the pooled DiD estimate at the bottom; significant changes in red,
-non-significant in green. The spread across neighborhoods---from roughly $-2\%$ to
+COVID), with the pooled DiD estimate at the bottom; changes whose intervals exclude zero
+in red, others in gray. The spread across neighborhoods---from roughly $-2\%$ to
 $+62\%$---shows how heavily the pooled headline leans on a few high-count neighborhoods.}
 \label{fig:forest}
 \end{figure}

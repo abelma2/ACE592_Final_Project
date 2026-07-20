@@ -239,9 +239,12 @@ for y, r in zip(y_pos, spec_results):
     ax.plot([r["ci"][0], r["ci"][1]], [y, y], color=color, lw=3, zorder=2)
     ax.plot(r["b"], y, "o", color=color, markersize=11, zorder=3,
             markeredgecolor="white", markeredgewidth=1.2)
+    # white backing box so the zero line never strikes through the label text
     ax.text(r["ci"][1] + 0.18, y,
             f"β = {r['b']:+.2f}  ({format_pvalue(r['p'])}{sig_stars(r['p'])})",
-            va="center", fontsize=10, color=color, fontweight="bold")
+            va="center", fontsize=10, color=color, fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.22", fc="white", alpha=0.9, ec="none"),
+            zorder=4)
 
 ax.set_yticks(y_pos)
 ax.set_yticklabels([r["label"] for r in spec_results], fontsize=11)
