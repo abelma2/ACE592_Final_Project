@@ -58,7 +58,7 @@ we estimate five classes of model: (i) a two-way fixed-effects OLS difference-in
 staggered 2017/2018 rollout; (iv) a synthetic control with permutation inference; and (v)
 pre-period placebo tests. The OLS DiD coefficient is positive and significant ($\beta =
 +2.63$ gun homicides per area-year, $p < 0.001$) and survives unit and year fixed
-effects---but it is a count-data misspecification artifact (Silva \& Tenreyro, 2006):
+effects---but it is a count-data misspecification artifact (Santos Silva \& Tenreyro, 2006):
 estimated as Poisson or Negative Binomial with the same fixed effects, the effect
 collapses to a statistically null incidence-rate ratio of $\approx 1.07$ ($p \approx
 0.5$), with confidence intervals spanning anywhere from a 13\% reduction to a 33\%
@@ -72,14 +72,13 @@ makes the selection explicit: ShotSpotter siting is predicted by structural disa
 and pre-period violence with near-perfect separation (propensity AUC $0.94$), and the six
 highest-violence study neighborhoods have no comparably situated untreated counterpart.
 These data therefore \emph{cannot identify} a causal effect of ShotSpotter on gun
-homicides in either direction. The same non-identification recurs on an independent
-event---Chicago's September 2024 shutoff, where gun homicides were already falling
-city-wide in coverage and comparison areas alike, so the widely cited post-removal decline
-reflects a city-wide trend, not a removal effect. They rule out a large \emph{deterrence}
-effect, but cannot
-exclude the survival-channel mortality benefit that a boundary regression discontinuity
-attributes to faster emergency response---a magnitude that lies inside our confidence
-interval and that this design is not built to detect. The contribution is thus a worked
+homicides in either direction. The installation estimates nonetheless rule out a large
+\emph{deterrence} effect, but cannot exclude the survival-channel mortality benefit that a
+boundary regression discontinuity attributes to faster emergency response---a magnitude
+that lies inside our confidence interval and that this design is not built to detect. The
+same non-identification recurs on an independent event---Chicago's September 2024 shutoff,
+where gun homicides were already falling city-wide in coverage and comparison areas alike,
+so the widely cited post-removal decline reflects a city-wide trend, not a removal effect. The contribution is thus a worked
 identification-limits case: a coefficient can survive fixed effects and robustness
 restrictions and still fail every condition a causal reading requires.
 \end{abstract}
@@ -129,7 +128,7 @@ instability is diagnostic, not incidental. It is the signature of a research des
 valid control group and a pre-period dominated by a single anomalous year. Three findings
 organize the paper. First, a standard two-way fixed-effects DiD manufactures a large,
 significant, robustness-surviving positive coefficient that collapses to a null the moment
-the count outcome is modeled correctly (Silva \& Tenreyro, 2006; Wilson, 2022)---a worked
+the count outcome is modeled correctly (Santos Silva \& Tenreyro, 2006; Wilson, 2022)---a worked
 instance, on a live \$3 million procurement decision, of a coefficient that passes every
 routine check yet fails a causal reading (LaLonde, 1986). Second, we estimate the selection
 mechanism the design founders on: ShotSpotter placement is predicted by structural
@@ -263,8 +262,9 @@ into treatment.}
 
 In a randomized experiment we would compare treated neighborhoods to a control group
 drawn from the same distribution of pre-treatment violence. Chicago's data do not allow
-that. Because the 51 ShotSpotter neighborhoods had roughly nine times the homicide rate
-of the 26 non-ShotSpotter neighborhoods \emph{before} deployment, any
+that. Because the 51 ShotSpotter neighborhoods had roughly nine times as many gun homicides in
+aggregate as the 26 non-ShotSpotter neighborhoods---about 4.6 times as many per
+area---\emph{before} deployment, any
 difference-in-differences contrast must lean on the parallel-trends assumption: that,
 absent ShotSpotter, the two groups would have moved in parallel. Much of the paper is a
 sustained test of whether that assumption can survive contact with the data.
@@ -284,7 +284,11 @@ level, estimated on the full panel and with three robustness restrictions (exclu
 \item \textbf{Count-data regression.} Poisson and Negative Binomial DiD with the same
 two-way fixed effects, appropriate for integer homicide counts. The Negative Binomial
 dispersion is \emph{estimated} (Cameron--Trivedi NB2 auxiliary regression; Cameron \&
-Trivedi, 2013) rather than fixed at one.
+Trivedi, 2013) rather than fixed at one. As a heterogeneity-robust count analog of the
+Callaway--Sant'Anna estimator---and a check that the count-model null is not a
+fixed-effects weighting artifact---we also report a Poisson extended two-way fixed-effects
+model (Wooldridge, 2023), which saturates the treatment in cohort and calendar time and
+aggregates cohort-by-year effects from clean never-treated comparisons.
 
 \item \textbf{Event studies.} A transparent, hand-rolled cohort-specific ATT$(g,k)$
 estimator (2017 and 2018 cohorts versus the 26 never-treated areas, sample-weighted,
@@ -414,7 +418,7 @@ For completeness, non-fatal gunshot injuries (a four-times-larger sample) yield 
 estimated as Poisson or Negative Binomial with the same fixed effects, the point estimate
 flips \emph{below} one and is statistically null in every specification (IRRs
 $0.84$--$0.92$, $p \geq 0.23$). The higher-powered outcome delivers the same verdict as
-the homicide series: the additive OLS coefficient is a scale artifact. The same artifact
+the homicide series: the additive OLS coefficient is a scale artifact. The same distortion
 recurs, unchanged, when the identical difference-in-differences is run on weapons-violation
 enforcement rather than homicides---an order-of-magnitude-larger OLS coefficient that again
 collapses to a null incidence-rate ratio, confirming the inflation is a property of the
@@ -750,7 +754,7 @@ On a common (indexed) scale the two groups decline in near-lockstep straight thr
 removal date (Figure~\ref{fig:removal}): coverage-area homicides fell 37\% from the pre- to
 the post-removal window, but never-treated areas fell 31\% over the very same months. The
 naive ``crime fell after ShotSpotter left'' comparison attributes a city-wide trend to the
-shutoff, the mirror image of the naive ``crime rose after ShotSpotter arrived'' comparison
+shutoff, the exact inverse of the naive ``crime rose after ShotSpotter arrived'' comparison
 that would have credited the 2016--2021 rise to the rollout.
 
 Second, the scale artifact. Netting out the common trend with a difference-in-differences
@@ -759,7 +763,7 @@ Section~\ref{sec:count}: it returns a ``significant'' removal \emph{benefit} of 
 homicides per area-month ($p < 0.001$)---but only because coverage areas start from a far
 higher baseline ($0.85$ versus $0.20$ gun homicides per area-month) and so move more in
 absolute terms for the same proportional change. On the correct multiplicative scale the
-removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.55, 1.52]$). The post window is also
+removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.54, 1.52]$). The post window is also
 short---seven complete months, with 2025 only partially observed---so the estimate is
 under-powered on top of being non-identified. Both the raw drop and the additive DiD are
 mirages: these data can no more identify the removal effect than the installation effect, in
