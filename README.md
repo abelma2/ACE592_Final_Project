@@ -409,8 +409,6 @@ clone with no path edits. (The hotspot maps fetch basemap tiles over the network
 
 Austin Belman — abelma2@illinois.edu (repository maintainer)
 
-Paper co-authored with Kameron Nelson.
-
 ## License
 
 MIT — see [LICENSE](LICENSE).
