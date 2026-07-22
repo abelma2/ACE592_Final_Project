@@ -213,6 +213,8 @@ from the Chicago Data Portal:
 fall in our analysis window).
 \item \textbf{Census Data---Selected Socioeconomic Indicators, 2008--2012} (77 community
 areas plus the city total).
+\item \textbf{ACS 5-Year Data by Community Area} (racial composition) and \textbf{Public
+Health Statistics---Life Expectancy by Community Area} (2010), used in the placement model.
 \item \textbf{Community Areas GeoJSON} (77 polygons).
 \end{itemize}
 
@@ -598,7 +600,10 @@ once hardship is held fixed the violence count adds essentially nothing (its coe
 statistically insignificant). Violence and disadvantage are entangled---the same
 neighborhoods score high on both---so this does not say violence was irrelevant; it says
 the city sited ShotSpotter along the map of disinvestment, of which concentrated gun
-violence is one facet.
+violence is one facet. The starkest summary of that map is not economic but biological: the
+ShotSpotter neighborhoods averaged 76 years of life expectancy in 2010 against 80 in the
+never-treated areas (Figure~\ref{fig:placement})---a four-year gap that states plainly who
+lives under the surveillance the city purchased.
 
 Second, and decisively for identification, placement is nearly deterministic. A propensity
 model on pre-period violence, hardship, and income separates the two groups with an AUC of
@@ -874,8 +879,9 @@ Every input is a public product of the City of Chicago Data Portal
 (\url{https://data.cityofchicago.org}): Violence Reduction---Victims of Homicides and
 Non-Fatal Shootings (\texttt{gumc-mgzr}); Violence Reduction---ShotSpotter Alerts
 (Historical) (\texttt{3h7q-7mdb}); Census Data---Selected Socioeconomic Indicators,
-2008--2012 (\texttt{kn9c-c2s2}); ACS 5-Year Data by Community Area (\texttt{t68z-cikk}); and
-the Community Areas boundary file (\texttt{cauq-8yn6}). The complete analysis
+2008--2012 (\texttt{kn9c-c2s2}); ACS 5-Year Data by Community Area (\texttt{t68z-cikk});
+Public Health Statistics---Life Expectancy by Community Area (\texttt{qjr3-bm53}); and the
+Community Areas boundary file (\texttt{cauq-8yn6}). The complete analysis
 pipeline---data-processing, all five estimator classes, the placement model, and every
 figure---is openly available and reproduces the paper end to end at
 \url{https://github.com/abelma2/ACE592_Final_Project}.
