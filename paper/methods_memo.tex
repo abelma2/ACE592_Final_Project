@@ -163,7 +163,12 @@ $[0.86, 1.33]$, $p = 0.55$), with the dispersion estimated at about $0.02$ throu
 Cameron and Trivedi (2013) NB2 auxiliary regression rather than fixed at one. The interval
 admits anywhere from a 13\% reduction to a 33\% increase in homicides. On the additive
 scale the program looks consequential; on the multiplicative scale it is indistinguishable
-from zero (Figure~\ref{fig:spec}).
+from zero (Figure~\ref{fig:spec}). Because the plain Poisson is itself a two-way fixed-effects
+PPML, which under the staggered rollout inherits the same heterogeneity-weighting concern as
+linear TWFE, we confirm the null with a heterogeneity-robust Poisson extended two-way
+fixed-effects estimator (Wooldridge, 2023): the overall ATT incidence-rate ratio is $1.05$
+(95\% CI $[0.79, 1.33]$, community-area cluster bootstrap), with cohort-time effects at one
+at every horizon. The null is not an artifact of the plain PPML's fixed-effects weighting.
 
 \begin{table}[H]
 \centering
@@ -393,6 +398,9 @@ Department's use of ShotSpotter technology}.
 
 University of Chicago Crime Lab. (2024). Op-ed and replication analysis of ShotSpotter and
 shooting fatality in Chicago [not peer-reviewed].
+
+Wooldridge, J. M. (2023). Simple approaches to nonlinear difference-in-differences with
+panel data. \emph{The Econometrics Journal, 26}(3), C31--C66.
 
 \end{flushleft}
 

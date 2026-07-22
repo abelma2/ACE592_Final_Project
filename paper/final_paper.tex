@@ -62,7 +62,9 @@ effects---but it is a count-data misspecification artifact (Silva \& Tenreyro, 2
 estimated as Poisson or Negative Binomial with the same fixed effects, the effect
 collapses to a statistically null incidence-rate ratio of $\approx 1.07$ ($p \approx
 0.5$), with confidence intervals spanning anywhere from a 13\% reduction to a 33\%
-increase. The design also fails a joint parallel-trends Wald test ($F = 19.9$, $p =
+increase; a heterogeneity-robust Poisson extended two-way fixed-effects estimator
+(Wooldridge, 2023) returns the same null, so the result is not a fixed-effects weighting
+artifact. The design also fails a joint parallel-trends Wald test ($F = 19.9$, $p =
 0.006$), produces similarly ``significant'' coefficients when treatment is faked in
 pre-rollout years, and admits no feasible synthetic control because the 26 never-treated
 areas are systematically lower-violence than any treated neighborhood. A placement model
@@ -70,7 +72,11 @@ makes the selection explicit: ShotSpotter siting is predicted by structural disa
 and pre-period violence with near-perfect separation (propensity AUC $0.94$), and the six
 highest-violence study neighborhoods have no comparably situated untreated counterpart.
 These data therefore \emph{cannot identify} a causal effect of ShotSpotter on gun
-homicides in either direction. They rule out a large \emph{deterrence} effect, but cannot
+homicides in either direction. The same non-identification recurs on an independent
+event---Chicago's September 2024 shutoff, where gun homicides were already falling
+city-wide in coverage and comparison areas alike, so the widely cited post-removal decline
+reflects a city-wide trend, not a removal effect. They rule out a large \emph{deterrence}
+effect, but cannot
 exclude the survival-channel mortality benefit that a boundary regression discontinuity
 attributes to faster emergency response---a magnitude that lies inside our confidence
 interval and that this design is not built to detect. The contribution is thus a worked
@@ -133,6 +139,10 @@ literally non-constructible rather than merely imperfect. Third, we state the su
 envelope honestly: the data rule out a large \emph{deterrence} effect but cannot exclude a
 survival-channel mortality benefit of the kind a boundary regression discontinuity
 attributes to faster response---a magnitude that falls inside our own confidence interval.
+The same two failures resurface when we treat Chicago's September 2024 removal of the system
+as an independent second experiment---a city-wide decline mistaken for a treatment effect,
+and an additive coefficient a count model erases---confirming that the non-identification is
+structural rather than an accident of how the installation happens to be timed.
 We close with the conclusion the data robustly support---that ShotSpotter functioned as a
 detection instrument, not as a demonstrated violence-reduction intervention---a reading
 consistent with the 2023 decision to end the contract.
@@ -320,6 +330,7 @@ it is designed to detect.}
 \end{figure}
 
 \subsection{The headline OLS DiD is positive---but disappears under count-data regression}
+\label{sec:count}
 
 The two-way fixed-effects DiD coefficient on the full 2009--2023 panel is
 $\beta = +2.627$ gun homicides per community-area-year (SE $= 0.638$, $p < 0.001$, 95\%
@@ -403,7 +414,11 @@ For completeness, non-fatal gunshot injuries (a four-times-larger sample) yield 
 estimated as Poisson or Negative Binomial with the same fixed effects, the point estimate
 flips \emph{below} one and is statistically null in every specification (IRRs
 $0.84$--$0.92$, $p \geq 0.23$). The higher-powered outcome delivers the same verdict as
-the homicide series: the additive OLS coefficient is a scale artifact.
+the homicide series: the additive OLS coefficient is a scale artifact. The same artifact
+recurs, unchanged, when the identical difference-in-differences is run on weapons-violation
+enforcement rather than homicides---an order-of-magnitude-larger OLS coefficient that again
+collapses to a null incidence-rate ratio, confirming the inflation is a property of the
+additive specification and not of homicide counts (Appendix~\ref{app:procedural}).
 
 \begin{figure}[H]
 \centering
@@ -426,47 +441,7 @@ $+62\%$---shows how heavily the pooled headline leans on a few high-count neighb
 \label{fig:forest}
 \end{figure}
 
-\subsection{The procedural channel, and why the artifact is general}
-
-Gunshot detection is documented to improve \emph{process} outcomes---faster detection, more
-ballistic evidence, more gun recoveries---even where it does not reduce victimization (Piza
-et al., 2024). Chicago's process measures are FOIA-only, but the public analog is
-weapons-violation enforcement from the Crimes dataset (\texttt{ijzp-q8t2}). Running the
-\emph{same} two-way fixed-effects DiD on two enforcement measures---weapons-violation
-incidents and arrests, aggregated to the community-area-by-year panel---yields
-Figure~\ref{fig:procedural}, and it teaches two things.
-
-First, the specification artifact is general. Weapons-violation incidents produce an OLS DiD
-of $+51.8$ per community-area-year ($p < 0.001$)---an order of magnitude larger than the
-homicide coefficient, and just as significant---yet it collapses to a statistically null
-incidence-rate ratio of $1.13$ ($p = 0.48$) under Poisson with the same fixed effects;
-weapons arrests behave identically (OLS $+22.0$, $p < 0.01$; IRR $0.95$, $p = 0.82$). The
-additive-scale inflation that produced the headline homicide coefficient is not a quirk of
-homicide counts---it recurs, unchanged, on a completely different outcome. That is the
-cleanest available demonstration that the OLS DiD is measuring a scale, not an effect.
-
-Second, on the substance, these data do not reproduce the process benefit that a
-microsynthetic control recovers in Kansas City (Piza et al., 2024): weapons enforcement
-shows no detectable relative increase under coverage once the outcome is modeled correctly.
-Whether that reflects the 2021 OIG finding that Chicago's alerts rarely produced
-investigative evidence (Office of Inspector General, 2021), or simply the same absent
-counterfactual that governs every estimate in this paper, these data cannot say. What can be
-said is double-edged: to whatever extent coverage concentrated enforcement, it did so in the
-lowest-life-expectancy, most heavily policed neighborhoods---the ``procedural benefit''
-vendors advertise and the surveillance burden advocates warn of are two readings of the same
-coin.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{procedural_vs_outcome.png}
-\caption{The same two-way fixed-effects DiD applied to a victim outcome (gun homicides) and
-two enforcement-process measures (weapons-violation incidents and arrests). Every outcome
-carries a large, significant OLS coefficient that collapses to a statistically null
-incidence-rate ratio on the count scale---the additive-scale artifact is not specific to
-homicides, and the process channel shows no detectable footprint of coverage in these
-community-area data.}
-\label{fig:procedural}
-\end{figure}
+% [Procedural-channel subsection moved to Appendix~\ref{app:procedural} in the coherence pass.]
 
 \subsection{The design produces ``significant'' placebos}
 
@@ -512,8 +487,8 @@ the 1\% level and of comparable magnitude to the true post-2017 estimate.}
 
 \subsection{The event studies confirm a failure of parallel trends}
 
-The cohort-specific event study (Table~\ref{tab:eventstudy}, aggregated across the 2017
-and 2018 cohorts with never-treated controls) shows that \emph{every} pre-treatment
+The cohort-specific event study (Appendix Table~\ref{tab:eventstudy}, aggregated across the
+2017 and 2018 cohorts with never-treated controls) shows that \emph{every} pre-treatment
 coefficient is large and negative---a clear failure of parallel trends. A formal joint
 Wald $F$-test on the seven pre-treatment interaction coefficients, which is invariant to
 the choice of base year, yields $F = 19.9$, $p = 0.006$, rejecting parallel trends at the
@@ -528,32 +503,7 @@ one does, is telling us the parallel-trends assumption is not available---and th
 response is to report that the effect is not point-identified, not to lean on a single
 base-year normalization.
 
-\begin{table}[H]
-\centering
-\small
-\caption{Cohort-specific event study, aggregated ATT by event time $k$ (years from
-install), sample-weighted, bootstrap CIs.}
-\label{tab:eventstudy}
-\begin{tabular}{ccc}
-\toprule
-$k$ (years from install) & ATT & 95\% CI \\
-\midrule
-$-7$ & $-5.46$ & $[-9.30, -1.62]$ \\
-$-6$ & $-4.54$ & $[-8.53, -0.56]$ \\
-$-5$ & $-5.09$ & $[-8.97, -1.20]$ \\
-$-4$ & $-6.25$ & $[-10.04, -2.46]$ \\
-$-3$ & $-6.09$ & $[-10.01, -2.17]$ \\
-$-2$ & $-4.92$ & $[-8.92, -0.93]$ \\
-$-1$ (base) & $0$ & --- \\
-$\phantom{+}0$ & $-1.95$ & $[-6.57, +2.68]$ \\
-$+1$ & $-4.65$ & $[-8.79, -0.51]$ \\
-$+2$ & $-3.83$ & $[-8.12, +0.47]$ \\
-$+3$ & $+0.10$ & $[-4.85, +5.05]$ \\
-$+4$ & $-0.43$ & $[-5.25, +4.39]$ \\
-$+5$ & $-2.99$ & $[-7.19, +1.22]$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+% [Cohort-specific event-study coefficient table moved to Appendix~\ref{app:eventstudy}.]
 
 \begin{figure}[H]
 \centering
@@ -623,6 +573,34 @@ already-treated comparison (red diamond) carries only 4.6\% of the weight; the w
 2$\times$2 components reproduce the aggregate coefficient exactly. The estimate's
 instability is not staggered-timing contamination.}
 \label{fig:bacon}
+\end{figure}
+
+\subsection{The heterogeneity-robust count estimator agrees}
+
+One loose end remains. The headline null is a Poisson (and Negative Binomial) two-way
+fixed-effects regression, which under a staggered rollout carries the same
+heterogeneity-weighting concern as linear TWFE---a two-way fixed-effects PPML can place
+negative weights on some treated cells (Moreau-Kastler, 2025). And the heterogeneity-robust
+estimator used above, Callaway--Sant'Anna, is \emph{linear}: it does not transfer to the
+multiplicative outcome the count argument itself calls for. The appropriate tool is a
+nonlinear, heterogeneity-robust count estimator, and we estimate it directly---a Poisson
+extended two-way fixed-effects model (Wooldridge, 2023) that saturates the treatment in
+cohort and calendar time, so each cohort-by-year effect is built from clean never-treated
+comparisons before aggregation, with a community-area cluster bootstrap for inference. It
+returns the same null: an overall ATT incidence-rate ratio of $1.05$ (95\% CI $[0.79,
+1.33]$), with cohort-time effects hovering at one at every horizon
+(Figure~\ref{fig:etwfe}). The right tool removes the last escape hatch---the count-model
+null is not an artifact of the plain PPML's weighting.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{etwfe_event_study.png}
+\caption{Wooldridge (2023) extended two-way fixed-effects Poisson event study---the
+heterogeneity-robust estimator for count outcomes under staggered adoption. Every
+cohort-time incidence-rate ratio hovers at one, and the overall ATT is $1.05$ (95\% CI
+$[0.79, 1.33]$, community-area cluster bootstrap). The count-model null is not a weighting
+artifact of the plain PPML.}
+\label{fig:etwfe}
 \end{figure}
 
 \subsection{The selection mechanism: what predicted placement}
@@ -756,6 +734,51 @@ homicide rates after. Cross-sectional variation in violence tracks structural
 disadvantage tightly; cross-sectional variation in ShotSpotter coverage adds little
 explanatory power once disadvantage is held constant.
 
+\subsection{A second natural experiment: the September 2024 removal}
+\label{sec:removal}
+
+Chicago switched ShotSpotter off on 22 September 2024, and the gun-homicide decline that
+followed has been read in public commentary as proof the technology never worked. The
+shutoff is a genuine second experiment, so it is worth asking whether it identifies
+anything the installation did not. It does not---and it fails in precisely the two ways the
+installation estimate fails, which is itself the cleanest confirmation of the paper's
+argument.
+
+First, the common trend. Gun homicides had been falling city-wide from their 2021--2022
+peak for two full years before the shutoff, in ShotSpotter and never-treated areas alike.
+On a common (indexed) scale the two groups decline in near-lockstep straight through the
+removal date (Figure~\ref{fig:removal}): coverage-area homicides fell 37\% from the pre- to
+the post-removal window, but never-treated areas fell 31\% over the very same months. The
+naive ``crime fell after ShotSpotter left'' comparison attributes a city-wide trend to the
+shutoff, the mirror image of the naive ``crime rose after ShotSpotter arrived'' comparison
+that would have credited the 2016--2021 rise to the rollout.
+
+Second, the scale artifact. Netting out the common trend with a difference-in-differences
+does not rescue identification, because the additive DiD reproduces the very artifact of
+Section~\ref{sec:count}: it returns a ``significant'' removal \emph{benefit} of $-0.25$ gun
+homicides per area-month ($p < 0.001$)---but only because coverage areas start from a far
+higher baseline ($0.85$ versus $0.20$ gun homicides per area-month) and so move more in
+absolute terms for the same proportional change. On the correct multiplicative scale the
+removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.55, 1.52]$). The post window is also
+short---seven complete months, with 2025 only partially observed---so the estimate is
+under-powered on top of being non-identified. Both the raw drop and the additive DiD are
+mirages: these data can no more identify the removal effect than the installation effect, in
+either direction. The public debate has confidently drawn both unwarranted inferences.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{removal_trajectory.png}
+\caption{The September 2024 removal as a second natural experiment. Each series is indexed
+to its own 2022--2023 mean ($=100$) and smoothed with a three-month moving average, so the
+two groups are compared on a common proportional scale. Gun homicides fall in near-lockstep
+in ShotSpotter and never-treated areas alike, straight through the removal date and into the
+post-removal window (shaded). The naive ``crime fell after removal'' claim mistakes a
+city-wide decline for a removal effect; the additive difference-in-differences that nets out
+that trend reproduces the paper's scale artifact (a ``significant'' $-0.25$/area-month that
+is null on the multiplicative scale, IRR $0.91$).}
+\label{fig:removal}
+\end{figure}
+
 % ===========================================================================
 \section{What the Data Can and Cannot Support}
 
@@ -766,7 +789,12 @@ regression (Poisson IRR $1.07$, $p = 0.51$; Negative Binomial IRR $1.07$, $p = 0
 control; and (e) a Callaway--Sant'Anna estimate whose sign reverses ($-2.45$ to $+1.90$)
 when one anomalous year is dropped---the evidence points to a single conclusion: \textbf{the
 design cannot credibly identify the causal effect of ShotSpotter installation on gun
-homicides.} Table~\ref{tab:summary} lays out why the estimators differ.
+homicides.} And the September 2024 removal, examined the same way, reproduces both
+failures at once---a city-wide decline mistaken for a treatment effect, and an additive DiD
+that manufactures significance the multiplicative model erases (Section~\ref{sec:removal})---so
+the non-identification is a property of the data and the setting, not an artifact of how the
+installation event happens to be timed. Table~\ref{tab:summary} lays out why the estimators
+differ.
 
 \begin{table}[H]
 \centering
@@ -870,17 +898,7 @@ packaged Callaway--Sant'Anna estimator, which should be treated as the authorita
 staggered-DiD result. The placement model is cross-sectional and descriptive: it documents
 the selection pattern but does not identify a causal siting rule, and its racial-composition
 measure is drawn from the 2019--2023 ACS, a proxy for the pre-rollout composition that
-relies on the persistence of Chicago's neighborhood racial geography. A subtler caveat
-applies to the count models that carry the headline null: the Poisson and Negative Binomial
-DiD use two-way fixed effects, and under a staggered rollout a two-way fixed-effects PPML
-inherits the same heterogeneity-weighting problem as linear TWFE, placing potentially
-negative weights on some treated cells (Moreau-Kastler, 2025). The heterogeneity-robust
-estimator we do report---Callaway--Sant'Anna---is linear and does not transfer to the
-multiplicative outcome the count argument itself calls for; the appropriate tool is a
-nonlinear, heterogeneity-robust count estimator (Wooldridge, 2023; Moreau-Kastler, 2025),
-which we leave to follow-up. This does not rescue a causal reading---if anything it is one
-more reason the effect is not cleanly identified---but the reported incidence-rate ratio is
-best read as a pooled two-way-FE summary, not a heterogeneity-robust ATT. And the analysis
+relies on the persistence of Chicago's neighborhood racial geography. And the analysis
 observes neither police response times, dispatch decisions, nor arrests---the actual channel
 through which detection could plausibly reduce violence.
 
@@ -916,6 +934,91 @@ Cure Violence, Becoming a Man---would, on the existing quasi-experimental eviden
 least as good a chance of producing the homicide reductions ShotSpotter has not been shown
 to deliver at scale. Technology can help detect the problem; on this evidence, it has not
 been shown to solve it.
+
+% ===========================================================================
+\appendix
+\section{The specification artifact recurs on enforcement outcomes}
+\label{app:procedural}
+
+The count-data artifact of Section~\ref{sec:count}---a large, significant additive OLS
+coefficient that collapses to a null incidence-rate ratio under Poisson---is not specific to
+homicide counts. Running the \emph{identical} two-way fixed-effects DiD on a completely
+different outcome reproduces it exactly, which is the cleanest available demonstration that
+the OLS coefficient measures a scale, not an effect.
+
+Gunshot detection is documented to improve \emph{process} outcomes---faster detection, more
+ballistic evidence, more gun recoveries---even where it does not reduce victimization (Piza
+et al., 2024). Chicago's process measures are FOIA-only, but the public analog is
+weapons-violation enforcement from the Crimes dataset (\texttt{ijzp-q8t2}). Running the
+same DiD on two enforcement measures---weapons-violation incidents and arrests, aggregated
+to the community-area-by-year panel---yields Figure~\ref{fig:procedural}, and it teaches two
+things.
+
+First, the specification artifact is general. Weapons-violation incidents produce an OLS DiD
+of $+51.8$ per community-area-year ($p < 0.001$)---an order of magnitude larger than the
+homicide coefficient, and just as significant---yet it collapses to a statistically null
+incidence-rate ratio of $1.13$ ($p = 0.48$) under Poisson with the same fixed effects;
+weapons arrests behave identically (OLS $+22.0$, $p < 0.01$; IRR $0.95$, $p = 0.82$). The
+additive-scale inflation that produced the headline homicide coefficient is not a quirk of
+homicide counts---it recurs, unchanged, on a completely different outcome.
+
+Second, on the substance, these data do not reproduce the process benefit that a
+microsynthetic control recovers in Kansas City (Piza et al., 2024): weapons enforcement
+shows no detectable relative increase under coverage once the outcome is modeled correctly.
+Whether that reflects the 2021 OIG finding that Chicago's alerts rarely produced
+investigative evidence (Office of Inspector General, 2021), or simply the same absent
+counterfactual that governs every estimate in this paper, these data cannot say. What can be
+said is double-edged: to whatever extent coverage concentrated enforcement, it did so in the
+lowest-life-expectancy, most heavily policed neighborhoods---the ``procedural benefit''
+vendors advertise and the surveillance burden advocates warn of are two readings of the same
+coin.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{procedural_vs_outcome.png}
+\caption{The same two-way fixed-effects DiD applied to a victim outcome (gun homicides) and
+two enforcement-process measures (weapons-violation incidents and arrests). Every outcome
+carries a large, significant OLS coefficient that collapses to a statistically null
+incidence-rate ratio on the count scale---the additive-scale artifact is not specific to
+homicides, and the process channel shows no detectable footprint of coverage in these
+community-area data.}
+\label{fig:procedural}
+\end{figure}
+
+\section{Cohort-specific event-study coefficients}
+\label{app:eventstudy}
+
+Table~\ref{tab:eventstudy} reports the aggregated cohort-specific event-study coefficients
+plotted in Figure~\ref{fig:eventstudy}. Every pre-treatment coefficient is large and
+negative, the pattern that the joint Wald test ($F = 19.9$, $p = 0.006$) formalizes as a
+rejection of parallel trends.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Cohort-specific event study, aggregated ATT by event time $k$ (years from
+install), sample-weighted, bootstrap CIs.}
+\label{tab:eventstudy}
+\begin{tabular}{ccc}
+\toprule
+$k$ (years from install) & ATT & 95\% CI \\
+\midrule
+$-7$ & $-5.46$ & $[-9.30, -1.62]$ \\
+$-6$ & $-4.54$ & $[-8.53, -0.56]$ \\
+$-5$ & $-5.09$ & $[-8.97, -1.20]$ \\
+$-4$ & $-6.25$ & $[-10.04, -2.46]$ \\
+$-3$ & $-6.09$ & $[-10.01, -2.17]$ \\
+$-2$ & $-4.92$ & $[-8.92, -0.93]$ \\
+$-1$ (base) & $0$ & --- \\
+$\phantom{+}0$ & $-1.95$ & $[-6.57, +2.68]$ \\
+$+1$ & $-4.65$ & $[-8.79, -0.51]$ \\
+$+2$ & $-3.83$ & $[-8.12, +0.47]$ \\
+$+3$ & $+0.10$ & $[-4.85, +5.05]$ \\
+$+4$ & $-0.43$ & $[-5.25, +4.39]$ \\
+$+5$ & $-2.99$ & $[-7.19, +1.22]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % ===========================================================================
 \section*{Data and Code Availability}
