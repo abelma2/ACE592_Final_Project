@@ -55,33 +55,44 @@ count-data models collapse the headline to a statistically null IRR ≈ 1.07.*
 | **OLS DiD** | +2.63 gun homicides / area-year | [+1.38, +3.88] | **<0.001*** |
 | **Poisson DiD** (two-way fixed effects) | IRR 1.07 | [0.87, 1.33] | 0.51 (ns) |
 | **Negative Binomial DiD** (dispersion estimated) | IRR 1.07 | [0.86, 1.33] | 0.55 (ns) |
+| **ETWFE-Poisson** (Wooldridge 2023, heterogeneity-robust) | IRR 1.05 | [0.79, 1.33] | ns |
 
 The +2.63 OLS coefficient is *robust* to adding community-area and year fixed
 effects — it does **not** come from a missing-controls problem. It comes from
 modeling integer homicide counts as a continuous, homoscedastic outcome. On the
 natural multiplicative (count-data) scale, the effect is statistically null.
 
+The +2.63 collapses to the same null under the heterogeneity-robust count estimator the
+staggered-rollout literature calls for (a Wooldridge 2023 ETWFE-Poisson), so it is not an
+artifact of the plain Poisson's fixed-effects weighting.
+
 The full write-up is in **[NARRATIVE.md](NARRATIVE.md)**; the formatted paper is
 **[paper/final_paper.pdf](paper/final_paper.pdf)**. Regenerable result tables live in
 [docs/results_summary_original.md](docs/results_summary_original.md) (original pipeline),
 [docs/results_summary_reanalysis.md](docs/results_summary_reanalysis.md)
-(re-analysis + robustness), and
+(re-analysis + robustness),
 [docs/results_summary_placement.md](docs/results_summary_placement.md)
-(treatment-assignment / equity model).
+(treatment-assignment / equity model),
+[docs/results_summary_etwfe.md](docs/results_summary_etwfe.md) (ETWFE robustness), and
+[docs/results_summary_removal.md](docs/results_summary_removal.md) (the September 2024
+removal experiment).
 
 ## Methods & skills demonstrated
 
 - **Causal inference:** difference-in-differences (pooled and two-way fixed
   effects), Callaway–Sant'Anna heterogeneity-robust staggered DiD, cohort-specific
   event study, synthetic control with in-space permutation inference, pre-period
-  placebo / falsification tests.
+  placebo / falsification tests, and a second natural experiment exploiting the
+  September 2024 ShotSpotter shutoff.
 - **Selection / treatment-assignment modeling:** cross-sectional linear-probability
   and logistic models of *which* neighborhoods got ShotSpotter, standardized-effect
   balance tables, propensity-score overlap / common-support diagnostics, and an equity
   test of whether racial composition predicts placement conditional on violence and
   disadvantage.
 - **Count-data econometrics:** Poisson and Negative Binomial regression (with the
-  dispersion estimated), incidence-rate ratios, clustered standard errors.
+  dispersion estimated), incidence-rate ratios, clustered standard errors, and a
+  Wooldridge (2023) extended two-way fixed-effects Poisson (the heterogeneity-robust
+  count analog of Callaway–Sant'Anna).
 - **Robustness & diagnostics:** joint parallel-trends Wald test, COVID- and
   2016-sensitivity checks, multiple-specification forest plots.
 - **Geospatial analysis:** GeoPandas, choropleth and kernel-density hotspot maps,
@@ -124,7 +135,10 @@ Negative Binomial with the same fixed effects — the effect is **statistically 
 small, non-significant *positive* point estimate (IRR ≈ 1.07, p ≈ 0.5; see the headline
 figure above), not the dramatic +2.6 the additive scale implies. The count models agree
 with OLS in *direction* but shrink the effect to noise on the natural multiplicative
-scale.
+scale. And the null is not an artifact of the plain Poisson's fixed-effects weighting under
+the staggered rollout: the heterogeneity-robust count estimator the literature prescribes —
+a Wooldridge (2023) extended two-way fixed-effects Poisson — returns the same null (overall
+ATT IRR 1.05, 95% CI [0.79, 1.33]), with cohort-time effects at one at every horizon.
 
 ### 4. Parallel trends fail
 
@@ -213,6 +227,23 @@ on top of a design with **no valid control group** (Step 7) and a **failed pre-t
 test** (Step 4). With no clean counterfactual, the causal effect is simply **not
 identifiable from these data** — in either direction.
 
+### 9. A second natural experiment: the September 2024 removal
+
+![The September 2024 removal](plots/removal_trajectory.png)
+
+Chicago switched ShotSpotter off on 22 September 2024, and the gun-homicide decline that
+followed has been read in public commentary as proof the technology never worked. Applying
+the same discipline to the *removal* shows it is no more identifiable than the installation —
+and it fails in the same two ways, which is the cleanest confirmation of the whole argument.
+Gun homicides were already falling city-wide from the 2021–22 peak, in ShotSpotter and
+never-treated areas alike (coverage areas **−37%**, never-treated **−31%** over the same
+post-removal months), so the raw "crime fell after ShotSpotter left" is a city-wide trend,
+not a removal effect. And the additive removal DiD even manufactures a "significant" benefit
+(**−0.25 homicides/area-month, p < 0.001**) that vanishes on the multiplicative scale
+(**Poisson IRR 0.91, 95% CI [0.54, 1.52]**) — the identical scale artifact as the
+installation. Both the raw drop and the additive DiD are mirages; the public debate has
+confidently drawn both unwarranted inferences.
+
 ## Bottom line
 
 ShotSpotter did what it was built to do — *detect* gunfire that 911 calls miss. But
@@ -226,7 +257,9 @@ sustained drop in shootings of the kind a $3M detection contract was meant to de
 not the smaller, survival-channel mortality benefit a boundary regression discontinuity
 attributes to faster emergency response, a magnitude that falls *inside* the interval this
 panel can resolve. That non-result is itself the policy finding, and it is consistent with
-the city's 2023 decision to end the contract. Full argument and limitations:
+the city's 2023 decision to end the contract. The 2024 removal, analyzed the same way
+(Step 9), reproduces both failures — so the non-identification is a property of the setting,
+not of how the installation happens to be timed. Full argument and limitations:
 [NARRATIVE.md](NARRATIVE.md).
 
 ## Limitations & next steps
