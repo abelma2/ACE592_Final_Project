@@ -318,6 +318,7 @@ All inputs are public products of the [Chicago Data Portal](https://data.cityofc
 | `CommAreas_*.geojson` | [Community Areas](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Community-Areas-current-/cauq-8yn6) | Yes |
 | `Census_Data_-_Selected_socioeconomic_indicators_*.csv` | [Census — socioeconomic indicators](https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2/about_data) | Yes |
 | `ACS_5yr_race_by_community_area_2023.csv` | [ACS 5-Year Data by Community Area](https://data.cityofchicago.org/d/t68z-cikk) (racial composition for the placement model) | Yes |
+| `Public_Health_Statistics_Life_Expectancy_By_Community_Area.csv` | [Life Expectancy by Community Area](https://data.cityofchicago.org/d/qjr3-bm53) (2010, equity measure for the placement model) | Yes |
 
 The three large raw files (~110 MB combined) are **git-ignored** to keep the
 repository lightweight and to avoid re-hosting victim-level data. They are freely

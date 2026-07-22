@@ -20,9 +20,12 @@ Sample: 77 community areas (51 ShotSpotter, 26 never-treated). Treatment defined
 | Unemployed, 16+ (%) | 18.70 | 8.84 | +1.66 | 0.919 |
 | Households below poverty (%) | 26.44 | 12.60 | +1.45 | 0.885 |
 | No high-school diploma, 25+ (%) | 24.90 | 11.40 | +1.35 | 0.860 |
+| Life expectancy, 2010 (years) | 76.16 | 80.43 | -1.20 | 0.806 |
 | Pre-period gun homicides (mean/yr, 2009-16) | 7.48 | 1.62 | +0.89 | 0.793 |
 | Dependency: under 18 or over 64 (%) | 38.42 | 30.51 | +1.25 | 0.787 |
 | Crowded housing (%) | 5.84 | 3.12 | +0.78 | 0.745 |
+
+The health penalty is the most human summary of the gap: ShotSpotter areas averaged **76.2 years** of life expectancy in 2010 versus **80.4** in never-treated areas---a **-4.3-year** difference. Life expectancy is a descriptive disadvantage summary here, not a siting predictor (the city did not site on it); it is kept out of the placement regressions below and reported only to characterize who bears the coverage. Source: Chicago Public Health Statistics, Life Expectancy by Community Area (`qjr3-bm53`).
 
 ## 2. Placement model and the violence horse-race
 

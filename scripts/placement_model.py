@@ -164,9 +164,21 @@ race = race.dropna(subset=["ca_num"]).copy()
 race["ca_num"] = race["ca_num"].astype(int)
 df = df.merge(race[["ca_num", "pct_black", "pct_hispanic", "pct_white_nh"]], on="ca_num", how="left")
 
+# --- Life expectancy (Chicago Public Health Statistics, 2010 by community area) ---
+# Treated as a descriptive health/disadvantage summary in the balance table, not a siting
+# predictor: the city did not site on life expectancy, but that ShotSpotter areas carry a
+# large life-expectancy penalty is a vivid statement of who bears the coverage.
+le = pd.read_csv(os.path.join(DATA, "Public_Health_Statistics_Life_Expectancy_By_Community_Area.csv"))
+le["ca_num"] = le["community_area"].map(lambda s: ca_norm2num.get(_norm(s)))
+le["life_exp"] = pd.to_numeric(le["_2010_life_expectancy"], errors="coerce")
+le = le.dropna(subset=["ca_num"]).copy()
+le["ca_num"] = le["ca_num"].astype(int)
+df = df.merge(le[["ca_num", "life_exp"]], on="ca_num", how="left")
+
 PREDICTORS = ["pre_gun_hom", "poverty", "unemp", "no_hs", "income", "hardship",
               "crowded", "dependency"]
 RACE = ["pct_black", "pct_hispanic", "pct_white_nh"]
+HEALTH = ["life_exp"]   # descriptive balance only; kept out of the placement regressions
 PRETTY = {
     "pre_gun_hom": "Pre-period gun homicides (mean/yr, 2009-16)",
     "poverty":     "Households below poverty (%)",
@@ -179,15 +191,16 @@ PRETTY = {
     "pct_black":    "Black share of population (%)",
     "pct_hispanic": "Hispanic/Latino share (%)",
     "pct_white_nh": "White, non-Hispanic share (%)",
+    "life_exp":     "Life expectancy, 2010 (years)",
 }
 
-df = df.dropna(subset=PREDICTORS + RACE).reset_index(drop=True)
+df = df.dropna(subset=PREDICTORS + RACE + HEALTH).reset_index(drop=True)
 n_missing = 77 - len(df)
 if n_missing:
-    print(f"  [note] dropped {n_missing} community area(s) missing Census or ACS indicators")
+    print(f"  [note] dropped {n_missing} community area(s) missing Census, ACS, or health indicators")
 
 # z-scored copies so coefficients are comparable "per one SD" effects
-for v in PREDICTORS + RACE:
+for v in PREDICTORS + RACE + HEALTH:
     df[f"z_{v}"] = (df[v] - df[v].mean()) / df[v].std(ddof=0)
 ZPRED = [f"z_{v}" for v in PREDICTORS]
 
@@ -206,7 +219,7 @@ print("1. BALANCE TABLE: what distinguishes treated from never-treated areas")
 print("=" * 72)
 
 balance = []
-for v in PREDICTORS:
+for v in PREDICTORS + HEALTH:
     t = df.loc[df.treated == 1, v]
     c = df.loc[df.treated == 0, v]
     pooled_sd = np.sqrt(((t.var(ddof=1) * (len(t) - 1)) + (c.var(ddof=1) * (len(c) - 1))) /
@@ -223,6 +236,11 @@ print(f"  {'Characteristic':<44} {'Treated':>9} {'Control':>9} {'Std.diff':>9} {
 for _, r in balance.iterrows():
     print(f"  {PRETTY[r['var']]:<44} {r['treated_mean']:>9.2f} {r['control_mean']:>9.2f} "
           f"{r['smd']:>+9.2f} {r['auc']:>6.3f}")
+
+le_t = df.loc[df.treated == 1, "life_exp"].mean()
+le_c = df.loc[df.treated == 0, "life_exp"].mean()
+print(f"\n  LIFE-EXPECTANCY GAP: ShotSpotter areas {le_t:.1f} yrs vs {le_c:.1f} in never-treated "
+      f"areas = {le_t - le_c:+.1f} years (2010).")
 
 
 # =====================================================================
@@ -410,7 +428,7 @@ legend = [
     Line2D([0], [0], color=C_BLUE, marker="o", lw=2.4, markersize=9, label="Lower in ShotSpotter areas"),
 ]
 ax.legend(handles=legend, loc="upper left", frameon=False, fontsize=9)
-add_source_note(fig, SOURCE_DEFAULT + "  Census 2008-2012 socioeconomic indicators.")
+add_source_note(fig, SOURCE_DEFAULT + "  Census 2008-2012 indicators; Public Health life expectancy (2010).")
 fig.tight_layout(rect=[0, 0.03, 1, 1])
 fig.savefig(os.path.join(PLOTS, "placement_coefficients.png"), dpi=200, facecolor="white")
 plt.close(fig)
@@ -443,7 +461,7 @@ add_n_label(ax, f"Propensity AUC = {ps_auc:.2f}\n"
                 f"Six study areas all ≥ {study6_lo:.2f} (shaded);\n"
                 f"{c_above_study6} of {n_c} controls reach that band",
             loc="upper right")
-add_source_note(fig, SOURCE_DEFAULT + "  Census 2008-2012 socioeconomic indicators.")
+add_source_note(fig, SOURCE_DEFAULT + "  Census 2008-2012 indicators; Public Health life expectancy (2010).")
 fig.tight_layout(rect=[0, 0.03, 1, 1])
 fig.savefig(os.path.join(PLOTS, "placement_propensity_overlap.png"), dpi=200, facecolor="white")
 plt.close(fig)
@@ -481,6 +499,14 @@ L.append("|---|---|---|---|---|")
 for _, r in balance.iterrows():
     L.append(f"| {PRETTY[r['var']]} | {r['treated_mean']:.2f} | {r['control_mean']:.2f} | "
              f"{r['smd']:+.2f} | {r['auc']:.3f} |")
+L.append("")
+L.append(f"The health penalty is the most human summary of the gap: ShotSpotter areas averaged "
+         f"**{le_t:.1f} years** of life expectancy in 2010 versus **{le_c:.1f}** in never-treated "
+         f"areas---a **{le_t - le_c:+.1f}-year** difference. Life expectancy is a descriptive "
+         f"disadvantage summary here, not a siting predictor (the city did not site on it); it is "
+         f"kept out of the placement regressions below and reported only to characterize who bears "
+         f"the coverage. Source: Chicago Public Health Statistics, Life Expectancy by Community "
+         f"Area (`qjr3-bm53`).")
 L.append("")
 L.append("## 2. Placement model and the violence horse-race")
 L.append("")
