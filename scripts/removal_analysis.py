@@ -130,11 +130,13 @@ ols = smf.ols("gun_hom ~ did + C(ca_num) + C(mstr)", data=mpanel).fit(
 pois = smf.glm("gun_hom ~ did + C(ca_num) + C(mstr)", data=mpanel, family=sm.families.Poisson()).fit(
     cov_type="cluster", cov_kwds={"groups": mpanel["ca_num"]})
 b, p = ols.params["did"], ols.pvalues["did"]
+se = ols.bse["did"]
 irr = np.exp(pois.params["did"]); il, ih = np.exp(pois.conf_int().loc["did"]); ip = pois.pvalues["did"]
+ise = pois.bse["did"]
 n_post = mpanel["post"].sum() // 77
 print(f"\n  Removal DiD (treated x post-removal), {n_post} post-removal months:")
-print(f"    OLS     = {b:+.4f} per area-month (p={p:.3f} {sig_stars(p)})")
-print(f"    Poisson = IRR {irr:.3f} [{il:.3f}, {ih:.3f}] (p={ip:.3f} {sig_stars(ip)})")
+print(f"    OLS     = {b:+.4f} (SE {se:.4f}) per area-month (p={p:.3f} {sig_stars(p)})")
+print(f"    Poisson = IRR {irr:.3f} [{il:.3f}, {ih:.3f}] (log-SE {ise:.4f}, p={ip:.3f} {sig_stars(ip)})")
 
 # =====================================================================
 # FIGURE: indexed monthly rates (single axis, apples-to-apples) show both

@@ -417,7 +417,7 @@ For completeness, non-fatal gunshot injuries (a four-times-larger sample) yield 
 +7.51$ under OLS ($p = 0.009$)---and the count-data correction is even starker there:
 estimated as Poisson or Negative Binomial with the same fixed effects, the point estimate
 flips \emph{below} one and is statistically null in every specification (IRRs
-$0.84$--$0.92$, $p \geq 0.23$). The higher-powered outcome delivers the same verdict as
+$0.84$--$0.92$, $p \geq 0.23$; Table~\ref{tab:nfs}). The higher-powered outcome delivers the same verdict as
 the homicide series: the additive OLS coefficient is a scale artifact. The same distortion
 recurs, unchanged, when the identical difference-in-differences is run on weapons-violation
 enforcement rather than homicides---an order-of-magnitude-larger OLS coefficient that again
@@ -444,6 +444,29 @@ in red, others in gray. The spread across neighborhoods---from roughly $-2\%$ to
 $+62\%$---shows how heavily the pooled headline leans on a few high-count neighborhoods.}
 \label{fig:forest}
 \end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Non-fatal gunshot injuries (a four-times-larger sample) under count models, same
+two-way fixed effects and cluster-robust SEs. The OLS coefficient is positive and
+significant; every count model is null with a point estimate \emph{below} one.}
+\label{tab:nfs}
+\begin{tabular}{llcccc}
+\toprule
+Model & Specification & $\beta$ & IRR & 95\% CI on IRR & $p$ \\
+\midrule
+OLS (TWFE)     & full panel   & $+7.51$  & ---   & ---              & 0.009 \\
+\midrule
+Poisson        & full panel   & $-0.102$ & 0.903 & $[0.691, 1.181]$ & 0.457 \\
+Neg.\ Binomial & full panel   & $-0.168$ & 0.845 & $[0.640, 1.115]$ & 0.234 \\
+Poisson        & excl.\ COVID & $-0.093$ & 0.912 & $[0.710, 1.171]$ & 0.469 \\
+Neg.\ Binomial & excl.\ COVID & $-0.157$ & 0.854 & $[0.653, 1.118]$ & 0.251 \\
+Poisson        & excl.\ 2016  & $-0.087$ & 0.917 & $[0.686, 1.226]$ & 0.558 \\
+Neg.\ Binomial & excl.\ 2016  & $-0.175$ & 0.840 & $[0.623, 1.131]$ & 0.251 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % [Procedural-channel subsection moved to Appendix~\ref{app:procedural} in the coherence pass.]
 
@@ -540,7 +563,7 @@ Goodman--Bacon decomposition of the staggered two-way fixed-effects estimate ($+
 cohort-specific timing) locates the problem precisely: the ``forbidden'' comparison of
 the 2018 cohort against the already-treated 2017 cohort carries only $4.6\%$ of the
 weight, and the weighted 2$\times$2 components reproduce the aggregate exactly
-(Figure~\ref{fig:bacon}). Negative-weighting contamination is therefore minor in this
+(Figure~\ref{fig:bacon}, Table~\ref{tab:bacon}). Negative-weighting contamination is therefore minor in this
 panel---the instability comes from the 2016 anomaly and the absence of a valid control
 group, not from the staggered aggregation itself.
 
@@ -579,6 +602,25 @@ instability is not staggered-timing contamination.}
 \label{fig:bacon}
 \end{figure}
 
+\begin{table}[H]
+\centering
+\small
+\caption{Goodman--Bacon decomposition of the staggered two-way fixed-effects estimate
+($+2.481$, SE $0.725$). The weighted 2$\times$2 components reproduce the aggregate exactly;
+the ``forbidden'' already-treated comparison carries only 4.6\% of the weight.}
+\label{tab:bacon}
+\begin{tabular}{lcc}
+\toprule
+Comparison & Weight & 2$\times$2 estimate \\
+\midrule
+2017 cohort vs never-treated                      & 0.375 & $+4.642$ \\
+2018 cohort vs never-treated                      & 0.517 & $+0.946$ \\
+2017 vs 2018 (not-yet-treated control)            & 0.062 & $+3.765$ \\
+2018 vs 2017 (already-treated control; forbidden) & 0.046 & $+0.396$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{The heterogeneity-robust count estimator agrees}
 
 One loose end remains. The headline null is a Poisson (and Negative Binomial) two-way
@@ -593,7 +635,7 @@ cohort and calendar time, so each cohort-by-year effect is built from clean neve
 comparisons before aggregation, with a community-area cluster bootstrap for inference. It
 returns the same null: an overall ATT incidence-rate ratio of $1.05$ (95\% CI $[0.79,
 1.33]$), with cohort-time effects hovering at one at every horizon
-(Figure~\ref{fig:etwfe}). The right tool removes the last escape hatch---the count-model
+(Figure~\ref{fig:etwfe}, Table~\ref{tab:etwfe}). The right tool removes the last escape hatch---the count-model
 null is not an artifact of the plain PPML's weighting.
 
 \begin{figure}[H]
@@ -607,6 +649,30 @@ artifact of the plain PPML.}
 \label{fig:etwfe}
 \end{figure}
 
+\begin{table}[H]
+\centering
+\small
+\caption{Wooldridge (2023) extended two-way fixed-effects Poisson: ATT incidence-rate
+ratios by years since install, and the cohort-size-weighted overall ATT. Community-area
+cluster bootstrap (400 draws). Every horizon and the overall estimate span one.}
+\label{tab:etwfe}
+\begin{tabular}{ccc}
+\toprule
+Years since install ($k$) & ATT (IRR) & 95\% CI \\
+\midrule
+0 & 1.123 & $[0.842, 1.475]$ \\
+1 & 0.938 & $[0.650, 1.340]$ \\
+2 & 0.967 & $[0.663, 1.362]$ \\
+3 & 1.279 & $[0.951, 1.849]$ \\
+4 & 0.975 & $[0.738, 1.301]$ \\
+5 & 0.953 & $[0.668, 1.296]$ \\
+6 & 1.299 & $[0.884, 2.067]$ \\
+\midrule
+\textbf{Overall ATT} & \textbf{1.048} & $[0.791, 1.330]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{The selection mechanism: what predicted placement}
 \label{sec:placement}
 
@@ -619,7 +685,8 @@ administrative and made at the police-district level---the OIG documents deploym
 twelve districts---so community-area treatment is the neighborhood-level footprint of that
 coarser choice, and the model describes what that footprint tracks, not 77 independent
 siting decisions. Two facts emerge. First, placement tracks structural
-disadvantage even more tightly than the homicide count itself (Figure~\ref{fig:placement}):
+disadvantage even more tightly than the homicide count itself (Figure~\ref{fig:placement},
+Table~\ref{tab:balance}):
 the hardship index separates treated from never-treated areas with an AUC of $0.93$, and
 per-capita income and unemployment each with $0.92$, against $0.79$ for the pre-period
 gun-homicide count, and
@@ -651,7 +718,8 @@ non-Hispanic share is the single sharpest separator in the whole analysis (13\% 
 placement model raises its AUC from $0.94$ to $0.96$, and in a linear-probability model with
 pre-period violence, hardship, and income, a one-SD rise in the Black share is associated
 with a $+33$ percentage-point change in placement probability ($p = 0.002$) and the Hispanic
-share $+28$ points ($p = 0.003$), while violence and hardship themselves turn insignificant.
+share $+28$ points ($p = 0.003$), while violence and hardship themselves turn insignificant
+(Table~\ref{tab:placement}).
 Race, hardship, and violence are deeply entangled in a segregated city, and with 77 areas the
 design cannot separate them cleanly, so this is \emph{not} evidence that race drove siting
 independently of disadvantage. What it shows, descriptively, is that ShotSpotter placement
@@ -674,6 +742,37 @@ gun-homicide count does.}
 \label{fig:placement}
 \end{figure}
 
+\begin{table}[H]
+\centering
+\small
+\caption{Balance: ShotSpotter (treated, $n=51$) versus never-treated ($n=26$) community
+areas. Std.\ diff.\ is the standardized mean difference (treated $-$ control, in pooled SDs);
+AUC is the single-predictor discriminating power for placement. Structural disadvantage
+separates the groups more sharply than the pre-period gun-homicide count. Life expectancy is
+descriptive and is not entered in the placement regressions.}
+\label{tab:balance}
+\begin{tabular}{lcccc}
+\toprule
+Characteristic & Treated & Control & Std.\ diff. & AUC \\
+\midrule
+Hardship index                       & 63.90 & 21.27 & $+2.09$ & 0.931 \\
+Per-capita income (\$000s)           & 18.65 & 39.11 & $-1.72$ & 0.919 \\
+Unemployed, 16+ (\%)                 & 18.70 & \phantom{0}8.84 & $+1.66$ & 0.919 \\
+Households below poverty (\%)        & 26.44 & 12.60 & $+1.45$ & 0.885 \\
+No high-school diploma, 25+ (\%)     & 24.90 & 11.40 & $+1.35$ & 0.860 \\
+Dependency: under 18 or over 64 (\%) & 38.42 & 30.51 & $+1.25$ & 0.787 \\
+Life expectancy, 2010 (years)        & 76.16 & 80.43 & $-1.20$ & 0.806 \\
+Pre-period gun homicides (mean/yr)   & \phantom{0}7.48 & \phantom{0}1.62 & $+0.89$ & 0.793 \\
+Crowded housing (\%)                 & \phantom{0}5.84 & \phantom{0}3.12 & $+0.78$ & 0.745 \\
+\midrule
+\multicolumn{5}{l}{\emph{Racial composition (2019--2023 ACS)}} \\
+Black share (\%)                     & 48.9 & 13.5 & $+1.03$ & 0.733 \\
+Hispanic/Latino share (\%)           & 32.0 & 17.4 & $+0.55$ & 0.537 \\
+White, non-Hispanic share (\%)       & 12.6 & 55.7 & $-2.80$ & 0.948 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{placement_propensity_overlap.png}
@@ -684,6 +783,41 @@ is predictable enough that these units have no untreated counterpart---the selec
 view of why no valid counterfactual exists.}
 \label{fig:overlap}
 \end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Placement (linear-probability) models with standardized predictors and HC1 robust
+SEs (in parentheses); the dependent variable is receipt of ShotSpotter. Each coefficient is
+the change in placement probability per one-SD increase. The gun-homicide count does not
+predict placement once disadvantage is held fixed, while hardship and---conditionally---racial
+composition do.}
+\label{tab:placement}
+\begin{tabular}{lcc}
+\toprule
+                        & (1) Violence $+$      & (2) $+$ racial \\
+Predictor               & hardship $+$ income   & composition \\
+\midrule
+Pre-period gun homicides & $+0.016$        & $-0.023$ \\
+                         & $(0.026)$       & $(0.027)$ \\
+Hardship index           & $+0.271^{***}$  & $+0.123$ \\
+                         & $(0.068)$       & $(0.096)$ \\
+Per-capita income        & $-0.065$        & $+0.012$ \\
+                         & $(0.053)$       & $(0.050)$ \\
+Black share              & ---             & $+0.333^{**}$ \\
+                         &                 & $(0.110)$ \\
+Hispanic/Latino share    & ---             & $+0.282^{**}$ \\
+                         &                 & $(0.094)$ \\
+\midrule
+$R^2$ (LPM)              & 0.506 & 0.613 \\
+Logit AUC                & 0.935 & 0.956 \\
+$N$                      & 77 & 77 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+{\footnotesize $^{**}\,p<0.01$; $^{***}\,p<0.001$. Predictors standardized to mean 0, SD 1.}
+\end{table}
 
 \subsection{Synthetic control is infeasible}
 
@@ -763,7 +897,7 @@ Section~\ref{sec:count}: it returns a ``significant'' removal \emph{benefit} of 
 homicides per area-month ($p < 0.001$)---but only because coverage areas start from a far
 higher baseline ($0.85$ versus $0.20$ gun homicides per area-month) and so move more in
 absolute terms for the same proportional change. On the correct multiplicative scale the
-removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.54, 1.52]$). The post window is also
+removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.54, 1.52]$; Table~\ref{tab:removal}). The post window is also
 short---seven complete months, with 2025 only partially observed---so the estimate is
 under-powered on top of being non-identified. Both the raw drop and the additive DiD are
 mirages: these data can no more identify the removal effect than the installation effect, in
@@ -782,6 +916,31 @@ that trend reproduces the paper's scale artifact (a ``significant'' $-0.25$/area
 is null on the multiplicative scale, IRR $0.91$).}
 \label{fig:removal}
 \end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\caption{The September 2024 removal (monthly panel; seven complete post-removal months,
+2025 partial). Both groups fall in near-identical proportion, so the naive drop is a
+city-wide trend; the additive DiD is ``significant'' only because coverage areas have a
+higher baseline, while the multiplicative model is null.}
+\label{tab:removal}
+\begin{tabular}{lccc}
+\toprule
+\multicolumn{4}{l}{\emph{Panel A. Gun homicides per area-month, before vs.\ after the shutoff}} \\
+Group & Pre & Post & \% change \\
+\midrule
+ShotSpotter areas ($n=51$) & 0.849 & 0.532 & $-37\%$ \\
+Never-treated ($n=26$)     & 0.199 & 0.137 & $-31\%$ \\
+\midrule
+\multicolumn{4}{l}{\emph{Panel B. Removal difference-in-differences (treated $\times$ post)}} \\
+Estimator & Estimate (SE) & 95\% CI & $p$ \\
+\midrule
+OLS (additive, per area-month) & $-0.255\ (0.069)$ & --- & $<0.001$ \\
+Poisson (IRR)                  & $0.909$ & $[0.545, 1.518]$ & 0.717 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % ===========================================================================
 \section{What the Data Can and Cannot Support}
@@ -894,9 +1053,9 @@ sensor-coverage polygons, would be the natural complement. The panel is annual, 
 within-year dynamics. Standard errors
 cluster on community area (about 77 clusters); a restricted wild-cluster bootstrap
 (Cameron, Gelbach, \& Miller, 2008; 999 Rademacher replications) returns $p \approx
-0.001$ for the OLS DiD in every specification, so the headline coefficient is not an
-artifact of thin-cluster inference---the problem is the specification and the design,
-not the standard errors. Two event-study implementations
+0.001$ for the OLS DiD in every specification (Appendix~\ref{app:wildboot},
+Table~\ref{tab:wildboot}), so the headline coefficient is not an artifact of thin-cluster
+inference---the problem is the specification and the design, not the standard errors. Two event-study implementations
 are reported---a transparent hand-rolled difference-in-means kept for intuition, and the
 packaged Callaway--Sant'Anna estimator, which should be treated as the authoritative
 staggered-DiD result. The placement model is cross-sectional and descriptive: it documents
@@ -989,6 +1148,25 @@ community-area data.}
 \label{fig:procedural}
 \end{figure}
 
+\begin{table}[H]
+\centering
+\small
+\caption{The same two-way fixed-effects DiD applied to a victim outcome and two
+enforcement-process outcomes, on the identical community-area-by-year panel. Every outcome
+carries a large, significant OLS coefficient that collapses to a null incidence-rate ratio
+on the count scale.}
+\label{tab:procedural}
+\begin{tabular}{lcccc}
+\toprule
+Outcome & OLS DiD & Poisson IRR & 95\% CI on IRR & $p$ \\
+\midrule
+Gun homicides (outcome)               & $+2.627$ & 1.074 & $[0.869, 1.328]$ & 0.508 \\
+Weapons-violation incidents (process) & $+51.78$ & 1.125 & $[0.810, 1.563]$ & 0.481 \\
+Weapons-violation arrests (process)   & $+21.96$ & 0.952 & $[0.620, 1.464]$ & 0.824 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Cohort-specific event-study coefficients}
 \label{app:eventstudy}
 
@@ -1020,6 +1198,34 @@ $+2$ & $-3.83$ & $[-8.12, +0.47]$ \\
 $+3$ & $+0.10$ & $[-4.85, +5.05]$ \\
 $+4$ & $-0.43$ & $[-5.25, +4.39]$ \\
 $+5$ & $-2.99$ & $[-7.19, +1.22]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Restricted wild-cluster bootstrap of the headline OLS DiD}
+\label{app:wildboot}
+
+Because the panel has only about 77 clusters, Table~\ref{tab:wildboot} re-tests the OLS DiD
+with a restricted wild-cluster bootstrap (Rademacher weights, null imposed, 999
+replications; Cameron, Gelbach, \& Miller, 2008). The coefficient stays significant in every
+specification, so the headline is not an artifact of thin-cluster inference---the problem is
+the additive specification and the design, not the standard errors.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Restricted wild-cluster bootstrap of the headline OLS difference-in-differences.
+Cluster-robust $t$-statistics with a $G/(G-1)$ small-sample factor; the FWL-residualized
+implementation reproduces the statsmodels two-way-FE fit to $10^{-8}$.}
+\label{tab:wildboot}
+\begin{tabular}{lcccc}
+\toprule
+Specification & $\beta$ (DiD) & $t$ & Cluster-robust $p$ & Wild-bootstrap $p$ \\
+\midrule
+Full panel            & $+2.627$ & 4.29 & $<0.001$ & 0.001 \\
+Excl.\ COVID          & $+1.749$ & 3.65 & $<0.001$ & 0.001 \\
+Excl.\ 2016           & $+3.189$ & 4.35 & $<0.001$ & 0.001 \\
+Excl.\ COVID $+$ 2016 & $+2.311$ & 3.89 & $<0.001$ & 0.001 \\
 \bottomrule
 \end{tabular}
 \end{table}
