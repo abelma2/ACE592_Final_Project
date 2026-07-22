@@ -215,6 +215,9 @@ fall in our analysis window).
 areas plus the city total).
 \item \textbf{ACS 5-Year Data by Community Area} (racial composition) and \textbf{Public
 Health Statistics---Life Expectancy by Community Area} (2010), used in the placement model.
+\item \textbf{Crimes---2001 to Present} (\texttt{ijzp-q8t2}), aggregated to
+community-area-by-year weapons-violation incidents and arrests for the procedural-channel
+analysis.
 \item \textbf{Community Areas GeoJSON} (77 polygons).
 \end{itemize}
 
@@ -421,6 +424,48 @@ COVID), with the pooled DiD estimate at the bottom; changes whose intervals excl
 in red, others in gray. The spread across neighborhoods---from roughly $-2\%$ to
 $+62\%$---shows how heavily the pooled headline leans on a few high-count neighborhoods.}
 \label{fig:forest}
+\end{figure}
+
+\subsection{The procedural channel, and why the artifact is general}
+
+Gunshot detection is documented to improve \emph{process} outcomes---faster detection, more
+ballistic evidence, more gun recoveries---even where it does not reduce victimization (Piza
+et al., 2024). Chicago's process measures are FOIA-only, but the public analog is
+weapons-violation enforcement from the Crimes dataset (\texttt{ijzp-q8t2}). Running the
+\emph{same} two-way fixed-effects DiD on two enforcement measures---weapons-violation
+incidents and arrests, aggregated to the community-area-by-year panel---yields
+Figure~\ref{fig:procedural}, and it teaches two things.
+
+First, the specification artifact is general. Weapons-violation incidents produce an OLS DiD
+of $+51.8$ per community-area-year ($p < 0.001$)---an order of magnitude larger than the
+homicide coefficient, and just as significant---yet it collapses to a statistically null
+incidence-rate ratio of $1.13$ ($p = 0.48$) under Poisson with the same fixed effects;
+weapons arrests behave identically (OLS $+22.0$, $p < 0.01$; IRR $0.95$, $p = 0.82$). The
+additive-scale inflation that produced the headline homicide coefficient is not a quirk of
+homicide counts---it recurs, unchanged, on a completely different outcome. That is the
+cleanest available demonstration that the OLS DiD is measuring a scale, not an effect.
+
+Second, on the substance, these data do not reproduce the process benefit that a
+microsynthetic control recovers in Kansas City (Piza et al., 2024): weapons enforcement
+shows no detectable relative increase under coverage once the outcome is modeled correctly.
+Whether that reflects the 2021 OIG finding that Chicago's alerts rarely produced
+investigative evidence (Office of Inspector General, 2021), or simply the same absent
+counterfactual that governs every estimate in this paper, these data cannot say. What can be
+said is double-edged: to whatever extent coverage concentrated enforcement, it did so in the
+lowest-life-expectancy, most heavily policed neighborhoods---the ``procedural benefit''
+vendors advertise and the surveillance burden advocates warn of are two readings of the same
+coin.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{procedural_vs_outcome.png}
+\caption{The same two-way fixed-effects DiD applied to a victim outcome (gun homicides) and
+two enforcement-process measures (weapons-violation incidents and arrests). Every outcome
+carries a large, significant OLS coefficient that collapses to a statistically null
+incidence-rate ratio on the count scale---the additive-scale artifact is not specific to
+homicides, and the process channel shows no detectable footprint of coverage in these
+community-area data.}
+\label{fig:procedural}
 \end{figure}
 
 \subsection{The design produces ``significant'' placebos}
@@ -880,8 +925,9 @@ Every input is a public product of the City of Chicago Data Portal
 Non-Fatal Shootings (\texttt{gumc-mgzr}); Violence Reduction---ShotSpotter Alerts
 (Historical) (\texttt{3h7q-7mdb}); Census Data---Selected Socioeconomic Indicators,
 2008--2012 (\texttt{kn9c-c2s2}); ACS 5-Year Data by Community Area (\texttt{t68z-cikk});
-Public Health Statistics---Life Expectancy by Community Area (\texttt{qjr3-bm53}); and the
-Community Areas boundary file (\texttt{cauq-8yn6}). The complete analysis
+Public Health Statistics---Life Expectancy by Community Area (\texttt{qjr3-bm53});
+Crimes---2001 to Present (\texttt{ijzp-q8t2}); and the Community Areas boundary file
+(\texttt{cauq-8yn6}). The complete analysis
 pipeline---data-processing, all five estimator classes, the placement model, and every
 figure---is openly available and reproduces the paper end to end at
 \url{https://github.com/abelma2/ACE592_Final_Project}.
