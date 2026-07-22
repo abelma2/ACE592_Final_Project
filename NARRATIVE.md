@@ -37,7 +37,7 @@ The evaluation record is, by now, fairly settled. No rigorous study finds gunsho
 The analysis combines four City of Chicago open-data products:
 
 - **Violence Reduction — Victims of Homicides and Non-Fatal Shootings** (61,450 incidents, 1991–2025). Filtered to gun homicides (n ≈ 7,600 in 2009–2023) and non-fatal gunshot injuries (n ≈ 30,000 in 2009–2023).
-- **Violence Reduction — ShotSpotter Alerts (Historical)** (222,108 alerts, 2017-01-13 to 2023-12-31).
+- **Violence Reduction — ShotSpotter Alerts (Historical)** (222,108 alerts, 2017-01-13 to 2024-09-22, when the city ended ShotSpotter; the 191,824 through 2023 fall in the analysis window). [Chicago Data Portal 3h7q-7mdb]
 - **Census Data — Selected socioeconomic indicators, 2008–2012** (77 community areas plus city total).
 - **Community Areas GeoJSON** (77 polygons).
 
