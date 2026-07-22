@@ -150,16 +150,24 @@ reduce gun violence (Braga \& Cook, 2023), others caution that aggressive enforc
 carries serious social costs for communities already disproportionately affected by
 violence (Harcourt, 2019; Raphael \& Stoll, 2013).
 
-The evaluation record on gunshot detection is, by now, fairly settled. Studies at the
-police-district level in Chicago (Connealy et al., 2024) and across metropolitan counties
-nationally (Doucette et al., 2021) find no reduction in shootings, homicides, or case
-clearance---only faster detection and more recovered evidence. A Chicago district-level
-study finds detection even slowed dispatch and lowered arrest probability (Topper \&
-Ferrazares, 2024), and a 2026 meta-analysis of 44 estimates across eight studies pools to a
-null relative incidence-rate ratio of $1.02$ (95\% CI $[0.90, 1.16]$; Huff, Dunlap, \&
-Pearson, 2026). The one channel with a credible claim to benefit is medical: a boundary
-regression discontinuity attributes a lower shooting-fatality rate inside coverage to faster
-emergency response (University of Chicago Crime Lab, 2024, not peer-reviewed). Against that
+The evaluation record on gunshot detection is, by now, fairly settled, and it splits along
+one seam: the technology reliably improves \emph{process} outcomes---faster detection, more
+ballistic evidence, fewer shots-fired calls---but not the \emph{victim} outcomes that
+motivate its purchase. A microsynthetic-control evaluation in Kansas City draws the seam
+sharply (Piza et al., 2024): coverage raised ballistic-evidence collection and cut
+shots-fired calls, yet left fatal shootings, non-fatal shootings, and gun assaults
+unchanged. Neighborhood evaluations in St.\ Louis echo it---roughly a 25\% drop in citizen
+shots-fired calls with no change in violent crime (Mares \& Blackburn, 2021)---while results
+elsewhere range from crime reductions (Mares, 2023) to increases coinciding with deployment
+(Vovak et al., 2021). The same null holds at coarser units: staggered evaluations across
+Chicago police districts (Connealy et al., 2024) and metropolitan counties nationally
+(Doucette et al., 2021) find no reduction in shootings, homicides, or case clearance, a
+Chicago district study finds detection even slowed dispatch and lowered arrest probability
+(Topper \& Ferrazares, 2024), and a 2026 meta-analysis of 44 estimates across eight studies
+pools to a null relative incidence-rate ratio of $1.02$ (95\% CI $[0.90, 1.16]$; Huff,
+Dunlap, \& Pearson, 2026). The one channel with a credible claim to benefit is medical: a
+boundary regression discontinuity attributes a lower shooting-fatality rate inside coverage
+to faster emergency response (University of Chicago Crime Lab, 2024, not peer-reviewed). Against that
 backdrop, the question this paper takes up is not whether detection deters homicides---the
 weight of the evidence says it does not---but whether the community-area data on which most
 local policy argument relies can \emph{identify} such an effect at all, and how a routine
@@ -201,7 +209,8 @@ from the Chicago Data Portal:
 (61,450 incidents, 1991--2025), filtered to gun homicides ($n \approx 7{,}600$ in
 2009--2023) and non-fatal gunshot injuries ($n \approx 30{,}000$).
 \item \textbf{Violence Reduction---ShotSpotter Alerts (Historical)} (222,108 alerts,
-2017-01-13 to 2023-12-31).
+2017-01-13 to 2024-09-22, when the city ended ShotSpotter; the 191,824 alerts through 2023
+fall in our analysis window).
 \item \textbf{Census Data---Selected Socioeconomic Indicators, 2008--2012} (77 community
 areas plus the city total).
 \item \textbf{Community Areas GeoJSON} (77 polygons).
@@ -666,6 +675,16 @@ is not a failure of method; it is a feature of the data. ShotSpotter's selection
 rule---deploy where violence is highest---is, in a literal sense, what makes synthetic
 control infeasible. The absence of a counterfactual is itself the finding.
 
+The contrast with settings where synthetic control \emph{does} work is instructive. In
+Kansas City, gunshot detection covers a localized 3.5-square-mile zone---about 1\% of the
+city---leaving a large donor pool of untreated micro-units, and a microsynthetic control
+is feasible (Piza et al., 2024; Robbins \& Davenport, 2021). Chicago is the mirror image:
+coverage blankets essentially every high-violence community area, so the pool of comparably
+violent untreated donors is empty. Infeasibility here is therefore not a shortcoming of the
+estimator but a consequence of near-universal treatment among the units of interest---the
+same fact the placement model states from the selection side. Permutation $p$-values from
+synthetic control lack a clean interpretation in any case (Ferman et al., 2020).
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{synthetic_control_panels.png}
@@ -732,8 +751,15 @@ What the design cannot rule out is a benefit operating through a different chann
 boundary regression-discontinuity analysis attributes roughly 85 fewer deaths per year to
 faster emergency response inside coverage, working through victim survival rather than
 deterrence (University of Chicago Crime Lab, 2024; a working analysis, not yet
-peer-reviewed). A mortality reduction of that magnitude falls squarely \emph{inside} our
-own count-model confidence interval, and a community-area-by-year homicide panel---which
+peer-reviewed). The direct tests of that channel are equivocal rather than supportive: the
+two studies that measured case fatality found no reduction---Piza et al.\ (2024) compare
+the fatal and non-fatal shooting counts in the Kansas City coverage area and find no
+difference, and a Camden trauma-registry study found faster prehospital times but no
+significant adjusted mortality difference, albeit among more severely injured detected
+victims (Goldenberg et al., 2019). The mechanism is real---detection alerts precede the
+first 911 call by a median of roughly 90 seconds (Piza et al., 2023)---but its translation
+into fewer deaths is unproven. A mortality reduction of the magnitude the discontinuity
+implies would still fall \emph{inside} our own count-model confidence interval, and a community-area-by-year homicide panel---which
 observes neither response times nor the conversion of shootings into deaths---is simply not
 built to detect it. Ruling out a large deterrence effect is therefore not the same as
 ruling out every benefit, and we do not claim the stronger statement. Whatever effect
@@ -773,7 +799,17 @@ The most important limitation is the one developed throughout the paper: the des
 itself cannot identify a clean treatment effect from these data, because the city did not
 generate the counterfactual we need---Chicago neighborhoods with ShotSpotter-eligible
 violence levels but no ShotSpotter installation. Beyond that, several caveats are worth
-naming explicitly. The panel is annual, masking within-year dynamics. Standard errors
+naming explicitly. The unit of analysis is coarse. The crime-and-place literature favors
+micro-geographic units---street segments---over administrative geographies (Weisburd, 2015),
+and Schnell, Braga, and Piza (2017) show for Chicago specifically that community areas mask
+within-area heterogeneity that finer units capture; evaluations pinned to administrative
+units can also overstate coverage (Doucette et al., 2021). We use the community area
+deliberately, because it is the unit at which Chicago's open data are published and its
+policy debate is conducted, and the paper's claim is precisely that at this policy-grade
+resolution the effect is not identifiable---the coarseness is part of the finding, not an
+assumption to wave away. A micro-geographic re-estimation, once the city releases the
+sensor-coverage polygons, would be the natural complement. The panel is annual, masking
+within-year dynamics. Standard errors
 cluster on community area (about 77 clusters); a restricted wild-cluster bootstrap
 (Cameron, Gelbach, \& Miller, 2008; 999 Rademacher replications) returns $p \approx
 0.001$ for the OLS DiD in every specification, so the headline coefficient is not an
@@ -832,6 +868,19 @@ to deliver at scale. Technology can help detect the problem; on this evidence, i
 been shown to solve it.
 
 % ===========================================================================
+\section*{Data and Code Availability}
+
+Every input is a public product of the City of Chicago Data Portal
+(\url{https://data.cityofchicago.org}): Violence Reduction---Victims of Homicides and
+Non-Fatal Shootings (\texttt{gumc-mgzr}); Violence Reduction---ShotSpotter Alerts
+(Historical) (\texttt{3h7q-7mdb}); Census Data---Selected Socioeconomic Indicators,
+2008--2012 (\texttt{kn9c-c2s2}); ACS 5-Year Data by Community Area (\texttt{t68z-cikk}); and
+the Community Areas boundary file (\texttt{cauq-8yn6}). The complete analysis
+pipeline---data-processing, all five estimator classes, the placement model, and every
+figure---is openly available and reproduces the paper end to end at
+\url{https://github.com/abelma2/ACE592_Final_Project}.
+
+% ===========================================================================
 \singlespacing
 \section*{References}
 \begin{flushleft}
@@ -883,8 +932,16 @@ Impact of ShotSpotter technology on firearm homicides and arrests among large
 metropolitan counties: A longitudinal analysis, 1999--2016. \emph{Journal of Urban
 Health, 98}(5), 609--621.
 
+Ferman, B., Pinto, C., \& Possebom, V. (2020). Cherry picking with synthetic controls.
+\emph{Journal of Policy Analysis and Management, 39}(2), 510--532.
+
 Gatens, A., \& Reichert, J. (2019). \emph{Police technology: Acoustic gunshot detection
 systems}. Illinois Criminal Justice Information Authority.
+
+Goldenberg, A., Rattigan, D., Dalton, M., Gaughan, J. P., Thomson, J. S., Remick, K.,
+Butts, C., \& Hazelton, J. P. (2019). Use of ShotSpotter detection technology decreases
+prehospital time for patients sustaining gunshot wounds. \emph{Journal of Trauma and Acute
+Care Surgery, 87}(6), 1253--1259.
 
 Goodman-Bacon, A. (2021). Difference-in-differences with variation in treatment timing.
 \emph{Journal of Econometrics, 225}(2), 254--277.
@@ -910,6 +967,13 @@ MacArthur Justice Center. (2021). \emph{ShotSpotter generated over 40,000 dead-e
 deployments in Chicago in 21 months, according to new study}. Northwestern Pritzker School
 of Law.
 
+Mares, D. (2023). Evaluating an acoustic gunshot detection system in Cincinnati. In E. R.
+Groff \& C. P. Haberman (Eds.), \emph{Understanding crime and place: A methods handbook}
+(pp. 396--406). Temple University Press.
+
+Mares, D., \& Blackburn, E. (2021). Acoustic gunshot detection systems: A quasi-experimental
+evaluation in St.\ Louis, MO. \emph{Journal of Experimental Criminology, 17}(2), 193--215.
+
 Moreau-Kastler, N. (2025). \emph{Proportional treatment effects in staggered settings: An
 approach for Poisson pseudo-maximum likelihood}. Working paper, Sciences Po.
 
@@ -917,14 +981,29 @@ Office of Inspector General, City of Chicago. (2021, August 24). \emph{The Chica
 Department's use of ShotSpotter technology}.
 \url{https://www.chicago.gov/content/dam/city/depts/oig/publications/reports-public-safety/2021/CPD-ShotSpotter-Report-8-24-21.pdf}
 
+Piza, E. L., Hatten, D. N., Carter, J. G., Baughman, J. H., \& Mohler, G. O. (2023).
+Gunshot detection technology time savings and spatial precision: An exploratory analysis in
+Kansas City. \emph{Policing: A Journal of Policy and Practice, 17}, paac097.
+
+Piza, E. L., Hatten, D. N., Mohler, G. O., Carter, J. G., \& Cho, J. (2024). Gunshot
+detection technology effect on gun violence in Kansas City, Missouri: A microsynthetic
+control evaluation. \emph{Criminology \& Public Policy, 23}, 863--892.
+
 Raphael, S., \& Stoll, M. A. (2013). \emph{Why are so many Americans in prison?} Russell
 Sage Foundation.
+
+Robbins, M. W., \& Davenport, S. (2021). microsynth: Synthetic control methods for
+disaggregated and micro-level data in R. \emph{Journal of Statistical Software, 97}(2).
 
 Roth, J. (2022). Pretest with caution: Event-study estimates after testing for parallel
 trends. \emph{American Economic Review: Insights, 4}(3), 305--322.
 
 Santos Silva, J. M. C., \& Tenreyro, S. (2006). The log of gravity. \emph{Review of
 Economics and Statistics, 88}(4), 641--658.
+
+Schnell, C., Braga, A. A., \& Piza, E. L. (2017). The influence of community areas,
+neighborhood clusters, and street segments on the spatial variability of violent crime in
+Chicago. \emph{Journal of Quantitative Criminology, 33}(3), 469--496.
 
 Thompson, P. S., Lawrence, D. S., \& La Vigne, N. G. (2020). Securing officer buy-in when
 a beneficial technology increases workload: Best practices for implementing gunshot
@@ -936,6 +1015,13 @@ Evidence from ShotSpotter. Forthcoming, \emph{Journal of Human Resources} (SSRN 
 University of Chicago Crime Lab. (2024). Op-ed and replication analysis of ShotSpotter and
 shooting fatality in Chicago [not peer-reviewed]. Replication code:
 \url{https://github.com/uchicago-urbanlabs-crimelab/shotspotter-op-ed}.
+
+Vovak, H., Riddle, T., Taniguchi, T., Hoogesteyn, K., \& Yang, Y. (2021). \emph{Strategies
+for Policing Innovation (SPI) in Wilmington, Delaware: Targeting violent crime} [Final
+evaluation report]. National Police Foundation.
+
+Weisburd, D. (2015). The law of crime concentration and the criminology of place.
+\emph{Criminology, 53}(2), 133--157.
 
 Wilson, D. B. (2022). The relative incident rate ratio effect size for count-based impact
 evaluations: When an odds ratio is not an odds ratio. \emph{Journal of Quantitative

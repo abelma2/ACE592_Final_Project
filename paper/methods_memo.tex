@@ -93,8 +93,9 @@ every identification problem below.
 
 The analysis combines four City of Chicago open-data products: the Violence Reduction
 victims file (61,450 incidents, 1991 to 2025), filtered to gun homicides (about 7,600 in
-2009 to 2023); the historical ShotSpotter alert file (222,108 alerts, January 2017 to
-December 2023); the 2008 to 2012 Census socioeconomic indicators; and the community-area
+2009 to 2023); the historical ShotSpotter alert file (222,108 alerts, January 2017 to the
+program's termination on September 22, 2024; 191,824 fall in the 2017--2023 analysis
+window); the 2008 to 2012 Census socioeconomic indicators; and the community-area
 boundaries. The alert file shows a staggered rollout: 21 community areas activate in 2017
 and 30 in 2018, which leaves 26 never-treated areas. Pooling both cohorts at a single 2017
 cutoff, the convention in the original pipeline, biases the estimate when treatment timing
@@ -343,6 +344,14 @@ direction. The 2023 decision to end the contract is consistent with that absence
 evidence. The wider lesson carries to any program evaluated this way: a coefficient that
 survives fixed effects and robustness restrictions can still fail the conditions a causal
 reading requires.
+
+\section*{Data and Code Availability}
+
+All inputs are public City of Chicago Data Portal products (homicides/shootings
+\texttt{gumc-mgzr}; ShotSpotter alerts \texttt{3h7q-7mdb}; Census indicators
+\texttt{kn9c-c2s2}; ACS race \texttt{t68z-cikk}; community-area boundaries
+\texttt{cauq-8yn6}). The full reproducible pipeline is at
+\url{https://github.com/abelma2/ACE592_Final_Project}.
 
 \section*{References}
 \begin{flushleft}
