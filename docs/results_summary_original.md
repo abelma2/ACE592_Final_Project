@@ -1,6 +1,6 @@
 # Results Summary
 
-**ACE 592 Final Project: ShotSpotter & Gun Homicide DiD Analysis**
+**ShotSpotter & Gun Homicide DiD Analysis**
 
 ## DiD Regression Results
 

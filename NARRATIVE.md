@@ -1,6 +1,6 @@
 # Detection Without Identification: ShotSpotter and Gun Homicide in Chicago, 2009–2023
 
-*A revised narrative for the ACE 592 final project, built from the data and code in this repository. Quantitative results come from `scripts/did_analysis.py`, `scripts/econometric_analysis.py`, and `scripts/placement_model.py`; tables are reproduced in [`docs/results_summary_original.md`](docs/results_summary_original.md), [`docs/results_summary_reanalysis.md`](docs/results_summary_reanalysis.md), and [`docs/results_summary_placement.md`](docs/results_summary_placement.md).*
+*A revised narrative of this study, built from the data and code in this repository. Quantitative results come from `scripts/did_analysis.py`, `scripts/econometric_analysis.py`, and `scripts/placement_model.py`; tables are reproduced in [`docs/results_summary_original.md`](docs/results_summary_original.md), [`docs/results_summary_reanalysis.md`](docs/results_summary_reanalysis.md), and [`docs/results_summary_placement.md`](docs/results_summary_placement.md).*
 
 ## Abstract
 

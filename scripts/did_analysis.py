@@ -1,6 +1,6 @@
 """
 did_analysis.py  --  Difference-in-Differences analysis, statistical testing,
-                     and publication-quality plots for ACE 592 Final Project.
+                     and publication-quality plots for the ShotSpotter analysis.
 """
 import os, sys, warnings
 import numpy as np
@@ -828,7 +828,7 @@ print("=" * 72)
 lines = []
 lines.append("# Results Summary")
 lines.append("")
-lines.append("**ACE 592 Final Project: ShotSpotter & Gun Homicide DiD Analysis**")
+lines.append("**ShotSpotter & Gun Homicide DiD Analysis**")
 lines.append("")
 
 # 5A: Master Results Table
