@@ -43,10 +43,10 @@ ShotSpotter and Gun Homicide in Chicago, 2009--2023}}
 % ===========================================================================
 \begin{abstract}
 \noindent
-Between 2017 and 2023, Chicago paid millions of dollars to deploy ShotSpotter---an
-acoustic gunshot-detection system---across 51 of its 77 community areas, and Mayor
+Between 2017 and 2023, Chicago paid millions of dollars to deploy ShotSpotter (an
+acoustic gunshot-detection system) across 51 of its 77 community areas, and Mayor
 Brandon Johnson cancelled the contract in 2023 citing limited evidence of impact. That
-ShotSpotter does not reduce gun violence is by now well established---in Chicago at the
+ShotSpotter does not reduce gun violence is by now well established, in Chicago at the
 police-district level (Connealy et al., 2024) and nationally (Doucette et al., 2021); the
 question we take up is not whether that null replicates but whether the public,
 community-area-level data that anchor most policy debate can \emph{identify} a causal
@@ -57,7 +57,7 @@ we estimate five classes of model: (i) a two-way fixed-effects OLS difference-in
 staggered 2017/2018 rollout; (iv) a synthetic control with permutation inference; and (v)
 pre-period placebo tests. The OLS DiD coefficient is positive and significant ($\beta =
 +2.63$ gun homicides per area-year, $p < 0.001$) and survives unit and year fixed
-effects---but it is a count-data misspecification artifact (Santos Silva \& Tenreyro, 2006):
+effects, but it is a count-data misspecification artifact (Santos Silva \& Tenreyro, 2006):
 estimated as Poisson or Negative Binomial with the same fixed effects, the effect
 collapses to a statistically null incidence-rate ratio of $\approx 1.07$ ($p \approx
 0.5$), with confidence intervals spanning anywhere from a 13\% reduction to a 33\%
@@ -73,9 +73,9 @@ highest-violence study neighborhoods have no comparably situated untreated count
 These data therefore \emph{cannot identify} a causal effect of ShotSpotter on gun
 homicides in either direction. The installation estimates nonetheless rule out a large
 \emph{deterrence} effect, but cannot exclude the survival-channel mortality benefit that a
-boundary regression discontinuity attributes to faster emergency response---a magnitude
+boundary regression discontinuity attributes to faster emergency response, a magnitude
 that lies inside our confidence interval and that this design is not built to detect. The
-same non-identification recurs on an independent event---Chicago's September 2024 shutoff,
+same non-identification recurs on an independent event: Chicago's September 2024 shutoff,
 where gun homicides were already falling city-wide in coverage and comparison areas alike,
 so the widely cited post-removal decline reflects a city-wide trend, not a removal effect. The contribution is thus a worked
 identification-limits case: a coefficient can survive fixed effects and robustness
@@ -93,10 +93,10 @@ metropolitan areas (CDC, 2020; Kegler, Dahlberg, \& Mercy, 2018). One barrier to
 firearm violence is the chronic underreporting of gunfire: research finds that only about
 20\% of shootings are reported to law enforcement (Irvin-Erickson et al., 2016; Carr \&
 Doleac, 2016). In response, cities have turned to
-gunshot-detection technology---most notably ShotSpotter---to close that measurement gap
+gunshot-detection technology (most notably ShotSpotter) to close that measurement gap
 and improve real-time awareness of gunfire (Choi, Librett, \& Collins, 2014). This paper
 uses Chicago's deployment of that technology not to re-evaluate it, but to ask what the
-public data most policy debate relies on can---and cannot---identify.
+public data most policy debate relies on can (and cannot) identify.
 
 Chicago piloted ShotSpotter in 2012 in two small zones, expanded to full district
 coverage in 2016, and signed a three-year, \$3 million contract to widen coverage in
@@ -106,8 +106,8 @@ in investigations; advocacy groups argued the technology concentrated police pre
 already over-policed Black and Brown communities; and in 2023 Mayor Brandon Johnson
 terminated the contract, citing reliability and community-impact concerns.
 
-The empirical question that motivated ShotSpotter is straightforward---\emph{did it reduce
-gun violence?}---and for Chicago it is largely answered. A matched quasi-experiment of the
+The empirical question that motivated ShotSpotter is straightforward (\emph{did it reduce
+gun violence?}) and for Chicago it is largely answered. A matched quasi-experiment of the
 technology's staggered rollout across Chicago police districts finds no reduction in fatal
 or non-fatal shootings, gun crimes, or shots-fired calls, only a rise in recovered
 evidence (Connealy et al., 2024); a national panel of large metropolitan counties reaches
@@ -115,19 +115,19 @@ the same null for firearm homicides and arrests (Doucette et al., 2021); and a
 district-level study finds that, if anything, the technology slowed dispatch and lowered
 arrest probability (Topper \& Ferrazares, 2024). Replicating that null is not this paper's
 contribution. What no prior evaluation has done is run the design at the community-area
-level---the 77-unit geography in which Chicago's open data are published and its policy
+level: the 77-unit geography in which Chicago's open data are published and its policy
 debate is conducted, finer than the police districts of the existing Chicago evaluations
 (Connealy et al., 2024; Topper \& Ferrazares, 2024).
 
 Our question is instead a methodological one: can the public, community-area-level data
 that dominate policy debate \emph{identify} such an effect at all, and what happens when a
 conventional evaluation is run on them without asking? The answer, defensibly stated, is
-that \textbf{no design we can run produces a credible causal estimate}---and the
+that \textbf{no design we can run produces a credible causal estimate}, and the
 instability is diagnostic, not incidental. It is the signature of a research design with no
 valid control group and a pre-period dominated by a single anomalous year. Three findings
 organize the paper. First, a standard two-way fixed-effects DiD manufactures a large,
 significant, robustness-surviving positive coefficient that collapses to a null the moment
-the count outcome is modeled correctly (Santos Silva \& Tenreyro, 2006; Wilson, 2022)---a worked
+the count outcome is modeled correctly (Santos Silva \& Tenreyro, 2006; Wilson, 2022), a worked
 instance, on a live \$3 million procurement decision, of a coefficient that passes every
 routine check yet fails a causal reading (LaLonde, 1986). Second, we estimate the selection
 mechanism the design founders on: ShotSpotter placement is predicted by structural
@@ -136,13 +136,13 @@ have no comparably situated untreated counterpart, which is what makes a synthet
 literally non-constructible rather than merely imperfect. Third, we state the substantive
 envelope honestly: the data rule out a large \emph{deterrence} effect but cannot exclude a
 survival-channel mortality benefit of the kind a boundary regression discontinuity
-attributes to faster response---a magnitude that falls inside our own confidence interval.
+attributes to faster response, a magnitude that falls inside our own confidence interval.
 The same two failures resurface when we treat Chicago's September 2024 removal of the system
-as an independent second experiment---a city-wide decline mistaken for a treatment effect,
-and an additive coefficient a count model erases---confirming that the non-identification is
+as an independent second experiment (a city-wide decline mistaken for a treatment effect,
+and an additive coefficient a count model erases) confirming that the non-identification is
 structural rather than an accident of how the installation happens to be timed.
-We close with the conclusion the data robustly support---that ShotSpotter functioned as a
-detection instrument, not as a demonstrated violence-reduction intervention---a reading
+We close with the conclusion the data robustly support: that ShotSpotter functioned as a
+detection instrument, not as a demonstrated violence-reduction intervention, a reading
 consistent with the 2023 decision to end the contract.
 
 % ===========================================================================
@@ -152,20 +152,20 @@ ShotSpotter is a real-time acoustic-detection service. Microphones triangulate t
 of gunfire, an algorithm filters non-gunshot sounds, and a human acoustic expert reviews
 the alert before it is dispatched to police (Choi, Librett, \& Collins, 2014; Gatens \&
 Reichert, 2019). The technology is sold as a response-time tool: faster, more accurate
-detection should mean faster police response and faster trauma care, and therefore---in
-principle---fewer deaths. While some scholars argue that policing and enforcement can
+detection should mean faster police response and faster trauma care, and therefore (in
+principle) fewer deaths. While some scholars argue that policing and enforcement can
 reduce gun violence (Braga \& Cook, 2023), others caution that aggressive enforcement
 carries serious social costs for communities already disproportionately affected by
 violence (Harcourt, 2019; Raphael \& Stoll, 2013).
 
 The evaluation record on gunshot detection is, by now, fairly settled, and it splits along
-one seam: the technology reliably improves \emph{process} outcomes---faster detection, more
-ballistic evidence, fewer shots-fired calls---but not the \emph{victim} outcomes that
+one seam: the technology reliably improves \emph{process} outcomes (faster detection, more
+ballistic evidence, fewer shots-fired calls) but not the \emph{victim} outcomes that
 motivate its purchase. A microsynthetic-control evaluation in Kansas City draws the seam
 sharply (Piza et al., 2024): coverage raised ballistic-evidence collection and cut
 shots-fired calls, yet left fatal shootings, non-fatal shootings, and gun assaults
-unchanged. Neighborhood evaluations in St.\ Louis echo it---roughly a 25\% drop in citizen
-shots-fired calls with no change in violent crime (Mares \& Blackburn, 2021)---while results
+unchanged. Neighborhood evaluations in St.\ Louis echo it (roughly a 25\% drop in citizen
+shots-fired calls with no change in violent crime (Mares \& Blackburn, 2021)) while results
 elsewhere range from crime reductions (Mares, 2023) to increases coinciding with deployment
 (Vovak et al., 2021). The same null holds at coarser units: staggered evaluations across
 Chicago police districts (Connealy et al., 2024) and metropolitan counties nationally
@@ -176,22 +176,22 @@ pools to a null relative incidence-rate ratio of $1.02$ (95\% CI $[0.90, 1.16]$;
 Dunlap, \& Pearson, 2026). The one channel with a credible claim to benefit is medical: a
 boundary regression discontinuity attributes a lower shooting-fatality rate inside coverage
 to faster emergency response (University of Chicago Crime Lab, 2024, not peer-reviewed). Against that
-backdrop, the question this paper takes up is not whether detection deters homicides---the
-weight of the evidence says it does not---but whether the community-area data on which most
+backdrop, the question this paper takes up is not whether detection deters homicides (the
+weight of the evidence says it does not) but whether the community-area data on which most
 local policy argument relies can \emph{identify} such an effect at all, and how a routine
 evaluation run on those data can mislead.
 
 Chicago's deployment was concentrated in the city's most disinvested neighborhoods. Each
-of the six neighborhoods studied here---Austin, Humboldt Park, North Lawndale,
-Englewood, West Englewood, and South Shore---has a poverty rate roughly twice the
+of the six neighborhoods studied here (Austin, Humboldt Park, North Lawndale,
+Englewood, West Englewood, and South Shore) has a poverty rate roughly twice the
 Chicago average (28.6\%--46.6\% versus 19.7\% city-wide), unemployment 1.5--3 times the
 city rate, and a hardship index between 55 and 94 against a city-wide median below 50
 (Census 2008--2012). The 51 ShotSpotter community areas accounted for an average of 381
 gun homicides per year in 2009--2016, against 42 per year across the 26 community areas
-without ShotSpotter---roughly a 9-to-1 ratio in aggregate, and about 4.6 times the
+without ShotSpotter, roughly a 9-to-1 ratio in aggregate, and about 4.6 times the
 homicides \emph{per area}. That ratio is the central methodological challenge of the
 paper: \textbf{ShotSpotter was deployed \emph{because} of concentrated violence and
-disadvantage, not assigned at random}---a selection rule we estimate directly in
+disadvantage, not assigned at random}, a selection rule we estimate directly in
 Section~\ref{sec:placement}. Figure~\ref{fig:map} shows the resulting geography of treatment
 and control.
 
@@ -213,17 +213,17 @@ from the Chicago Data Portal:
 
 \begin{itemize}
 \itemsep0.1em
-\item \textbf{Violence Reduction---Victims of Homicides and Non-Fatal Shootings}
+\item \textbf{Violence Reduction: Victims of Homicides and Non-Fatal Shootings}
 (61,450 incidents, 1991--2025), filtered to gun homicides ($n \approx 7{,}600$ in
 2009--2023) and non-fatal gunshot injuries ($n \approx 30{,}000$).
-\item \textbf{Violence Reduction---ShotSpotter Alerts (Historical)} (222,108 alerts,
+\item \textbf{Violence Reduction: ShotSpotter Alerts (Historical)} (222,108 alerts,
 2017-01-13 to 2024-09-22, when the city ended ShotSpotter; the 191,824 alerts through 2023
 fall in our analysis window).
-\item \textbf{Census Data---Selected Socioeconomic Indicators, 2008--2012} (77 community
+\item \textbf{Census Data: Selected Socioeconomic Indicators, 2008--2012} (77 community
 areas plus the city total).
 \item \textbf{ACS 5-Year Data by Community Area} (racial composition) and \textbf{Public
-Health Statistics---Life Expectancy by Community Area} (2010), used in the placement model.
-\item \textbf{Crimes---2001 to Present} (\texttt{ijzp-q8t2}), aggregated to
+Health Statistics: Life Expectancy by Community Area} (2010), used in the placement model.
+\item \textbf{Crimes: 2001 to Present} (\texttt{ijzp-q8t2}), aggregated to
 community-area-by-year weapons-violation incidents and arrests for the procedural-channel
 analysis.
 \item \textbf{Community Areas GeoJSON} (77 polygons).
@@ -234,13 +234,13 @@ exploits: 21 community areas appear in the data beginning in early 2017 and 30 b
 mid-2017 and mid-2018, leaving 26 never-treated areas. Treatment status is inferred from
 alert presence, so a community area counts as treated when district-level sensor coverage
 reached any part of it. The original project pipeline
-collapses both cohorts to a single 2017 cutoff---the standard convention, but one that
+collapses both cohorts to a single 2017 cutoff, the standard convention, but one that
 biases pooled estimates when treatment timing varies (Goodman-Bacon, 2021), motivating
 the cohort-aware estimators below. Homicide and alert data are aggregated to the
 community-area-by-year (and, for descriptive figures, community-area-by-month) level.
 
 Figure~\ref{fig:comparison} shows the raw before/during homicide comparison for the six
-study neighborhoods. Counts rose in most of them---but, as the rest of the paper makes
+study neighborhoods. Counts rose in most of them, but, as the rest of the paper makes
 clear, a raw before/during comparison is exactly the kind of contrast that selection and
 the city-wide trend render uninterpretable as a causal effect.
 
@@ -262,8 +262,8 @@ into treatment.}
 In a randomized experiment we would compare treated neighborhoods to a control group
 drawn from the same distribution of pre-treatment violence. Chicago's data do not allow
 that. Because the 51 ShotSpotter neighborhoods had roughly nine times as many gun homicides in
-aggregate as the 26 non-ShotSpotter neighborhoods---about 4.6 times as many per
-area---\emph{before} deployment, any
+aggregate as the 26 non-ShotSpotter neighborhoods (about 4.6 times as many per
+area) \emph{before} deployment, any
 difference-in-differences contrast must lean on the parallel-trends assumption: that,
 absent ShotSpotter, the two groups would have moved in parallel. Much of the paper is a
 sustained test of whether that assumption can survive contact with the data.
@@ -284,8 +284,8 @@ level, estimated on the full panel and with three robustness restrictions (exclu
 two-way fixed effects, appropriate for integer homicide counts. The Negative Binomial
 dispersion is \emph{estimated} (Cameron--Trivedi NB2 auxiliary regression; Cameron \&
 Trivedi, 2013) rather than fixed at one. As a heterogeneity-robust count analog of the
-Callaway--Sant'Anna estimator---and a check that the count-model null is not a
-fixed-effects weighting artifact---we also report a Poisson extended two-way fixed-effects
+Callaway--Sant'Anna estimator (and a check that the count-model null is not a
+fixed-effects weighting artifact) we also report a Poisson extended two-way fixed-effects
 model (Wooldridge, 2023), which saturates the treatment in cohort and calendar time and
 aggregates cohort-by-year effects from clean never-treated comparisons.
 
@@ -316,23 +316,23 @@ seven years and 51 communities, with the heaviest-coverage areas (Austin, West
 Englewood, Englewood, North Lawndale) generating 8,000--15,000 alerts each. Both alert
 volume and homicide counts peak in the same months (May--August) and the same hours (10
 PM to 1 AM); Figure~\ref{fig:hourly} shows the within-day co-movement. That co-movement is
-expected---detected gunfire and gun homicide share the same late-night diurnal cycle---so we
+expected (detected gunfire and gun homicide share the same late-night diurnal cycle) so we
 read the figure only as validation that the sensor network captures the gunfire it was
 purchased to capture, not as a finding in its own right. As a \emph{measurement
 instrument}, ShotSpotter works. The question these data must answer is whether detection
-translated into fewer homicides---and whether they can answer it at all.
+translated into fewer homicides, and whether they can answer it at all.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{hourly_pattern.png}
 \caption{ShotSpotter alerts and gun homicides rise and fall together over the day, both
-bottoming out mid-morning and peaking late at night---an expected co-movement, shown as
+bottoming out mid-morning and peaking late at night, an expected co-movement, shown as
 validation of the sensor network rather than as a finding. The system detects the gunfire
 it is designed to detect.}
 \label{fig:hourly}
 \end{figure}
 
-\subsection{The headline OLS DiD is positive---but disappears under count-data regression}
+\subsection{The headline OLS DiD is positive, but disappears under count-data regression}
 \label{sec:count}
 
 The two-way fixed-effects DiD coefficient on the full 2009--2023 panel is
@@ -340,8 +340,8 @@ $\beta = +2.627$ gun homicides per community-area-year (SE $= 0.638$, $p < 0.001
 CI $[+1.38, +3.88]$). It is robust across restrictions: excluding COVID years yields
 $+1.75$ ($p < 0.001$), excluding 2016 yields $+3.19$ ($p < 0.001$), and excluding both
 yields $+2.31$ ($p < 0.001$) (Table~\ref{tab:twfe}). Crucially, the coefficient is
-\emph{robust to fixed effects}---adding unit and year fixed effects reproduces the
-original DiD coefficient almost exactly---so it does not come from a missing-controls
+\emph{robust to fixed effects} (adding unit and year fixed effects reproduces the
+original DiD coefficient almost exactly) so it does not come from a missing-controls
 problem.
 
 \begin{table}[H]
@@ -367,17 +367,16 @@ whose variance grows with the mean; OLS treats them as continuous and homoscedas
 weighting all observations equally and reporting an effect on the additive scale.
 Poisson and Negative Binomial regressions let the variance scale with the mean and
 estimate effects on the log scale, where they correspond to multiplicative (proportional)
-changes---the natural metric for a percentage-effect treatment. Estimated this way, the
+changes, the natural metric for a percentage-effect treatment. Estimated this way, the
 effect is \textbf{statistically null across every robustness specification}
 (Table~\ref{tab:count}): Poisson and Negative Binomial incidence-rate ratios (IRRs)
 hover around $1.07$ with confidence intervals consistent with anywhere from a 13\%
 reduction to a 33\% increase in homicides. Because the estimated Negative Binomial
-dispersion is small ($\alpha \approx 0.02$)---the counts are only mildly
-overdispersed---the Negative Binomial IRRs land essentially on top of the Poisson
+dispersion is small ($\alpha \approx 0.02$), the counts are only mildly
+overdispersed, the Negative Binomial IRRs land essentially on top of the Poisson
 estimates. They also land essentially on top of the meta-analytic pooled effect for
 gunshot detection (relative IRR $1.02$, 95\% CI $[0.90, 1.16]$; Huff, Dunlap, \& Pearson,
-2026), estimated with the same incidence-rate-ratio metric---evidence that the
-multiplicative-scale null is a property of the intervention, not an artifact of this
+2026), estimated with the same incidence-rate-ratio metric, evidence that the multiplicative-scale null is a property of the intervention, not an artifact of this
 particular panel.
 
 \begin{table}[H]
@@ -390,7 +389,7 @@ means no effect.}
 \toprule
 Specification & $\beta$ & IRR & 95\% CI on IRR & $p$ \\
 \midrule
-OLS (TWFE), full panel                 & $+2.627$ & ---     & ---              & $<0.001$ \\
+OLS (TWFE), full panel                 & $+2.627$ & n/a     & n/a              & $<0.001$ \\
 \midrule
 Poisson (TWFE), full panel             & $+0.072$ & 1.074 & $[0.869, 1.328]$ & 0.508 \\
 Poisson (TWFE), excl.\ COVID           & $+0.014$ & 1.014 & $[0.816, 1.259]$ & 0.902 \\
@@ -413,13 +412,13 @@ heterogeneity at the neighborhood level: individual before/after changes in the
 gun-homicide rate range from about $-2\%$ (West Englewood) to $+62\%$ (South Shore), and
 even the pooled estimate ($+23\%$, excluding COVID) carries a wide interval.
 For completeness, non-fatal gunshot injuries (a four-times-larger sample) yield $\beta =
-+7.51$ under OLS ($p = 0.009$)---and the count-data correction is even starker there:
++7.51$ under OLS ($p = 0.009$), and the count-data correction is even starker there:
 estimated as Poisson or Negative Binomial with the same fixed effects, the point estimate
 flips \emph{below} one and is statistically null in every specification (IRRs
 $0.84$--$0.92$, $p \geq 0.23$; Table~\ref{tab:nfs}). The higher-powered outcome delivers the same verdict as
 the homicide series: the additive OLS coefficient is a scale artifact. The same distortion
 recurs, unchanged, when the identical difference-in-differences is run on weapons-violation
-enforcement rather than homicides---an order-of-magnitude-larger OLS coefficient that again
+enforcement rather than homicides: an order-of-magnitude-larger OLS coefficient that again
 collapses to a null incidence-rate ratio, confirming the inflation is a property of the
 additive specification and not of homicide counts (Appendix~\ref{app:procedural}).
 
@@ -439,8 +438,8 @@ null IRR $\approx 1.07$.}
 \includegraphics[width=0.82\textwidth]{forest_plot_effects.png}
 \caption{Neighborhood-level before/after change in the gun-homicide rate (excluding
 COVID), with the pooled DiD estimate at the bottom; changes whose intervals exclude zero
-in red, others in gray. The spread across neighborhoods---from roughly $-2\%$ to
-$+62\%$---shows how heavily the pooled headline leans on a few high-count neighborhoods.}
+in red, others in gray. The spread across neighborhoods (from roughly $-2\%$ to
+$+62\%$) shows how heavily the pooled headline leans on a few high-count neighborhoods.}
 \label{fig:forest}
 \end{figure}
 
@@ -455,7 +454,7 @@ significant; every count model is null with a point estimate \emph{below} one.}
 \toprule
 Model & Specification & $\beta$ & IRR & 95\% CI on IRR & $p$ \\
 \midrule
-OLS (TWFE)     & full panel   & $+7.51$  & ---   & ---              & 0.009 \\
+OLS (TWFE)     & full panel   & $+7.51$  & n/a   & n/a              & 0.009 \\
 \midrule
 Poisson        & full panel   & $-0.102$ & 0.903 & $[0.691, 1.181]$ & 0.457 \\
 Neg.\ Binomial & full panel   & $-0.168$ & 0.845 & $[0.640, 1.115]$ & 0.234 \\
@@ -477,9 +476,9 @@ dates well before the actual rollout should yield null estimates. It does not
 level, with magnitudes (1.3--1.9 homicides per area-year) on the same order as the
 post-2017 estimate. They are opposite-signed, but that is precisely the point: a design
 that manufactures ``significant'' effects in years before the program existed is
-capturing pre-existing trend differences across neighborhoods---most likely the
+capturing pre-existing trend differences across neighborhoods (most likely the
 long-run, differentially absorbed city-wide decline from the early-1990s
-peak---not the intervention. That a difference-in-differences specification can return
+peak), not the intervention. That a difference-in-differences specification can return
 spurious significance is exactly the pathology Bertrand, Duflo, and Mullainathan (2004)
 documented, in which conventional standard errors so understate uncertainty that a large
 share of randomly dated placebo interventions test as significant. Figure~\ref{fig:falsification} plots the placebo
@@ -515,7 +514,7 @@ the 1\% level and of comparable magnitude to the true post-2017 estimate.}
 
 The cohort-specific event study (Appendix Table~\ref{tab:eventstudy}, aggregated across the
 2017 and 2018 cohorts with never-treated controls) shows that \emph{every} pre-treatment
-coefficient is large and negative---a clear failure of parallel trends. A formal joint
+coefficient is large and negative, a clear failure of parallel trends. A formal joint
 Wald $F$-test on the seven pre-treatment interaction coefficients, which is invariant to
 the choice of base year, yields $F = 19.9$, $p = 0.006$, rejecting parallel trends at the
 1\% level. The pattern is mechanical: 2016 was a Chicago-wide homicide-record year,
@@ -525,7 +524,7 @@ anomalously low (Figure~\ref{fig:eventstudy}). Once a design fails this test, th
 contrast cannot be read as causal. This is not a technicality to be tested away: pre-trends
 tests are themselves underpowered, and conditioning on having ``passed'' one distorts the
 inference that follows (Roth, 2022). A design that visibly \emph{fails} the test, as this
-one does, is telling us the parallel-trends assumption is not available---and the credible
+one does, is telling us the parallel-trends assumption is not available, and the credible
 response is to report that the effect is not point-identified, not to lean on a single
 base-year normalization.
 
@@ -544,13 +543,13 @@ The hand-rolled event study is intuitive but is not the modern estimator the
 staggered-rollout literature prescribes. As a final check we re-estimate the effect with
 the \textbf{Callaway \& Sant'Anna (2021)} group-time ATT
 (Table~\ref{tab:cs}). On the full panel the overall ATT is $-2.45$ per
-community-area-year (SE $0.89$)---\emph{negative}, the opposite sign of the pooled OLS,
+community-area-year (SE $0.89$): \emph{negative}, the opposite sign of the pooled OLS,
 and stable to using not-yet-treated rather than never-treated controls ($-2.51$). But
 this negative sign is not a property of the estimator. It is driven almost entirely by
 the 2016 record-homicide year, which sits at the $k = -1$ baseline for the 2017 cohort:
 the event study shows that only the $k = -1$ (2016) pre-coefficient is significant while
 the rest hover at zero, and \textbf{excluding 2016 and re-estimating returns $+1.90$ (SE
-$0.72$)---the same sign as the OLS DiD} (Figure~\ref{fig:cs}). The apparent
+$0.72$), the same sign as the OLS DiD} (Figure~\ref{fig:cs}). The apparent
 OLS-versus-Callaway--Sant'Anna sign reversal is therefore a single-year sensitivity, not
 a sign that the estimators fundamentally disagree about a well-identified parameter. The
 Callaway--Sant'Anna estimator is precisely the tool the staggered-adoption literature
@@ -563,7 +562,7 @@ cohort-specific timing) locates the problem precisely: the ``forbidden'' compari
 the 2018 cohort against the already-treated 2017 cohort carries only $4.6\%$ of the
 weight, and the weighted 2$\times$2 components reproduce the aggregate exactly
 (Figure~\ref{fig:bacon}, Table~\ref{tab:bacon}). Negative-weighting contamination is therefore minor in this
-panel---the instability comes from the 2016 anomaly and the absence of a valid control
+panel; the instability comes from the 2016 anomaly and the absence of a valid control
 group, not from the staggered aggregation itself.
 
 \begin{table}[H]
@@ -624,23 +623,23 @@ Comparison & Weight & 2$\times$2 estimate \\
 
 One loose end remains. The headline null is a Poisson (and Negative Binomial) two-way
 fixed-effects regression, which under a staggered rollout carries the same
-heterogeneity-weighting concern as linear TWFE---a two-way fixed-effects PPML can place
+heterogeneity-weighting concern as linear TWFE: a two-way fixed-effects PPML can place
 negative weights on some treated cells (Moreau-Kastler, 2025). And the heterogeneity-robust
 estimator used above, Callaway--Sant'Anna, is \emph{linear}: it does not transfer to the
 multiplicative outcome the count argument itself calls for. The appropriate tool is a
-nonlinear, heterogeneity-robust count estimator, and we estimate it directly---a Poisson
+nonlinear, heterogeneity-robust count estimator, and we estimate it directly: a Poisson
 extended two-way fixed-effects model (Wooldridge, 2023) that saturates the treatment in
 cohort and calendar time, so each cohort-by-year effect is built from clean never-treated
 comparisons before aggregation, with a community-area cluster bootstrap for inference. It
 returns the same null: an overall ATT incidence-rate ratio of $1.05$ (95\% CI $[0.79,
 1.33]$), with cohort-time effects hovering at one at every horizon
-(Figure~\ref{fig:etwfe}, Table~\ref{tab:etwfe}). The right tool removes the last escape hatch---the count-model
+(Figure~\ref{fig:etwfe}, Table~\ref{tab:etwfe}). The right tool removes the last escape hatch: the count-model
 null is not an artifact of the plain PPML's weighting.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{etwfe_event_study.png}
-\caption{Wooldridge (2023) extended two-way fixed-effects Poisson event study---the
+\caption{Wooldridge (2023) extended two-way fixed-effects Poisson event study: the
 heterogeneity-robust estimator for count outcomes under staggered adoption. Every
 cohort-time incidence-rate ratio hovers at one, and the overall ATT is $1.05$ (95\% CI
 $[0.79, 1.33]$, community-area cluster bootstrap). The count-model null is not a weighting
@@ -680,8 +679,8 @@ violence. Because that selection is the hinge of every identification problem he
 estimate it directly, modeling ShotSpotter placement across all 77 community areas as a
 function of pre-period (2009--2016) gun-homicide levels and the 2008--2012 Census
 socioeconomic indicators. One caveat governs the exercise: the city's siting decision was
-administrative and made at the police-district level---the OIG documents deployment across
-twelve districts---so community-area treatment is the neighborhood-level footprint of that
+administrative and made at the police-district level (the OIG documents deployment across
+twelve districts) so community-area treatment is the neighborhood-level footprint of that
 coarser choice, and the model describes what that footprint tracks, not 77 independent
 siting decisions. Two facts emerge. First, placement tracks structural
 disadvantage even more tightly than the homicide count itself (Figure~\ref{fig:placement},
@@ -690,21 +689,21 @@ the hardship index separates treated from never-treated areas with an AUC of $0.
 per-capita income and unemployment each with $0.92$, against $0.79$ for the pre-period
 gun-homicide count, and
 once hardship is held fixed the violence count adds essentially nothing (its coefficient is
-statistically insignificant). Violence and disadvantage are entangled---the same
-neighborhoods score high on both---so this does not say violence was irrelevant; it says
+statistically insignificant). Violence and disadvantage are entangled (the same
+neighborhoods score high on both) so this does not say violence was irrelevant; it says
 the city sited ShotSpotter along the map of disinvestment, of which concentrated gun
 violence is one facet. The starkest summary of that map is not economic but biological: the
 ShotSpotter neighborhoods averaged 76 years of life expectancy in 2010 against 80 in the
-never-treated areas (Figure~\ref{fig:placement})---a four-year gap that states plainly who
+never-treated areas (Figure~\ref{fig:placement}): a four-year gap that states plainly who
 lives under the surveillance the city purchased.
 
 Second, and decisively for identification, placement is nearly deterministic. A propensity
 model on pre-period violence, hardship, and income separates the two groups with an AUC of
 $0.94$; the median propensity is $0.97$ for ShotSpotter areas against $0.19$ for
 never-treated areas; and the six highest-violence study neighborhoods all carry a placement
-propensity of at least $0.97$---a band that \emph{no} never-treated area reaches
-(Figure~\ref{fig:overlap}). The natural comparison---neighborhoods similar in pre-period
-violence that did not receive ShotSpotter---therefore does not exist in Chicago, which is
+propensity of at least $0.97$, a band that \emph{no} never-treated area reaches
+(Figure~\ref{fig:overlap}). The natural comparison (neighborhoods similar in pre-period
+violence that did not receive ShotSpotter) therefore does not exist in Chicago, which is
 exactly why the synthetic control below cannot be constructed. This is the selection-side
 statement of the counterfactual problem: the city installed ShotSpotter in essentially every highest-violence,
 highest-hardship neighborhood, leaving no comparably situated untreated unit from which to
@@ -725,7 +724,7 @@ independently of disadvantage. What it shows, descriptively, is that ShotSpotter
 tracked Chicago's racial geography at least as tightly as it tracked violence or hardship.
 That coverage blankets the city's highest-Black-and-Latino police districts is already
 documented (MacArthur Justice Center, 2021; Office of Inspector General, 2021); our marginal
-contribution is the \emph{conditional} result---that racial composition predicts placement
+contribution is the \emph{conditional} result: that racial composition predicts placement
 even once pre-period violence and hardship are held fixed. (Community-area race is measured
 from the 2019--2023 ACS, which post-dates the rollout; because Chicago's neighborhood racial
 composition is highly persistent, we read it as a proxy for the pre-rollout map.)
@@ -735,8 +734,8 @@ composition is highly persistent, we read it as a proxy for the pre-rollout map.
 \includegraphics[width=0.85\textwidth]{placement_coefficients.png}
 \caption{Standardized differences between ShotSpotter and never-treated community areas on
 each characteristic (treated minus control, in pooled SDs), with each variable's
-single-predictor discriminating power (AUC). Structural disadvantage---hardship, low
-income, unemployment---distinguishes the two groups more sharply than the pre-period
+single-predictor discriminating power (AUC). Structural disadvantage (hardship, low
+income, unemployment) distinguishes the two groups more sharply than the pre-period
 gun-homicide count does.}
 \label{fig:placement}
 \end{figure}
@@ -778,7 +777,7 @@ White, non-Hispanic share (\%)       & 12.6 & 55.7 & $-2.80$ & 0.948 \\
 \caption{Estimated propensity to receive ShotSpotter, treated versus never-treated. The
 distributions are starkly separated (AUC $0.94$); the shaded band holds the six highest-violence
 study neighborhoods (propensity $\geq 0.97$), where no never-treated area appears. Placement
-is predictable enough that these units have no untreated counterpart---the selection-side
+is predictable enough that these units have no untreated counterpart, the selection-side
 view of why no valid counterfactual exists.}
 \label{fig:overlap}
 \end{figure}
@@ -789,7 +788,7 @@ view of why no valid counterfactual exists.}
 \caption{Placement (linear-probability) models with standardized predictors and HC1 robust
 SEs (in parentheses); the dependent variable is receipt of ShotSpotter. Each coefficient is
 the change in placement probability per one-SD increase. The gun-homicide count does not
-predict placement once disadvantage is held fixed, while hardship and---conditionally---racial
+predict placement once disadvantage is held fixed, while hardship and (conditionally) racial
 composition do.}
 \label{tab:placement}
 \begin{tabular}{lcc}
@@ -803,9 +802,9 @@ Hardship index           & $+0.271^{***}$  & $+0.123$ \\
                          & $(0.068)$       & $(0.096)$ \\
 Per-capita income        & $-0.065$        & $+0.012$ \\
                          & $(0.053)$       & $(0.050)$ \\
-Black share              & ---             & $+0.333^{**}$ \\
+Black share              & n/a             & $+0.333^{**}$ \\
                          &                 & $(0.110)$ \\
-Hispanic/Latino share    & ---             & $+0.282^{**}$ \\
+Hispanic/Latino share    & n/a             & $+0.282^{**}$ \\
                          &                 & $(0.094)$ \\
 \midrule
 $R^2$ (LPM)              & 0.506 & 0.613 \\
@@ -821,7 +820,7 @@ $N$                      & 77 & 77 \\
 \subsection{Synthetic control is infeasible}
 
 For each of the six study neighborhoods, the synthetic-control optimizer concentrates
-100\% of the weight on a single donor---Washington Heights, the highest-violence
+100\% of the weight on a single donor: Washington Heights, the highest-violence
 non-ShotSpotter community area. Pre-treatment RMSEs are large (10--34 homicides per year
 against actual values of 15--70), meaning even the best linear combination of donors
 cannot reproduce the pre-treatment trajectory of any treated unit. The synthetic
@@ -837,16 +836,16 @@ donor units, not by any treatment effect. The 26 never-treated community areas o
 low-violence end of Chicago's distribution, so there is no donor pool capable of
 constructing a credible counterfactual for the city's most violent neighborhoods. This
 is not a failure of method; it is a feature of the data. ShotSpotter's selection
-rule---deploy where violence is highest---is, in a literal sense, what makes synthetic
+rule (deploy where violence is highest) is, in a literal sense, what makes synthetic
 control infeasible. The absence of a counterfactual is itself the finding.
 
 The contrast with settings where synthetic control \emph{does} work is instructive. In
-Kansas City, gunshot detection covers a localized 3.5-square-mile zone---about 1\% of the
-city---leaving a large donor pool of untreated micro-units, and a microsynthetic control
+Kansas City, gunshot detection covers a localized 3.5-square-mile zone (about 1\% of the
+city) leaving a large donor pool of untreated micro-units, and a microsynthetic control
 is feasible (Piza et al., 2024; Robbins \& Davenport, 2021). Chicago is the mirror image:
 coverage blankets essentially every high-violence community area, so the pool of comparably
 violent untreated donors is empty. Infeasibility here is therefore not a shortcoming of the
-estimator but a consequence of near-universal treatment among the units of interest---the
+estimator but a consequence of near-universal treatment among the units of interest, the
 same fact the placement model states from the selection side. Permutation $p$-values from
 synthetic control lack a clean interpretation in any case (Ferman et al., 2020).
 
@@ -863,7 +862,7 @@ high-violence treated unit. The method is infeasible for these data.}
 \subsection{What does explain neighborhood-level violence?}
 
 The hardship index from the 2008--2012 Census ranks the six study neighborhoods at 55,
-73, 85, 87, 89, and 94---against a city-wide hardship score below 50 and the
+73, 85, 87, 89, and 94, against a city-wide hardship score below 50 and the
 lowest-violence community areas at 1--10. Per-capita income in these neighborhoods ranges
 from about \$11,000 to \$19,000, against a city-wide \$28,202. The same neighborhoods
 that had the highest homicide rates \emph{before} ShotSpotter still had the highest
@@ -877,7 +876,7 @@ explanatory power once disadvantage is held constant.
 Chicago switched ShotSpotter off on 22 September 2024, and the gun-homicide decline that
 followed has been read in public commentary as proof the technology never worked. The
 shutoff is a genuine second experiment, so it is worth asking whether it identifies
-anything the installation did not. It does not---and it fails in precisely the two ways the
+anything the installation did not. It does not, and it fails in precisely the two ways the
 installation estimate fails, which is itself the cleanest confirmation of the paper's
 argument.
 
@@ -893,11 +892,11 @@ that would have credited the 2016--2021 rise to the rollout.
 Second, the scale artifact. Netting out the common trend with a difference-in-differences
 does not rescue identification, because the additive DiD reproduces the very artifact of
 Section~\ref{sec:count}: it returns a ``significant'' removal \emph{benefit} of $-0.25$ gun
-homicides per area-month ($p < 0.001$)---but only because coverage areas start from a far
+homicides per area-month ($p < 0.001$), but only because coverage areas start from a far
 higher baseline ($0.85$ versus $0.20$ gun homicides per area-month) and so move more in
 absolute terms for the same proportional change. On the correct multiplicative scale the
 removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.54, 1.52]$; Table~\ref{tab:removal}). The post window is also
-short---seven complete months, with 2025 only partially observed---so the estimate is
+short (seven complete months, with 2025 only partially observed) so the estimate is
 under-powered on top of being non-identified. Both the raw drop and the additive DiD are
 mirages: these data can no more identify the removal effect than the installation effect, in
 either direction. The public debate has confidently drawn both unwarranted inferences.
@@ -935,7 +934,7 @@ Never-treated ($n=26$)     & 0.199 & 0.137 & $-31\%$ \\
 \multicolumn{4}{l}{\emph{Panel B. Removal difference-in-differences (treated $\times$ post)}} \\
 Estimator & Estimate (SE) & 95\% CI & $p$ \\
 \midrule
-OLS (additive, per area-month) & $-0.255\ (0.069)$ & --- & $<0.001$ \\
+OLS (additive, per area-month) & $-0.255\ (0.069)$ & n/a & $<0.001$ \\
 Poisson (IRR)                  & $0.909$ & $[0.545, 1.518]$ & 0.717 \\
 \bottomrule
 \end{tabular}
@@ -944,16 +943,16 @@ Poisson (IRR)                  & $0.909$ & $[0.545, 1.518]$ & 0.717 \\
 % ===========================================================================
 \section{What the Data Can and Cannot Support}
 
-Taken together---(a) an OLS DiD coefficient that disappears under proper count-data
+Taken together, (a) an OLS DiD coefficient that disappears under proper count-data
 regression (Poisson IRR $1.07$, $p = 0.51$; Negative Binomial IRR $1.07$, $p = 0.55$);
 (b) a Wald $F$-test that rejects parallel trends at the 1\% level ($F = 19.9$, $p =
 0.006$); (c) similarly significant pre-period placebos; (d) an infeasible synthetic
 control; and (e) a Callaway--Sant'Anna estimate whose sign reverses ($-2.45$ to $+1.90$)
-when one anomalous year is dropped---the evidence points to a single conclusion: \textbf{the
+when one anomalous year is dropped, the evidence points to a single conclusion: \textbf{the
 design cannot credibly identify the causal effect of ShotSpotter installation on gun
 homicides.} And the September 2024 removal, examined the same way, reproduces both
-failures at once---a city-wide decline mistaken for a treatment effect, and an additive DiD
-that manufactures significance the multiplicative model erases (Section~\ref{sec:removal})---so
+failures at once: a city-wide decline mistaken for a treatment effect, and an additive DiD
+that manufactures significance the multiplicative model erases (Section~\ref{sec:removal}), so
 the non-identification is a property of the data and the setting, not an artifact of how the
 installation event happens to be timed. Table~\ref{tab:summary} lays out why the estimators
 differ.
@@ -961,7 +960,7 @@ differ.
 \begin{table}[H]
 \centering
 \small
-\caption{Why the estimates differ---and what actually moves each one.}
+\caption{Why the estimates differ, and what actually moves each one.}
 \label{tab:summary}
 \begin{tabular}{p{0.30\textwidth}p{0.22\textwidth}p{0.40\textwidth}}
 \toprule
@@ -974,14 +973,14 @@ Callaway--Sant'Anna & $-2.45$ ($p < 0.01$) & Flips to $+1.90$ once the 2016 outl
 \end{tabular}
 \end{table}
 
-The data do not say ShotSpotter caused a 2.6-homicide-per-year \emph{increase}---that
-statistic is a misspecification artifact. Neither do they say it caused a reduction---that
+The data do not say ShotSpotter caused a 2.6-homicide-per-year \emph{increase}; that
+statistic is a misspecification artifact. Neither do they say it caused a reduction; that
 reading takes a 2016-driven event-study coefficient too literally. The proper count-data
 specifications return statistically null effects with confidence intervals spanning the
 entire policy-relevant range.
 
 We can, however, bound the answer in one direction: \textbf{the data are inconsistent with
-a large \emph{deterrence} effect}---a broad, sustained fall in the number of shootings of
+a large \emph{deterrence} effect}: a broad, sustained fall in the number of shootings of
 the kind detection volume alone was meant to produce. A treatment that large, at these
 sample sizes, would have produced visibly negative post-treatment event-study coefficients
 with intervals excluding zero, robustness across specifications, and a cleaner signal in
@@ -992,15 +991,15 @@ boundary regression-discontinuity analysis attributes roughly 85 fewer deaths pe
 faster emergency response inside coverage, working through victim survival rather than
 deterrence (University of Chicago Crime Lab, 2024; a working analysis, not yet
 peer-reviewed). The direct tests of that channel are equivocal rather than supportive: the
-two studies that measured case fatality found no reduction---Piza et al.\ (2024) compare
+two studies that measured case fatality found no reduction: Piza et al.\ (2024) compare
 the fatal and non-fatal shooting counts in the Kansas City coverage area and find no
 difference, and a Camden trauma-registry study found faster prehospital times but no
 significant adjusted mortality difference, albeit among more severely injured detected
-victims (Goldenberg et al., 2019). The mechanism is real---detection alerts precede the
-first 911 call by a median of roughly 90 seconds (Piza et al., 2023)---but its translation
+victims (Goldenberg et al., 2019). The mechanism is real, detection alerts precede the
+first 911 call by a median of roughly 90 seconds (Piza et al., 2023), but its translation
 into fewer deaths is unproven. A mortality reduction of the magnitude the discontinuity
-implies would still fall \emph{inside} our own count-model confidence interval, and a community-area-by-year homicide panel---which
-observes neither response times nor the conversion of shootings into deaths---is simply not
+implies would still fall \emph{inside} our own count-model confidence interval, and a community-area-by-year homicide panel (which
+observes neither response times nor the conversion of shootings into deaths) is simply not
 built to detect it. Ruling out a large deterrence effect is therefore not the same as
 ruling out every benefit, and we do not claim the stronger statement. Whatever effect
 ShotSpotter had on gun homicides through deterrence was not large enough to dominate the
@@ -1029,7 +1028,7 @@ homicides.
 \textbf{Structural factors dominate.} A surveillance technology cannot, by itself, change
 the distribution of poverty, unemployment, housing instability, or labor-market access.
 Programs that have reduced homicide in randomized or quasi-experimental
-evaluations---READI Chicago, Cure Violence, Becoming a Man---work on those structural
+evaluations (READI Chicago, Cure Violence, Becoming a Man) work on those structural
 channels directly. A microphone on a streetlight does not.
 
 % ===========================================================================
@@ -1037,16 +1036,16 @@ channels directly. A microphone on a streetlight does not.
 
 The most important limitation is the one developed throughout the paper: the design
 itself cannot identify a clean treatment effect from these data, because the city did not
-generate the counterfactual we need---Chicago neighborhoods with ShotSpotter-eligible
+generate the counterfactual we need: Chicago neighborhoods with ShotSpotter-eligible
 violence levels but no ShotSpotter installation. Beyond that, several caveats are worth
 naming explicitly. The unit of analysis is coarse. The crime-and-place literature favors
-micro-geographic units---street segments---over administrative geographies (Weisburd, 2015),
+micro-geographic units (street segments) over administrative geographies (Weisburd, 2015),
 and Schnell, Braga, and Piza (2017) show for Chicago specifically that community areas mask
 within-area heterogeneity that finer units capture; evaluations pinned to administrative
 units can also overstate coverage (Doucette et al., 2021). We use the community area
 deliberately, because it is the unit at which Chicago's open data are published and its
 policy debate is conducted, and the paper's claim is precisely that at this policy-grade
-resolution the effect is not identifiable---the coarseness is part of the finding, not an
+resolution the effect is not identifiable; the coarseness is part of the finding, not an
 assumption to wave away. A micro-geographic re-estimation, once the city releases the
 sensor-coverage polygons, would be the natural complement. The panel is annual, masking
 within-year dynamics. Standard errors
@@ -1054,17 +1053,17 @@ cluster on community area (about 77 clusters); a restricted wild-cluster bootstr
 (Cameron, Gelbach, \& Miller, 2008; 999 Rademacher replications) returns $p \approx
 0.001$ for the OLS DiD in every specification (Appendix~\ref{app:wildboot},
 Table~\ref{tab:wildboot}), so the headline coefficient is not an artifact of thin-cluster
-inference---the problem is the specification and the design, not the standard errors. Two event-study implementations
-are reported---a transparent hand-rolled difference-in-means kept for intuition, and the
+inference; the problem is the specification and the design, not the standard errors. Two event-study implementations
+are reported: a transparent hand-rolled difference-in-means kept for intuition, and the
 packaged Callaway--Sant'Anna estimator, which should be treated as the authoritative
 staggered-DiD result. The placement model is cross-sectional and descriptive: it documents
 the selection pattern but does not identify a causal siting rule, and its racial-composition
 measure is drawn from the 2019--2023 ACS, a proxy for the pre-rollout composition that
 relies on the persistence of Chicago's neighborhood racial geography. And the analysis
-observes neither police response times, dispatch decisions, nor arrests---the actual channel
+observes neither police response times, dispatch decisions, nor arrests: the actual channel
 through which detection could plausibly reduce violence.
 
-The comparison a credible design needs---similarly violent places without detection---must
+The comparison a credible design needs (similarly violent places without detection) must
 therefore be built outside the community-area frame, and the existing literature shows how:
 Connealy et al. (2024) construct it by matching Chicago police districts, and Doucette et
 al. (2021) by comparing metropolitan counties nationally; both recover the null this panel
@@ -1086,13 +1085,13 @@ treated-area violence levels. With no valid control group and a pre-period domin
 one outlier year, these data simply cannot identify a causal effect in either direction.
 They are inconsistent with a large \emph{deterrence} effect, though not with the smaller,
 survival-channel mortality benefit a boundary discontinuity design attributes to faster
-response---an effect this panel is not built to see.
+response, an effect this panel is not built to see.
 
 That non-result is itself a policy statement. The 2023 termination of Chicago's
 ShotSpotter contract is consistent with the absence, in the aggregate data, of the broad
 violence reduction the technology was marketed to deliver. Resources reallocated from
-detection contracts toward community-based violence-prevention programs---READI Chicago,
-Cure Violence, Becoming a Man---would, on the existing quasi-experimental evidence, have at
+detection contracts toward community-based violence-prevention programs (READI Chicago,
+Cure Violence, Becoming a Man) would, on the existing quasi-experimental evidence, have at
 least as good a chance of producing the homicide reductions ShotSpotter has not been shown
 to deliver at scale. Technology can help detect the problem; on this evidence, it has not
 been shown to solve it.
@@ -1102,27 +1101,27 @@ been shown to solve it.
 \section{The specification artifact recurs on enforcement outcomes}
 \label{app:procedural}
 
-The count-data artifact of Section~\ref{sec:count}---a large, significant additive OLS
-coefficient that collapses to a null incidence-rate ratio under Poisson---is not specific to
+The count-data artifact of Section~\ref{sec:count} (a large, significant additive OLS
+coefficient that collapses to a null incidence-rate ratio under Poisson) is not specific to
 homicide counts. Running the \emph{identical} two-way fixed-effects DiD on a completely
 different outcome reproduces it exactly, which is the cleanest available demonstration that
 the OLS coefficient measures a scale, not an effect.
 
-Gunshot detection is documented to improve \emph{process} outcomes---faster detection, more
-ballistic evidence, more gun recoveries---even where it does not reduce victimization (Piza
+Gunshot detection is documented to improve \emph{process} outcomes (faster detection, more
+ballistic evidence, more gun recoveries) even where it does not reduce victimization (Piza
 et al., 2024). Chicago's process measures are FOIA-only, but the public analog is
 weapons-violation enforcement from the Crimes dataset (\texttt{ijzp-q8t2}). Running the
-same DiD on two enforcement measures---weapons-violation incidents and arrests, aggregated
-to the community-area-by-year panel---yields Figure~\ref{fig:procedural}, and it teaches two
+same DiD on two enforcement measures (weapons-violation incidents and arrests, aggregated
+to the community-area-by-year panel) yields Figure~\ref{fig:procedural}, and it teaches two
 things.
 
 First, the specification artifact is general. Weapons-violation incidents produce an OLS DiD
-of $+51.8$ per community-area-year ($p < 0.001$)---an order of magnitude larger than the
-homicide coefficient, and just as significant---yet it collapses to a statistically null
+of $+51.8$ per community-area-year ($p < 0.001$), an order of magnitude larger than the
+homicide coefficient, and just as significant, yet it collapses to a statistically null
 incidence-rate ratio of $1.13$ ($p = 0.48$) under Poisson with the same fixed effects;
 weapons arrests behave identically (OLS $+22.0$, $p < 0.01$; IRR $0.95$, $p = 0.82$). The
 additive-scale inflation that produced the headline homicide coefficient is not a quirk of
-homicide counts---it recurs, unchanged, on a completely different outcome.
+homicide counts; it recurs, unchanged, on a completely different outcome.
 
 Second, on the substance, these data do not reproduce the process benefit that a
 microsynthetic control recovers in Kansas City (Piza et al., 2024): weapons enforcement
@@ -1131,7 +1130,7 @@ Whether that reflects the 2021 OIG finding that Chicago's alerts rarely produced
 investigative evidence (Office of Inspector General, 2021), or simply the same absent
 counterfactual that governs every estimate in this paper, these data cannot say. What can be
 said is double-edged: to whatever extent coverage concentrated enforcement, it did so in the
-lowest-life-expectancy, most heavily policed neighborhoods---the ``procedural benefit''
+lowest-life-expectancy, most heavily policed neighborhoods; the ``procedural benefit''
 vendors advertise and the surveillance burden advocates warn of are two readings of the same
 coin.
 
@@ -1141,7 +1140,7 @@ coin.
 \caption{The same two-way fixed-effects DiD applied to a victim outcome (gun homicides) and
 two enforcement-process measures (weapons-violation incidents and arrests). Every outcome
 carries a large, significant OLS coefficient that collapses to a statistically null
-incidence-rate ratio on the count scale---the additive-scale artifact is not specific to
+incidence-rate ratio on the count scale; the additive-scale artifact is not specific to
 homicides, and the process channel shows no detectable footprint of coverage in these
 community-area data.}
 \label{fig:procedural}
@@ -1190,7 +1189,7 @@ $-5$ & $-5.09$ & $[-8.97, -1.20]$ \\
 $-4$ & $-6.25$ & $[-10.04, -2.46]$ \\
 $-3$ & $-6.09$ & $[-10.01, -2.17]$ \\
 $-2$ & $-4.92$ & $[-8.92, -0.93]$ \\
-$-1$ (base) & $0$ & --- \\
+$-1$ (base) & $0$ & n/a \\
 $\phantom{+}0$ & $-1.95$ & $[-6.57, +2.68]$ \\
 $+1$ & $-4.65$ & $[-8.79, -0.51]$ \\
 $+2$ & $-3.83$ & $[-8.12, +0.47]$ \\
@@ -1207,7 +1206,7 @@ $+5$ & $-2.99$ & $[-7.19, +1.22]$ \\
 Because the panel has only about 77 clusters, Table~\ref{tab:wildboot} re-tests the OLS DiD
 with a restricted wild-cluster bootstrap (Rademacher weights, null imposed, 999
 replications; Cameron, Gelbach, \& Miller, 2008). The coefficient stays significant in every
-specification, so the headline is not an artifact of thin-cluster inference---the problem is
+specification, so the headline is not an artifact of thin-cluster inference; the problem is
 the additive specification and the design, not the standard errors.
 
 \begin{table}[H]
@@ -1233,15 +1232,15 @@ Excl.\ COVID $+$ 2016 & $+2.311$ & 3.89 & $<0.001$ & 0.001 \\
 \section*{Data and Code Availability}
 
 Every input is a public product of the City of Chicago Data Portal
-(\url{https://data.cityofchicago.org}): Violence Reduction---Victims of Homicides and
-Non-Fatal Shootings (\texttt{gumc-mgzr}); Violence Reduction---ShotSpotter Alerts
-(Historical) (\texttt{3h7q-7mdb}); Census Data---Selected Socioeconomic Indicators,
+(\url{https://data.cityofchicago.org}): Violence Reduction: Victims of Homicides and
+Non-Fatal Shootings (\texttt{gumc-mgzr}); Violence Reduction: ShotSpotter Alerts
+(Historical) (\texttt{3h7q-7mdb}); Census Data: Selected Socioeconomic Indicators,
 2008--2012 (\texttt{kn9c-c2s2}); ACS 5-Year Data by Community Area (\texttt{t68z-cikk});
-Public Health Statistics---Life Expectancy by Community Area (\texttt{qjr3-bm53});
-Crimes---2001 to Present (\texttt{ijzp-q8t2}); and the Community Areas boundary file
+Public Health Statistics: Life Expectancy by Community Area (\texttt{qjr3-bm53});
+Crimes: 2001 to Present (\texttt{ijzp-q8t2}); and the Community Areas boundary file
 (\texttt{cauq-8yn6}). The complete analysis
-pipeline---data-processing, all five estimator classes, the placement model, and every
-figure---is openly available and reproduces the paper end to end at
+pipeline (data-processing, all five estimator classes, the placement model, and every
+figure) is openly available and reproduces the paper end to end at
 \url{https://github.com/abelma2/ACE592_Final_Project}.
 
 % ===========================================================================
@@ -1276,7 +1275,8 @@ Carr, J., \& Doleac, J. L. (2016). The geography, incidence, and underreporting 
 violence: New evidence using ShotSpotter data. Working paper.
 
 Centers for Disease Control and Prevention (CDC). (2020). \emph{Firearm mortality by
-state and demographic group---United States, 2018}.
+state and
+demographic group, United States, 2018}.
 \url{https://www.cdc.gov/nchs/pressroom/states/illinois/il.htm}
 
 Choi, K. S., Librett, M., \& Collins, T. J. (2014). An empirical evaluation: Gunshot
@@ -1321,7 +1321,7 @@ Irvin-Erickson, Y., Bai, B., Gurvis, A., \& Mohr, E. (2016). \emph{The effect of
 violence on local economies}. Urban Institute.
 
 Kegler, S. R., Dahlberg, L. L., \& Mercy, J. A. (2018). Firearm homicides and suicides in
-major metropolitan areas---United States, 2012--2013 and 2015--2016. \emph{Morbidity and
+major metropolitan areas, United States, 2012--2013 and 2015--2016. \emph{Morbidity and
 Mortality Weekly Report, 67}.
 
 LaLonde, R. J. (1986). Evaluating the econometric evaluations of training programs with
