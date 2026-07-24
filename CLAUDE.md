@@ -34,7 +34,15 @@ cd paper && pdflatex -interaction=nonstopmode -halt-on-error final_paper.tex && 
 
 Same for `methods_memo.tex`. A clean build has no `undefined` in the log and no LaTeX warnings; `final_paper.pdf` is ~36 pages.
 
-**There is no test suite or linter.** Verifying a change means: re-run the affected script and inspect its `docs/results_summary_*.md`, then recompile the paper and confirm no undefined references.
+**There is a consistency check, and it is the closest thing here to a test suite.** Run it after changing any analysis and before committing:
+
+```bash
+python scripts/check_consistency.py     # exits non-zero on failure; stdlib only
+```
+
+It re-reads the source-of-truth `docs/results_summary_*.md` and asserts the paper states those numbers, verifies every occurrence of a confidence interval carries the same point estimate (the characteristic failure here is updating one instance of a number and missing another), and checks reference integrity, figure availability, panel-count arithmetic, the no-em-dash rule, and the framing constraint below. It has been validated by deliberately re-introducing three past regressions and confirming each is caught.
+
+Beyond that, verifying a change still means: re-run the affected script, inspect its `docs/results_summary_*.md`, and recompile the paper.
 
 ## Architecture & the consistency hazard
 
