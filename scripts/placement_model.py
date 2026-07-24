@@ -372,20 +372,37 @@ ps, ps_auc, ps_r2, _ = logit_fit(["z_pre_gun_hom", "z_hardship", "z_income"])
 df["propensity"] = ps
 t_ps = df.loc[df.treated == 1, "propensity"]
 c_ps = df.loc[df.treated == 0, "propensity"]
-# The six highest-violence study neighborhoods sit at the top of the propensity scale;
-# the honest "no counterfactual" statement is that no control lives up there with them.
+# The six named neighborhoods are ILLUSTRATIVE cases carried over from the original
+# analysis (they are ranks 1, 2, 3, 4, 8 and 9 of the 51 treated areas by pre-period
+# violence, not the literal top six). The identification argument does not rest on them:
+# the rule-free statement below counts how many treated areas lie above EVERY
+# never-treated unit, which needs no hand-picked subset.
 STUDY6 = ["Austin", "Humboldt Park", "North Lawndale", "Englewood", "West Englewood", "South Shore"]
 study6_ps = df[df["ca_name"].isin(STUDY6)]["propensity"]
 c_ge_08 = int((c_ps >= 0.8).sum())
 c_ge_09 = int((c_ps >= 0.9).sum())
 study6_lo = study6_ps.min()
 c_above_study6 = int((c_ps >= study6_lo).sum())
+
+# --- rule-free no-overlap statistics (no subset chosen by hand) ---
+max_c_ps = float(c_ps.max())
+n_t_above_all_c = int((t_ps > max_c_ps).sum())
+thresh_tbl = [(thr, int((t_ps >= thr).sum()), int((c_ps >= thr).sum())) for thr in (0.90, 0.95, 0.97)]
+above_viol = df.loc[(df.treated == 1) & (df.propensity > max_c_ps), "pre_gun_hom"]
+
 print(f"  Propensity model AUC={ps_auc:.3f}")
 print(f"  Treated propensity: median {t_ps.median():.2f}  |  Control propensity: median {c_ps.median():.2f}")
 print(f"  Never-treated areas with propensity >= 0.8: {c_ge_08} of {n_c};  >= 0.9: {c_ge_09} of {n_c}")
-print(f"  Six study neighborhoods' propensity: min={study6_ps.min():.2f}, all >= {study6_lo:.2f}")
-print(f"  Never-treated areas as high-propensity as the LEAST-extreme study neighborhood: "
-      f"{c_above_study6} of {n_c}")
+print(f"\n  RULE-FREE no-overlap statement (no hand-picked subset):")
+print(f"    Highest never-treated propensity = {max_c_ps:.3f}")
+print(f"    Treated areas above EVERY never-treated unit: {n_t_above_all_c} of {n_t}")
+for thr, nt_, nc_ in thresh_tbl:
+    print(f"      propensity >= {thr:.2f}: {nt_} of {n_t} treated, {nc_} of {n_c} never-treated")
+print(f"    Those {n_t_above_all_c} areas span {above_viol.min():.1f} to {above_viol.max():.1f} "
+      f"gun homicides/yr, so the support failure is not confined to the violence tail.")
+print(f"\n  Six illustrative neighborhoods (ranks 1,2,3,4,8,9 of {n_t} by pre-period violence):")
+print(f"    propensity min={study6_ps.min():.3f}, all >= {study6_lo:.2f}; "
+      f"never-treated areas that high: {c_above_study6} of {n_c}")
 
 
 # =====================================================================
@@ -451,15 +468,19 @@ ax.axhline(0, color="#999", lw=0.6)
 ax.set_xlabel("Estimated propensity to receive ShotSpotter\n"
               "(logit on pre-period violence, hardship, and per-capita income)")
 ax.set_ylabel("Number of community areas")
-ax.axvspan(study6_lo, 1.02, color=COLORS["accent"], alpha=0.10, zorder=0)
-ax.set_title("Placement is highly predictable — and no control matches the study areas\n"
+ax.axvspan(max_c_ps, 1.02, color=COLORS["accent"], alpha=0.12, zorder=0)
+ax.axvline(max_c_ps, color="#8a7b3a", ls="--", lw=1.3, zorder=1)
+ax.text(max_c_ps - 0.012, ax.get_ylim()[1] * 0.55,
+        f"no never-treated area\nabove {max_c_ps:.2f}", fontsize=8.5, ha="right", va="top",
+        style="italic", color="#6d6128")
+ax.set_title("Placement is highly predictable, and most treated areas have no counterpart\n"
              "The selection-side view of why no valid counterfactual exists",
              fontweight="bold", pad=10)
 ax.legend(frameon=False, fontsize=10, loc="upper center")
 add_n_label(ax, f"Propensity AUC = {ps_auc:.2f}\n"
                 f"Control median {c_ps.median():.2f} vs treated {t_ps.median():.2f}\n"
-                f"Six study areas all ≥ {study6_lo:.2f} (shaded);\n"
-                f"{c_above_study6} of {n_c} controls reach that band",
+                f"Highest never-treated propensity = {max_c_ps:.2f}\n"
+                f"{n_t_above_all_c} of {n_t} treated areas sit above it",
             loc="upper right")
 add_source_note(fig, SOURCE_DEFAULT + "  Census 2008-2012 indicators; Public Health life expectancy (2010).")
 fig.tight_layout(rect=[0, 0.03, 1, 1])
@@ -591,14 +612,26 @@ L.append(f"Propensity model (violence + hardship + income) AUC = {ps_auc:.3f}. M
          f"scale, where a handful of lower-hardship areas received ShotSpotter and a handful of "
          f"higher-hardship areas did not.")
 L.append("")
-L.append(f"The decisive fact is at the top of the scale. The six highest-violence study "
-         f"neighborhoods all carry a placement propensity of at least {study6_lo:.2f}, and "
-         f"{c_above_study6} of {n_c} never-treated areas reach that band "
-         f"({c_ge_09} reach 0.9). These are exactly the units the synthetic control in the main "
-         f"paper cannot reproduce. The placement model therefore states the identification problem "
-         f"from the selection side: the city installed ShotSpotter in essentially every "
-         f"highest-violence, highest-hardship area, leaving no comparably situated untreated unit "
-         f"from which to build a counterfactual for them.")
+L.append(f"The decisive fact is at the top of the scale, and it needs no hand-picked subset. "
+         f"The highest propensity among all {n_c} never-treated areas is {max_c_ps:.3f}, and "
+         f"**{n_t_above_all_c} of the {n_t} treated areas lie above every single never-treated "
+         f"unit**. At a threshold of 0.90, {thresh_tbl[0][1]} of {n_t} treated areas qualify "
+         f"against {thresh_tbl[0][2]} of {n_c} never-treated; at 0.95 it is {thresh_tbl[1][1]} "
+         f"versus {thresh_tbl[1][2]}, and at 0.97 {thresh_tbl[2][1]} versus {thresh_tbl[2][2]}. "
+         f"Those {n_t_above_all_c} areas span {above_viol.min():.1f} to {above_viol.max():.1f} gun "
+         f"homicides per year, so the support failure is not confined to the violence tail: "
+         f"hardship drives it too. The placement model therefore states the identification problem "
+         f"from the selection side: the city installed ShotSpotter across essentially the whole "
+         f"high-hardship, high-violence region of the city, leaving no comparably situated "
+         f"untreated unit from which to build a counterfactual for those areas.")
+L.append("")
+L.append(f"The six neighborhoods used as illustrative cases elsewhere in the paper (Austin, "
+         f"Humboldt Park, North Lawndale, Englewood, West Englewood, South Shore) sit inside that "
+         f"region, all with propensity at least {study6_lo:.2f}, which {c_above_study6} of {n_c} "
+         f"never-treated areas reach. They are carried over from the original analysis and are "
+         f"ranks 1, 2, 3, 4, 8 and 9 of {n_t} by pre-period violence, not the literal top six; "
+         f"nothing in the identification argument depends on which of the high-propensity areas "
+         f"are displayed.")
 L.append("")
 L.append("## Figures")
 L.append("")

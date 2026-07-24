@@ -59,9 +59,9 @@ ShotSpotter deployment is the worked case: a community-area-by-year panel of gun
 \emph{Signature one, no overlap.} A placement model separates treated from never-treated
 areas with a propensity AUC of $0.94$ (median $0.97$ versus $0.19$), structural
 disadvantage predicts siting better (hardship AUC $0.93$) than the pre-period homicide
-count does ($0.79$), and the six highest-violence neighborhoods sit in a propensity band no
-never-treated area enters, which is why synthetic control here is not merely imperfect but
-non-constructible. \emph{Signature two, an additive estimator reporting the baseline gap.}
+count does ($0.79$), and $36$ of the $51$ treated areas lie above \emph{every} never-treated
+unit on the propensity scale, which is why synthetic control here is not merely imperfect
+but non-constructible. \emph{Signature two, an additive estimator reporting the baseline gap.}
 A two-way fixed-effects OLS difference-in-differences returns $+2.63$ gun homicides per
 area-year ($p < 0.001$), stable across fixed effects, sample restrictions, and a wild-cluster
 bootstrap, yet the same design on the count scale is null (Poisson and Negative Binomial
@@ -74,8 +74,8 @@ Callaway--Sant'Anna estimate moves from $-2.45$ to $+1.90$ when one anomalous ye
 dropped, while a Goodman--Bacon decomposition shows the forbidden already-treated
 comparison carries only $4.6\%$ of the weight. Matching on the placement propensity
 sharpens the point rather than solving it: trimming to common support does restore parallel
-trends, but only by discarding all six study neighborhoods, so a credible comparison and a
-policy-relevant one cannot be had at once. A second event on the same panel with the
+trends, but only by discarding two thirds of the treated areas, so a credible comparison and
+a policy-relevant one cannot be had at once. A second event on the same panel with the
 treatment reversed, Chicago's September 2024 shutoff, reproduces both failures. These data
 therefore cannot identify a causal effect of ShotSpotter on gun homicides in either
 direction. That gunshot detection does not reduce gun violence is the weight of prior
@@ -197,9 +197,14 @@ weight of the evidence says it does not) but whether the community-area data on 
 local policy argument relies can \emph{identify} such an effect at all, and how a routine
 evaluation run on those data can mislead.
 
-Chicago's deployment was concentrated in the city's most disinvested neighborhoods. Each
-of the six neighborhoods studied here (Austin, Humboldt Park, North Lawndale,
-Englewood, West Englewood, and South Shore) has a poverty rate roughly twice the
+Chicago's deployment was concentrated in the city's most disinvested neighborhoods. Six
+coverage areas recur below as illustrative cases, carried over from the original analysis of
+this panel and retained because the synthetic control needs a readable number of panels:
+Austin, Humboldt Park, North Lawndale, Englewood, West Englewood, and South Shore. Each is
+among the highest-violence coverage areas, all six falling in the top nine of the 51 on
+pre-period gun homicides, though they are not the literal top six and nothing in the
+identification argument depends on which of the high-propensity areas are displayed. Each
+also has a poverty rate roughly twice the
 Chicago average (28.6\%--46.6\% versus 19.7\% city-wide), unemployment 1.5--3 times the
 city rate, and a hardship index between 55 and 94 against a city-wide median below 50
 (Census 2008--2012). The 51 ShotSpotter community areas accounted for an average of 381
@@ -311,10 +316,12 @@ bootstrap standard errors) and the modern \textbf{Callaway \& Sant'Anna (2021)}
 group-time ATT (estimated with the \texttt{differences} package, influence-function
 inference), which we treat as the authoritative staggered-rollout result.
 
-\item \textbf{Synthetic control.} For each of the six study neighborhoods, weights over
-the 26 never-treated areas are chosen to minimize pre-treatment squared error on annual
-gun-homicide counts, subject to the simplex constraint (Abadie, Diamond, \& Hainmueller,
-2010), with in-space permutation inference.
+\item \textbf{Synthetic control.} For each of the six illustrative study neighborhoods,
+weights over the 26 never-treated areas are chosen to minimize pre-treatment squared error
+on annual gun-homicide counts, subject to the simplex constraint (Abadie, Diamond, \&
+Hainmueller, 2010), with in-space permutation inference. The six are a legacy of the
+original analysis and keep the number of panels readable; the infeasibility result below
+holds for the treated distribution generally, not only for them.
 
 \item \textbf{Pre-period placebo / falsification.} The DiD is re-estimated with
 treatment reassigned to fake years (1999, 2003, 2007, 2011) well before the actual
@@ -705,14 +712,19 @@ lives under the surveillance the city purchased.
 Second, and decisively for identification, placement is nearly deterministic. A propensity
 model on pre-period violence, hardship, and income separates the two groups with an AUC of
 $0.94$; the median propensity is $0.97$ for ShotSpotter areas against $0.19$ for
-never-treated areas; and the six highest-violence study neighborhoods all carry a placement
-propensity of at least $0.97$, a band that \emph{no} never-treated area reaches
-(Figure~\ref{fig:overlap}). The natural comparison (neighborhoods similar in pre-period
-violence that did not receive ShotSpotter) therefore does not exist in Chicago, which is
-exactly why the synthetic control below cannot be constructed. This is the selection-side
-statement of the counterfactual problem: the city installed ShotSpotter in essentially every highest-violence,
-highest-hardship neighborhood, leaving no comparably situated untreated unit from which to
-build a counterfactual for the units the study is about.
+never-treated areas. The decisive statement requires no hand-picked subset. The highest
+propensity among all 26 never-treated areas is $0.873$, and \textbf{36 of the 51 treated
+areas lie above every one of them} (Figure~\ref{fig:overlap}). At a threshold of $0.90$, 35
+of 51 treated areas qualify against $0$ of 26 never-treated; at $0.95$ it is 32 versus $0$,
+and at $0.97$, 27 versus $0$. Those 36 areas span $0.6$ to $37.4$ gun homicides per year, so
+the failure of support is not confined to the violence tail: hardship drives it too, which
+is what makes this a property of the assignment rule rather than of the outcome
+distribution. The natural comparison (neighborhoods similar in pre-period violence and
+disadvantage that did not receive ShotSpotter) therefore does not exist in Chicago for most
+of the treated units, which is exactly why the synthetic control below cannot be
+constructed. This is the selection-side statement of the counterfactual problem: the city
+installed ShotSpotter across essentially the whole high-hardship, high-violence region,
+leaving no comparably situated untreated unit from which to build a counterfactual for it.
 
 Placement also mapped onto the city's racial geography. ShotSpotter areas are on average
 49\% Black and 32\% Hispanic, against 14\% and 17\% in never-treated areas, and the white,
@@ -769,10 +781,11 @@ White, non-Hispanic share (\%)       & 12.6 & 55.7 & $-2.80$ & 0.948 \\
 \centering
 \includegraphics[width=0.85\textwidth]{placement_propensity_overlap.png}
 \caption{Estimated propensity to receive ShotSpotter, treated versus never-treated. The
-distributions are starkly separated (AUC $0.94$); the shaded band holds the six highest-violence
-study neighborhoods (propensity $\geq 0.97$), where no never-treated area appears. Placement
-is predictable enough that these units have no untreated counterpart, the selection-side
-view of why no valid counterfactual exists.}
+distributions are starkly separated (AUC $0.94$). The shaded region lies above $0.873$, the
+highest propensity attained by any never-treated area; $36$ of the $51$ treated areas fall
+inside it and have no untreated counterpart anywhere in the city. This is the selection-side
+view of why no valid counterfactual exists, and it does not depend on singling out
+particular neighborhoods.}
 \label{fig:overlap}
 \end{figure}
 
@@ -828,10 +841,11 @@ parallel trends: a joint Wald test on pre-period treated-by-year interactions re
 full panel ($F = 2.67$, $p = 0.016$) but no longer rejects on common support ($F = 0.66$, $p
 = 0.70$) or after matching ($F = 0.87$, $p = 0.55$). The $F$ statistic falls below one, so
 this is not only the loss of power that comes with a smaller sample, though with fewer than
-half the original units some of it is. What the procedure costs is every unit the study is
-about. Placement is predicted well enough that the six highest-violence study neighborhoods
-occupy a propensity band no never-treated area reaches, so \emph{none} of the six survives
-either restriction, and only 17 of 51 treated areas find any control inside the caliper. The
+half the original units some of it is. What the procedure costs is most of the treated
+distribution. Placement is predicted well enough that 36 of the 51 treated areas sit above
+every never-treated unit on the propensity, so only 17 of 51 find any control inside the
+caliper, and \emph{none} of the six illustrative study neighborhoods survives either
+restriction. The
 design that satisfies parallel trends is a design about the marginal, lower-violence edge of
 coverage, not about the neighborhoods the program was built around. On that subsample the
 effect remains statistically null and less precisely estimated than before (IRR $1.31$, 95\%
@@ -864,8 +878,9 @@ NN matched      & 17 & \phantom{0}8 & 0/6 & 0.87 (0.545) & 1.24 $[0.86, 1.78]$ \
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{matched_did.png}
-\caption{Left: the estimated propensity to receive ShotSpotter. The six study neighborhoods
-sit in a band (shaded) that no never-treated area reaches, so they cannot be matched. Right:
+\caption{Left: the estimated propensity to receive ShotSpotter. The six illustrative study
+neighborhoods sit in a band (shaded) that no never-treated area reaches, as do 36 of the 51
+treated areas in all, so they cannot be matched. Right:
 DiD estimates across the three samples. Trimming to comparable units restores parallel
 pre-trends, but discards all six study neighborhoods and two thirds of the treated areas,
 and leaves the effect null and less precisely estimated.}

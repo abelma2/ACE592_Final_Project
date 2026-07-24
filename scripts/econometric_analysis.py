@@ -5,8 +5,10 @@ Implements four analyses that the original did_analysis.py omits:
 
   1. Two-way fixed effects DiD (community area + year FE, cluster-robust SE)
   2. Cohort-specific (staggered) event study using 2017 vs 2018 install dates
-  3. Synthetic control for the six highest-violence study neighborhoods,
-     with placebo inference via in-space permutation
+  3. Synthetic control for the six study neighborhoods carried over from the
+     original analysis (six of the highest-violence coverage areas, used as
+     illustrative panels because synthetic control needs a readable number of
+     them), with placebo inference via in-space permutation
   4. Pre-period placebo / falsification: assign fake treatment dates in
      1999, 2003, and 2007 using the 1991-2008 panel and confirm that
      null effects emerge
@@ -97,6 +99,10 @@ ss_profile = ss_profile[(ss_profile.total_alerts >= 100) & (ss_profile.months >=
 ALL_SS = sorted(ss_profile.index.tolist())
 COHORT_2017 = sorted(ss_profile[ss_profile.install_year == 2017].index.tolist())
 COHORT_2018 = sorted(ss_profile[ss_profile.install_year == 2018].index.tolist())
+# Six study neighborhoods carried over from the original analysis. They are six of
+# the highest-violence coverage areas (ranks 1-4, 8 and 9 of the 51 treated areas by
+# pre-period gun homicides), not the six highest, and they enter here only as
+# illustrative synthetic-control panels, not as the basis of the overlap argument.
 ORIG_6 = ["Austin", "Humboldt Park", "North Lawndale", "Englewood", "West Englewood", "South Shore"]
 
 print(f"  ShotSpotter cohorts: {len(COHORT_2017)} in 2017, {len(COHORT_2018)} in 2018")
@@ -280,6 +286,10 @@ print("=" * 72)
 print("For each of 6 study neighborhoods, build a synthetic counterfactual")
 print("from a weighted combination of the 26 never-treated community areas.")
 print("Weights minimize pre-treatment squared error on the gun_hom series.")
+print("The six neighborhoods are carried over from the original analysis and are")
+print("illustrative (six of the highest-violence coverage areas, chosen because")
+print("synthetic control needs a readable number of panels); the no-overlap")
+print("argument does not rest on them.")
 
 
 def synthetic_control(treated_name, donor_names, panel_df, install_year):
@@ -545,6 +555,11 @@ lines.append("community areas are chosen to minimize the pre-treatment squared e
 lines.append("annual gun homicide counts. A positive 'gap' means the treated unit had")
 lines.append("more homicides post-treatment than its synthetic counterfactual.")
 lines.append("")
+lines.append("These six are carried over from the original analysis and are illustrative:")
+lines.append("six of the highest-violence coverage areas, retained because synthetic")
+lines.append("control needs a readable number of panels. They are not the six highest, and")
+lines.append("the identification argument does not rest on the particular six.")
+lines.append("")
 lines.append("| Neighborhood | Cohort | Pre-tx RMSE | Post-tx gap (per year) | Top donors |")
 lines.append("|---|---|---|---|---|")
 for hood, r in sc_results.items():
@@ -559,10 +574,13 @@ lines.append("> (Washington Heights, the highest-violence never-treated area) an
 lines.append("> does not converge to an interior optimum. The pre-treatment RMSE is large relative")
 lines.append("> to the outcome level (e.g. Austin's pre-RMSE of ~34 against an actual level of")
 lines.append("> 15-70/yr), so the synthetic counterfactual cannot reproduce the treated series even")
-lines.append("> in the pre-period it was fit on. The 26 never-treated community areas are")
-lines.append("> systematically lower-violence than any treated neighborhood, so no convex")
-lines.append("> combination can match them. The positive 'gaps' below therefore reflect this")
-lines.append("> level mismatch, **not** a treatment effect. See NARRATIVE.md §5.5.")
+lines.append("> in the pre-period it was fit on. The 26 never-treated community areas sit far")
+lines.append("> below these treated neighborhoods in both violence and hardship, so no convex")
+lines.append("> combination can match them. The failure is not an artifact of picking these six:")
+lines.append("> in the placement model, 36 of the 51 treated areas carry a treatment propensity")
+lines.append("> above **every** one of the 26 never-treated units (whose maximum is 0.873), and")
+lines.append("> no never-treated area reaches 0.90. The positive 'gaps' below therefore reflect")
+lines.append("> this level mismatch, **not** a treatment effect. See NARRATIVE.md §5.5.")
 lines.append("")
 
 lines.append("## 4. Pre-Period Placebo Tests")
