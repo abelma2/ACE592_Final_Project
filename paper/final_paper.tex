@@ -233,7 +233,7 @@ violence, which is the selection problem every design in this paper must confron
 % ===========================================================================
 \section{Data}
 
-The analysis combines four City of Chicago open-data products, all freely available
+The analysis combines seven City of Chicago open-data products, all freely available
 from the Chicago Data Portal:
 
 \begin{itemize}
@@ -419,11 +419,11 @@ transfer to a count outcome. Estimating the tool the argument actually calls for
 extended two-way fixed-effects model (Wooldridge, 2023) that saturates the treatment in
 cohort and calendar time, returns the same null: an overall ATT incidence-rate ratio of
 $1.05$ (95\% CI $[0.79, 1.33]$), with cohort-time effects at one at every horizon
-(Appendix~\ref{app:supporting}, Table~\ref{tab:etwfe}). The null is therefore not an artifact
+(Appendix~\ref{app:supporting}, Figure~\ref{fig:etwfe} and Table~\ref{tab:etwfe}). The null is therefore not an artifact
 of the plain PPML's weighting. Second, non-fatal gunshot injuries, a four-times-larger
 sample, yield $\beta = +7.51$ under OLS ($p = 0.009$) and an even starker correction: every
 count model flips the point estimate \emph{below} one and is null (IRRs $0.84$--$0.92$, $p
-\geq 0.23$; Appendix Table~\ref{tab:nfs}). Third, the identical
+\geq 0.23$; Appendix~\ref{app:supporting}, Table~\ref{tab:nfs}). Third, the identical
 difference-in-differences run on weapons-violation enforcement rather than homicides
 reproduces the distortion unchanged, an order-of-magnitude-larger OLS coefficient that again
 collapses to a null incidence-rate ratio (Appendix~\ref{app:procedural}). The inflation is a
@@ -492,14 +492,14 @@ response is to report that the effect is not point-identified, not to lean on a 
 base-year normalization.
 
 The hand-rolled event study is intuitive but is not the modern estimator the
-staggered-rollout literature prescribes. As a final check we re-estimate the effect with
+staggered-rollout literature prescribes. We therefore re-estimate the effect with
 the \textbf{Callaway \& Sant'Anna (2021)} group-time ATT
 (Table~\ref{tab:cs}). On the full panel the overall ATT is $-2.45$ per
 community-area-year (SE $0.89$): \emph{negative}, the opposite sign of the pooled OLS,
 and stable to using not-yet-treated rather than never-treated controls ($-2.51$). But
 this negative sign is not a property of the estimator. It is driven almost entirely by
 the 2016 record-homicide year, which sits at the $k = -1$ baseline for the 2017 cohort:
-the event study shows that only the $k = -1$ (2016) pre-coefficient is significant while
+the Callaway--Sant'Anna event study shows that only the $k = -1$ (2016) pre-coefficient is significant while
 the rest hover at zero, and \textbf{excluding 2016 and re-estimating returns $+1.90$ (SE
 $0.72$), the same sign as the OLS DiD} (Figure~\ref{fig:cs}). The apparent
 OLS-versus-Callaway--Sant'Anna sign reversal is therefore a single-year sensitivity, not
@@ -684,8 +684,8 @@ counterfactual for units that have none.
 \small
 \caption{Matching on the placement propensity: what it buys and what it costs. The pre-trend
 test is a joint Wald test on treated-by-year interactions in the 2009--2016 pre-period, a
-simpler statistic than the cohort event study reported above and not directly comparable to
-it. The full-sample DiD is the staggered, cohort-specific specification.}
+simpler statistic than the cohort event study of Section~\ref{sec:trends} and not directly
+comparable to it. The full-sample DiD is the staggered, cohort-specific specification.}
 \label{tab:matching}
 \begin{tabular}{lccccc}
 \toprule
@@ -948,7 +948,7 @@ cluster on community area (about 77 clusters); a restricted wild-cluster bootstr
 (Cameron, Gelbach, \& Miller, 2008; 999 Rademacher replications) returns $p \approx
 0.001$ for the OLS DiD in every specification (Appendix~\ref{app:wildboot},
 Table~\ref{tab:wildboot}), so the headline coefficient is not an artifact of thin-cluster
-inference; the problem is the specification and the design, not the standard errors. Two event-study implementations
+inference. Two event-study implementations
 are reported: a transparent hand-rolled difference-in-means kept for intuition, and the
 packaged Callaway--Sant'Anna estimator, which should be treated as the authoritative
 staggered-DiD result. The placement model is cross-sectional and descriptive: it documents
