@@ -252,7 +252,10 @@ homicide year adjacent to the base period.}
 
 A synthetic control (Abadie, Diamond, \& Hainmueller, 2010) would build a counterfactual
 for each treated neighborhood from a weighted average of untreated areas. Here the
-construction fails. For all six study neighborhoods the optimizer places 100\% of the
+construction fails. We fit it for six high-violence coverage areas carried over from the
+original analysis (Austin, Humboldt Park, North Lawndale, Englewood, West Englewood, and
+South Shore), a set chosen to keep the number of panels readable rather than to carry the
+argument. For all six the optimizer places 100\% of the
 weight on a single donor, Washington Heights, the most violent never-treated area, and the
 pre-treatment root mean squared error is 10 to 34 homicides per year against outcome
 levels of 15 to 70. The synthetic series sits well below the actual series even within the
@@ -260,7 +263,12 @@ pre-treatment window it was fit to (Figure~\ref{fig:synth}). Permutation inferen
 a $p$-value below $0.001$ for every treated unit, but that rejection follows from the
 level mismatch, not from a treatment effect. The never-treated areas occupy the
 low-violence end of the city, so no weighted combination reproduces a high-violence
-treated unit. The infeasibility is a property of the data: the city installed ShotSpotter
+treated unit, and the failure is not a property of those six panels. A logit of coverage
+on pre-period gun homicides, the hardship index, and per-capita income separates the two
+groups almost completely (AUC $0.94$): 36 of the 51 treated areas carry a higher predicted
+probability of coverage than every one of the 26 never-treated areas, and no never-treated
+area exceeds $0.87$. Those 36 span $0.6$ to $37.4$ gun homicides per year, so the overlap
+failure is not confined to the violence tail. The infeasibility is a property of the data: the city installed ShotSpotter
 in every high-violence neighborhood and left no comparable unit untreated.
 
 \begin{figure}[H]

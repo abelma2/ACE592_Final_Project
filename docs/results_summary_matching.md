@@ -32,12 +32,15 @@ well below one, so this is not only the loss of power that comes with a smaller 
 though with fewer than half the original units some of it surely is. On its own terms the
 suggestion works: comparable units really do move in parallel.
 
-**The price is every unit the study is about.** Placement is predicted well enough that the
-six highest-violence study neighborhoods occupy a propensity band no never-treated area
-reaches. All six are present in the full sample; 0 of 6 survive
-common-support trimming and 0 of 6 survive matching, and only 17 of 51 treated areas find any control inside the caliper at all.
+**The price is most of the coverage the study is about.** Placement is predicted well
+enough that no never-treated area exceeds a propensity of 0.873, while 36 of the
+51 ShotSpotter areas sit above that ceiling and 35 sit at or above 0.90,
+against 0 of the 26 never-treated areas. Those 36 areas span 0.6 to 37.4 gun homicides a
+year, so the failure is not confined to the violence tail. The six study neighborhoods,
+carried over from the original analysis and used here because synthetic control needs a
+readable number of panels, all sit inside that region: all six are present in the full sample; 0 of 6 survive common-support trimming and 0 of 6 survive matching, and only 17 of 51 treated areas find any control inside the caliper at all.
 The design that satisfies parallel trends is therefore a design about the marginal,
-lower-violence edge of ShotSpotter coverage: real areas, but not the neighborhoods the
+low-propensity edge of ShotSpotter coverage: real areas, but not the neighborhoods the
 program was built around, and not the ones the procurement debate was about.
 
 **On that subsample the effect is still not estimable in any useful sense.** The

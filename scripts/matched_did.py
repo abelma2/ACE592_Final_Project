@@ -13,17 +13,17 @@ Three samples, all using the identical propensity model as the placement analysi
   2. TRIMMED       restricted to the propensity common-support region.
   3. MATCHED       1:1 nearest-neighbour propensity matching with a caliper.
 
-For each we report (a) how many treated units survive and whether the six
-highest-violence study neighborhoods survive, (b) whether the joint pre-trend Wald
-test still rejects parallel trends, and (c) the DiD estimate on the additive and
-multiplicative scales.
+For each we report (a) how many treated units survive, including the six study
+neighborhoods carried over from the original analysis as illustrative cases, (b) whether
+the joint pre-trend Wald test still rejects parallel trends, and (c) the DiD estimate on
+the additive and multiplicative scales.
 
 The answer is not that matching fails. It is that matching works, at a price the policy
 question cannot pay: restricting to the region where treated and control units are
-comparable does restore parallel pre-trends, but only by discarding every one of the six
-highest-violence study neighborhoods, because no never-treated area exists at their
-propensity level. What survives is a credible design for the marginal, lower-violence
-coverage areas. This script quantifies that trade.
+comparable does restore parallel pre-trends, but only by discarding the majority of coverage
+areas whose propensity exceeds that of every never-treated area, a group that includes all
+six study neighborhoods. What survives is a credible design for the marginal, low-propensity
+edge of coverage. This script quantifies that trade.
 
 Outputs:
   plots/matched_did.png
@@ -126,6 +126,17 @@ x["ps"] = clf.predict_proba(x[ZP].values)[:, 1]
 ps_auc = roc_auc_score(x["treated"], x["ps"])
 n_t_full = int(x.treated.sum()); n_c_full = int((1 - x.treated).sum())
 print(f"  Propensity model AUC = {ps_auc:.3f}   ({n_t_full} treated, {n_c_full} never-treated)")
+
+# Rule-free support statistics (computed, never hard-coded, so they track the pipeline).
+MAX_C_PS = float(x.loc[x.treated == 0, "ps"].max())
+N_ABOVE_ALL_C = int((x.loc[x.treated == 1, "ps"] > MAX_C_PS).sum())
+N_T_GE90 = int((x.loc[x.treated == 1, "ps"] >= 0.90).sum())
+N_C_GE90 = int((x.loc[x.treated == 0, "ps"] >= 0.90).sum())
+_above_v = x.loc[(x.treated == 1) & (x.ps > MAX_C_PS), "pre_gun_hom"]
+V_LO, V_HI = float(_above_v.min()), float(_above_v.max())
+print(f"  Highest never-treated propensity = {MAX_C_PS:.3f}; "
+      f"{N_ABOVE_ALL_C} of {n_t_full} treated areas sit above it "
+      f"(span {V_LO:.1f} to {V_HI:.1f} gun homicides/yr)")
 
 # annual panel
 panel = pd.DataFrame([(c, y) for c in x.ca_num for y in range(PANEL_START, PANEL_END + 1)],
@@ -261,7 +272,8 @@ axL.text(s6lo - 0.02, axL.get_ylim()[1] * 0.62,
          style="italic", color=COLORS["treated"])
 axL.set_xlabel("Estimated propensity to receive ShotSpotter")
 axL.set_ylabel("Number of community areas")
-axL.set_title(f"No control unit reaches the study areas' propensity band\n(AUC {ps_auc:.2f})",
+axL.set_title(f"No never-treated area exceeds {MAX_C_PS:.2f} propensity;\n"
+              f"{N_ABOVE_ALL_C} of {n_t_full} coverage areas do (AUC {ps_auc:.2f})",
               fontweight="bold", fontsize=11)
 axL.legend(loc="upper center", frameon=False, fontsize=9)
 
@@ -283,7 +295,7 @@ axR.axvline(1.0, color="#444", lw=1.2, zorder=1)
 axR.set_yticks(ypos)
 axR.set_yticklabels(res["sample"])
 axR.set_xlabel("Poisson DiD incidence-rate ratio")
-axR.set_title("Matching buys parallel trends by discarding\nevery study neighborhood",
+axR.set_title("Matching buys parallel trends by discarding every\ncoverage area with no comparable control",
               fontweight="bold", fontsize=11)
 axR.set_xlim(0.55, 3.05)
 axR.set_xticks([0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8])
@@ -331,13 +343,20 @@ L += ["",
       "well below one, so this is not only the loss of power that comes with a smaller sample,",
       "though with fewer than half the original units some of it surely is. On its own terms the",
       "suggestion works: comparable units really do move in parallel.", "",
-      "**The price is every unit the study is about.** Placement is predicted well enough that the",
-      "six highest-violence study neighborhoods occupy a propensity band no never-treated area",
-      f"reaches. All six are present in the full sample; {int(r_trim.study6)} of 6 survive",
-      f"common-support trimming and {int(r_nn.study6)} of 6 survive matching, and only "
-      f"{len(pairs)} of {n_t_full} treated areas find any control inside the caliper at all.",
+      "**The price is most of the coverage the study is about.** Placement is predicted well",
+      f"enough that no never-treated area exceeds a propensity of {MAX_C_PS:.3f}, while "
+      f"{N_ABOVE_ALL_C} of the",
+      f"{n_t_full} ShotSpotter areas sit above that ceiling and {N_T_GE90} sit at or above 0.90,",
+      f"against {N_C_GE90} of the {n_c_full} never-treated areas. Those {N_ABOVE_ALL_C} areas span "
+      f"{V_LO:.1f} to {V_HI:.1f} gun homicides a",
+      "year, so the failure is not confined to the violence tail. The six study neighborhoods,",
+      "carried over from the original analysis and used here because synthetic control needs a",
+      f"readable number of panels, all sit inside that region: all six are present in the full "
+      f"sample; {int(r_trim.study6)} of 6 survive common-support trimming and "
+      f"{int(r_nn.study6)} of 6 survive matching, and only {len(pairs)} of {n_t_full} treated "
+      "areas find any control inside the caliper at all.",
       "The design that satisfies parallel trends is therefore a design about the marginal,",
-      "lower-violence edge of ShotSpotter coverage: real areas, but not the neighborhoods the",
+      "low-propensity edge of ShotSpotter coverage: real areas, but not the neighborhoods the",
       "program was built around, and not the ones the procurement debate was about.", "",
       "**On that subsample the effect is still not estimable in any useful sense.** The",
       f"multiplicative estimate is IRR {r_trim.irr:.2f} [{r_trim.ilo:.2f}, {r_trim.ihi:.2f}] on common",

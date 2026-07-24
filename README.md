@@ -182,8 +182,13 @@ and the city's Inspector General already documented; our marginal addition is th
 ![Propensity-score overlap](plots/placement_propensity_overlap.png)
 
 The consequence for identification is stark. A propensity model separates the two groups
-with an AUC of 0.94, and the six highest-violence study neighborhoods all sit at a placement
-propensity of **≥ 0.97, a band no never-treated area reaches.** This is the selection-side
+with an AUC of 0.94, and **36 of the 51 covered areas sit at a placement propensity above
+every one of the 26 never-treated areas** (no never-treated area exceeds 0.87, while 35
+covered areas sit at 0.90 or higher, against 0 of 26 never-treated). Those 36 areas span 0.6
+to 37.4 gun homicides per year, so the overlap failure is not confined to the violence tail;
+hardship drives it too. The six study neighborhoods carried over from the original analysis,
+used as illustrative synthetic-control panels in the next step, all sit at a propensity of at
+least 0.97, and so do several covered areas outside that set. This is the selection-side
 view of the next step: the city installed ShotSpotter in essentially every highest-violence,
 highest-hardship neighborhood, leaving no comparable untreated unit from which to build a
 counterfactual. (Racial composition is measured from the 2019–2023 ACS, a proxy for the
@@ -193,8 +198,12 @@ persistent pre-rollout composition.)
 
 ![Synthetic control panels](plots/synthetic_control_panels.png)
 
-For every study neighborhood, the synthetic counterfactual (red) sits far below the
-actual series (blue); even in the pre-treatment window it was explicitly fit on. No
+The six study neighborhoods shown here are carried over from the original analysis and
+serve as illustrative cases, chosen because synthetic control needs a readable number of
+panels, not because they are the six most violent coverage areas (three higher-violence
+coverage areas sit outside the set, at propensities just as extreme). For each of them the
+synthetic counterfactual (red) sits far below the actual series (blue); even in the
+pre-treatment window it was explicitly fit on. No
 weighted combination of the 26 never-treated, lower-violence areas can reproduce a
 high-violence treated unit, so the optimizer collapses onto a single donor and the
 method is **infeasible**. The city left no comparable untreated neighborhood; the
