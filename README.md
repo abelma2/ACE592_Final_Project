@@ -4,42 +4,43 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Methods](https://img.shields.io/badge/methods-DiD%20%7C%20event%20study%20%7C%20synthetic%20control%20%7C%20placement%20model-orange.svg)
 
-**The question.** Chicago's ShotSpotter gunshot-detection system was deployed across
-51 of 77 community areas in 2017–2018 and cancelled in 2023. That gunshot detection
-*doesn't* reduce gun violence is, by now, well established, including for Chicago at the
-police-district level (Connealy et al. 2024, *J. Experimental Criminology*) and nationally
-(Doucette et al. 2021, *J. Urban Health*), with a 2026 meta-analysis of 44 estimates
-pooling to a null (Huff, Dunlap & Pearson 2026, *Am. J. Criminal Justice*). So this project asks a sharper, methodological
-question: **can the community-area data that most local policy argument relies on even
-*identify* such an effect, and what happens when a standard evaluation is run on them
-without asking?**
+**The general problem.** Cities do not site place-based programs at random; they install
+them where the problem is worst. This project diagnoses the evaluation failure that follows
+when that targeting is both tight and near-complete, a configuration we call **saturation
+targeting**: assignment is predicted by the same structural variables that predict the
+outcome, *and* coverage among units above the operative risk threshold approaches one. The
+units left untreated are then not a noisy comparison group but a group drawn from a region
+of the covariate space containing none of the units the evaluation is about, so the effect
+for those units is not a parameter the data contain.
 
-**The finding.** It cannot, and the way a routine evaluation fails is the point. A naive
-difference-in-differences says ShotSpotter areas saw **more** gun homicides (+2.6 per
-area-year, p < 0.001). But that headline is a statistical artifact: it collapses to a null
-once homicide *counts* are modeled correctly, it fails a parallel-trends test, it
-reproduces equally "significant" effects when treatment is faked in pre-rollout years, it
-has no valid synthetic-control comparison, and even the modern Callaway–Sant'Anna estimator
-only turns it negative because of a single outlier year. With no clean control group and a
-pre-period dominated by one anomalous year, these data cannot identify a causal effect in
-either direction. This is a worked cautionary case in the LaLonde (1986) tradition: a
-coefficient can survive fixed effects and robustness restrictions and still fail every
-condition a causal reading requires.
+**The contribution.** That failure leaves **three signatures, each testable on public data
+before any effect is estimated**, and the modern difference-in-differences toolkit repairs
+none of them, because it corrects weighting under heterogeneous treatment timing rather than
+missing overlap. Chicago's ShotSpotter rollout is the worked case: 51 of 77 community areas
+covered in 2017–2018, cancelled in 2023, switched off in 2024.
 
-**What the data *do* show.** A placement model pins down *why* no counterfactual exists:
-ShotSpotter was sited where violence, structural disadvantage, and (even conditional on
-those) the **Black and Hispanic share** of a neighborhood were highest, and so tightly
-that no comparable untreated neighborhood remains. The design rules out a large *deterrence*
-effect, but cannot exclude the survival-channel benefit a boundary regression discontinuity
-attributes to faster emergency response, a magnitude that sits *inside* the confidence
-interval this panel can resolve.
+| | Signature | What it looks like here |
+|---|---|---|
+| 1 | An additive estimator reporting the baseline gap | OLS DiD **+2.63** (p < 0.001), robust to fixed effects and a wild-cluster bootstrap, yet null on the count scale (**IRR ≈ 1.07**; heterogeneity-robust ETWFE **1.05** [0.79, 1.33]) |
+| 2 | Instability that is *not* a timing problem | Parallel trends rejected (**F = 19.9**, p = 0.006); pre-rollout placebos "significant"; Callaway–Sant'Anna flips **−2.45 → +1.90** on one year, while Goodman–Bacon puts only **4.6%** of weight on forbidden comparisons |
+| 3 | No overlap | Propensity AUC **0.94**; no never-treated area exceeds **0.873**, and **36 of 51** covered areas sit above every one of them |
 
-**How we get there** (and how you can reproduce it from the data and code below) is a
-sequence of increasingly demanding causal-inference designs on a community-area × year
-panel of Chicago gun homicides, 2009–2023, plus a cross-sectional model of *treatment
-assignment* itself. The figures below walk the evidence in order; the formatted paper is
-[paper/final_paper.pdf](paper/final_paper.pdf) and [NARRATIVE.md](NARRATIVE.md) is the
-long-form write-up.
+**The sharpest methodological point.** The staggered-adoption literature has taught applied
+researchers to reach for a heterogeneity-robust estimator when two-way fixed effects look
+unstable. Those estimators fix *weighting*; under saturation targeting the binding
+constraint is *missing overlap*, so a corrected estimate is no better identified than the
+one it replaces. The Goodman–Bacon decomposition is what lets you tell the two apart.
+
+**What this is not.** That gunshot detection does not reduce gun violence is the weight of
+prior evidence (Connealy et al. 2024; Doucette et al. 2021; Huff, Dunlap & Pearson 2026), not
+a claim of ours. Our estimates rule out a large *deterrence* effect but cannot exclude the
+smaller survival-channel benefit a boundary regression discontinuity attributes to faster
+emergency response, which sits inside our interval. **A non-identification of this kind is
+not a null result.** It is a statement about what the assignment mechanism left in the data.
+
+The formatted paper is [paper/final_paper.pdf](paper/final_paper.pdf);
+[NARRATIVE.md](NARRATIVE.md) is the long-form write-up. Everything below reproduces from the
+data and code in this repository.
 
 ![OLS headline vs. count-data specifications](plots/specification_comparison.png)
 
@@ -93,8 +94,17 @@ removal experiment).
   dispersion estimated), incidence-rate ratios, clustered standard errors, and a
   Wooldridge (2023) extended two-way fixed-effects Poisson (the heterogeneity-robust
   count analog of Callaway–Sant'Anna).
+- **Overlap / common-support analysis:** propensity trimming and 1:1 nearest-neighbour
+  matching with a caliper, re-testing pre-trends on each restricted sample to show what
+  matching buys and what it costs.
 - **Robustness & diagnostics:** joint parallel-trends Wald test, COVID- and
-  2016-sensitivity checks, multiple-specification forest plots.
+  2016-sensitivity checks, restricted wild-cluster bootstrap, Goodman–Bacon decomposition,
+  treatment-threshold sensitivity, multiple-specification forest plots.
+- **Reproducibility engineering:** `scripts/check_consistency.py`, a stdlib-only test suite
+  that re-reads the source-of-truth result docs and asserts the paper states those numbers,
+  verifies every occurrence of a confidence interval carries the same point estimate, and
+  checks reference integrity and style. Validated by deliberately re-introducing three past
+  regressions and confirming each is caught.
 - **Geospatial analysis:** GeoPandas, choropleth and kernel-density hotspot maps,
   CRS-correct metric grids (EPSG:26971), `contextily` basemaps.
 - **Python data stack:** pandas, NumPy, statsmodels, SciPy, matplotlib, seaborn.
@@ -103,7 +113,10 @@ removal experiment).
 
 ## How the analysis works
 
-### 1. The setting: ShotSpotter was deployed where violence already was
+The walkthrough below follows the argument in the paper: the setting, then the three
+signatures in order, then a replication of the whole pattern on an independent event.
+
+### Setting: ShotSpotter was deployed where violence already was
 
 ![Treatment vs. control community areas](plots/did_map_treatment_control.png)
 
@@ -115,16 +128,23 @@ Treatment was assigned *because of* violence, not at random, which is the centra
 problem every design here has to confront, and the reason the comparison leans
 entirely on the parallel-trends assumption.
 
-### 2. As a detector, the technology works
+One premise can be settled before the argument starts. As a *measurement instrument*
+ShotSpotter works: alerts track gun homicides through the same seasonal and diurnal cycles
+([`plots/hourly_pattern.png`](plots/hourly_pattern.png)). Detection is not in question. What
+follows asks whether these data can say anything about what that detection did.
 
-![Hourly pattern of alerts and homicides](plots/hourly_pattern.png)
+**The coverage screen itself is defensible, and we show it rather than assert it.** An area
+counts as covered if the alert file shows ≥ 100 alerts spanning ≥ 12 months. That cutoff
+falls in an *empty band*: the least-covered treated area records 380 alerts, the
+most-covered never-treated area records 99, and no community area falls between them. The
+panel is identical for any cutoff from 100 to 250. We also disclose what the screen misses:
+only 15 of the 26 never-treated areas record zero alerts, and Washington Heights, the single
+donor the synthetic control collapses onto, records 71
+([`docs/results_summary_treatment.md`](docs/results_summary_treatment.md)).
 
-ShotSpotter alerts and gun homicides rise and fall together over the day (both
-bottoming out mid-morning and peaking late at night) and they peak in the same summer
-months. The system detects the gunfire it is designed to detect. The question is
-whether *detection* translated into *fewer homicides*.
+![The coverage screen falls in an empty region](plots/treatment_threshold.png)
 
-### 3. The headline says "more homicides", but it is a modeling artifact
+### Signature 1. The headline says "more homicides", but it is a scale artifact
 
 The two-way fixed-effects OLS DiD returns **+2.63 gun homicides per area-year
 (p < 0.001)**. That number is robust to fixed effects, COVID exclusions, and dropping
@@ -140,7 +160,7 @@ the staggered rollout: the heterogeneity-robust count estimator the literature p
 (a Wooldridge (2023) extended two-way fixed-effects Poisson) returns the same null (overall
 ATT IRR 1.05, 95% CI [0.79, 1.33]), with cohort-time effects at one at every horizon.
 
-### 4. Parallel trends fail
+### Signature 2. The pre-period cannot support parallel trends
 
 ![Cohort-aware event study](plots/event_study_cohort_aware.png)
 
@@ -150,7 +170,7 @@ The robust evidence is a joint Wald test on the pre-treatment coefficients, whic
 invariant to the base year and rejects parallel trends (F = 19.9, p = 0.006). Once the
 design fails this test, the DiD contrast cannot be read as causal.
 
-### 5. Fake treatment dates produce the same "effect"
+#### Fake treatment dates produce the same "effect"
 
 ![Falsification / placebo test](plots/falsification_plot.png)
 
@@ -161,7 +181,34 @@ They are opposite-signed, but that is the point: a design that manufactures "sig
 effects in years before the program existed is capturing pre-existing trend differences
 across neighborhoods, not the intervention.
 
-### 6. Placement was predictable, and it tracked race, not just violence
+#### And the modern estimator's sign rides on a single year
+
+![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
+
+The gold-standard estimator for staggered rollouts, Callaway & Sant'Anna (2021),
+returns an overall ATT of **−2.45 (p < 0.01)** on the full panel, the *opposite* sign of
+OLS. But that negative is not a property of the method: it is driven almost entirely by
+the 2016 record-homicide year sitting at the *k* = −1 baseline. **Exclude 2016 and the
+same estimator returns +1.90 (SE 0.72), back to the sign of OLS.** The event study
+makes this visible: only the *k* = −1 (2016) pre-coefficient is significant; the rest
+hover at zero.
+
+So read honestly, the estimators do not show a mysterious "method-determined sign":
+
+| Estimator | Full panel | What actually moves it |
+|---|---|---|
+| Naive OLS DiD | **+2.63** (p < 0.001) | additive scale, inflated by high-count areas |
+| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | positive in sign, but null on the multiplicative scale |
+| Callaway–Sant'Anna | **−2.45** (p < 0.01) | flips to **+1.90** once the 2016 outlier year is dropped |
+
+OLS and the count models actually agree in *direction* (both positive); only Callaway–
+Sant'Anna goes negative, and only because of one anomalous year. The real lesson is not
+"any answer is possible," but that every estimate is dominated by a single outlier year
+on top of a design with **no valid control group** (Signature 3) and a **failed pre-trend
+test** (Signature 2). With no clean counterfactual, the causal effect is simply **not
+identifiable from these data**, in either direction.
+
+### Signature 3. Placement was near-deterministic, so no counterfactual exists
 
 ![What distinguished ShotSpotter areas](plots/placement_coefficients.png)
 
@@ -194,7 +241,26 @@ highest-hardship neighborhood, leaving no comparable untreated unit from which t
 counterfactual. (Racial composition is measured from the 2019–2023 ACS, a proxy for the
 persistent pre-rollout composition.)
 
-### 7. There is no valid comparison group (synthetic control)
+#### Matching restores parallel trends, at the cost of the units in question
+
+![Matched / common-support DiD](plots/matched_did.png)
+
+The natural response to a failing pre-trend test is to match on pre-treatment observables
+first. We ran exactly that, and the result is the sharpest statement of the problem in the
+project: **matching works, and the price is the finding.** Trimming to the propensity
+common-support region does restore parallel trends (the joint pre-trend Wald test goes from
+**F = 2.67, p = 0.016** to **F = 0.66, p = 0.70**). But it discards two thirds of the covered
+areas, including *every one* of the six study neighborhoods, because no never-treated area
+exists at their propensity level. Only 17 of 51 covered areas find any control inside the
+caliper. On the surviving subsample the effect is still null and less precisely estimated
+(IRR 1.31 [0.97, 1.76] on common support; 1.24 [0.86, 1.78] matched).
+
+So these data can support a credible comparison, **or** they can speak to the neighborhoods
+the policy is about, but not both at once. That is the identification problem stated as a
+trade rather than a failure, and it is why no reweighting of the units that exist can supply
+a counterfactual for units that have none.
+
+#### Synthetic control is therefore not constructible
 
 ![Synthetic control panels](plots/synthetic_control_panels.png)
 
@@ -209,34 +275,7 @@ high-violence treated unit, so the optimizer collapses onto a single donor and t
 method is **infeasible**. The city left no comparable untreated neighborhood; the
 absence of a counterfactual is itself the finding.
 
-### 8. The "modern estimator" sign rides on a single year
-
-![Callaway–Sant'Anna event study](plots/callaway_santanna_event_study.png)
-
-The gold-standard estimator for staggered rollouts, Callaway & Sant'Anna (2021),
-returns an overall ATT of **−2.45 (p < 0.01)** on the full panel, the *opposite* sign of
-OLS. But that negative is not a property of the method: it is driven almost entirely by
-the 2016 record-homicide year sitting at the *k* = −1 baseline. **Exclude 2016 and the
-same estimator returns +1.90 (SE 0.72), back to the sign of OLS.** The event study
-makes this visible: only the *k* = −1 (2016) pre-coefficient is significant; the rest
-hover at zero.
-
-So read honestly, the estimators do not show a mysterious "method-determined sign":
-
-| Estimator | Full panel | What actually moves it |
-|---|---|---|
-| Naive OLS DiD | **+2.63** (p < 0.001) | additive scale, inflated by high-count areas |
-| Poisson / Neg. Binomial | IRR ≈ **1.07** (ns) | positive in sign, but null on the multiplicative scale |
-| Callaway–Sant'Anna | **−2.45** (p < 0.01) | flips to **+1.90** once the 2016 outlier year is dropped |
-
-OLS and the count models actually agree in *direction* (both positive); only Callaway–
-Sant'Anna goes negative, and only because of one anomalous year. The real lesson is not
-"any answer is possible," but that every estimate is dominated by a single outlier year
-on top of a design with **no valid control group** (Step 7) and a **failed pre-trend
-test** (Step 4). With no clean counterfactual, the causal effect is simply **not
-identifiable from these data**, in either direction.
-
-### 9. A second natural experiment: the September 2024 removal
+### Replication with the treatment reversed: the September 2024 removal
 
 ![The September 2024 removal](plots/removal_trajectory.png)
 
@@ -265,11 +304,24 @@ cannot identify a causal effect**. They rule out a large *deterrence* effect (a 
 sustained drop in shootings of the kind a $3M detection contract was meant to deliver) but
 not the smaller, survival-channel mortality benefit a boundary regression discontinuity
 attributes to faster emergency response, a magnitude that falls *inside* the interval this
-panel can resolve. That non-result is itself the policy finding, and it is consistent with
-the city's 2023 decision to end the contract. The 2024 removal, analyzed the same way
-(Step 9), reproduces both failures, so the non-identification is a property of the setting,
-not of how the installation happens to be timed. Full argument and limitations:
-[NARRATIVE.md](NARRATIVE.md).
+panel can resolve. The 2024 removal, analyzed the same way, reproduces both failures, so the
+non-identification is a property of the setting, not of how the installation happens to be
+timed.
+
+**The general lesson is the portable one.** Saturation targeting is not a Chicago
+peculiarity or a ShotSpotter peculiarity; it is what competent, need-based allocation looks
+like from an evaluator's point of view, and it is becoming more common as cities target
+programs with administrative risk scores. Where it holds, the binding constraint is the
+assignment mechanism rather than the estimator, and no methodological sophistication applied
+after the fact recovers a counterfactual the rollout never generated. The practical
+implication is a change in order of operations: **estimate the assignment model first, check
+overlap for the units the decision is actually about, and treat that check as a precondition
+for estimating an effect rather than as a robustness appendix.** The same arc runs through
+the COPS literature (Evans & Owens 2007 → Worrall & Kovandzic 2007 → Mello 2019), where the
+dispute was settled not by a better panel estimator but by finding variation the assignment
+mechanism did not determine.
+
+Full argument and limitations: [NARRATIVE.md](NARRATIVE.md).
 
 ## Limitations & next steps
 

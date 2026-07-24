@@ -243,6 +243,39 @@ else:
 
 
 # =====================================================================
+# 7. COMPANION DOCS: README and NARRATIVE restate the same story
+# =====================================================================
+# The paper is not the only place these numbers live. README.md and NARRATIVE.md
+# restate the headline results, and they have drifted from the paper before.
+COMPANIONS = {
+    "README.md": read(os.path.join(P, "README.md")),
+    "NARRATIVE.md": read(os.path.join(P, "NARRATIVE.md")),
+}
+# headline numbers that must appear in both, in the form the companions use
+COMPANION_NUMBERS = ["+2.63", "1.07", "19.9", "0.94", "36 of the 51", "1.05"]
+for name, text in COMPANIONS.items():
+    flat = re.sub(r"\s+", " ", text)
+    absent = [n for n in COMPANION_NUMBERS if n not in flat]
+    if absent:
+        warn(f"{name}: does not restate {absent} (check it still matches the paper)")
+    else:
+        ok(f"{name}: restates the headline numbers")
+
+    # the framing constraint applies to the companions too
+    if re.search(r"Why Detection (?:Did Not|Would Not) Reduce", text, re.I):
+        fail(f"{name}: contains an effectiveness-verdict section removed from the paper")
+    # em dashes were removed project-wide
+    if "—" in text:
+        fail(f"{name}: contains em dash(es) (they were removed project-wide)")
+
+# every results doc a companion links to should exist
+for name, text in COMPANIONS.items():
+    for ref in set(re.findall(r"docs/(results_summary_\w+\.md)", text)):
+        if not os.path.exists(os.path.join(DOCS, ref)):
+            fail(f"{name}: links to docs/{ref}, which does not exist")
+
+
+# =====================================================================
 # REPORT
 # =====================================================================
 print("=" * 72)
