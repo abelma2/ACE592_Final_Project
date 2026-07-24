@@ -336,6 +336,7 @@ We'd rather name the soft spots than have a reviewer find them:
 │   ├── removal_analysis.py            Sept 2024 shutoff as a second natural experiment (non-identifiable)
 │   ├── matched_did.py                 Propensity matching / common support: what it buys and what it costs
 │   ├── treatment_definition.py        Coverage-screen diagnostics: threshold sensitivity + control contamination
+│   ├── check_consistency.py           Consistency check: paper numbers vs pipeline outputs, refs, style
 │   ├── make_narrative_plots.py        Specification-comparison + falsification figures
 │   ├── make_pretty_plots.py           Descriptive figures (monthly, hourly, hotspots)
 │   └── plot_covid_sensitivity.py
@@ -409,6 +410,9 @@ python scripts/etwfe_count.py          # Wooldridge ETWFE-Poisson (heterogeneity
 python scripts/removal_analysis.py     # Sept 2024 shutoff as a second natural experiment
 python scripts/matched_did.py          # propensity matching / common-support DiD
 python scripts/treatment_definition.py # coverage-screen sensitivity and control-group diagnostics
+
+# 8. Verify the paper still agrees with the pipeline (exits non-zero if not)
+python scripts/check_consistency.py
 
 # 7. Narrative + descriptive figures
 python scripts/make_narrative_plots.py
