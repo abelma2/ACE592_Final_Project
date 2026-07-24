@@ -817,6 +817,67 @@ $N$                      & 77 & 77 \\
 {\footnotesize $^{**}\,p<0.01$; $^{***}\,p<0.001$. Predictors standardized to mean 0, SD 1.}
 \end{table}
 
+\subsection{Matching restores parallel trends, at the cost of the units in question}
+\label{sec:matching}
+
+The natural response to a difference-in-differences that fails a pre-trend test is to match
+treated and control units on pre-treatment characteristics before estimating. Because the
+propensity model above is exactly the object such a procedure would use, we can run that
+response on its own terms and report what it buys. We compare three samples: the full panel,
+the subsample trimmed to the propensity common-support region, and a one-to-one
+nearest-neighbour matched sample (caliper of $0.2$ standard deviations of the linearized
+propensity). For each we re-test parallel pre-trends and re-estimate the DiD
+(Table~\ref{tab:matching}, Figure~\ref{fig:matched}).
+
+Matching works, and the price is the finding. Restricting to comparable units does restore
+parallel trends: a joint Wald test on pre-period treated-by-year interactions rejects on the
+full panel ($F = 2.67$, $p = 0.016$) but no longer rejects on common support ($F = 0.66$, $p
+= 0.70$) or after matching ($F = 0.87$, $p = 0.55$). The $F$ statistic falls below one, so
+this is not only the loss of power that comes with a smaller sample, though with fewer than
+half the original units some of it is. What the procedure costs is every unit the study is
+about. Placement is predicted well enough that the six highest-violence study neighborhoods
+occupy a propensity band no never-treated area reaches, so \emph{none} of the six survives
+either restriction, and only 17 of 51 treated areas find any control inside the caliper. The
+design that satisfies parallel trends is a design about the marginal, lower-violence edge of
+coverage, not about the neighborhoods the program was built around. On that subsample the
+effect remains statistically null and less precisely estimated than before (IRR $1.31$, 95\%
+CI $[0.97, 1.76]$ on common support; $1.24$ $[0.86, 1.78]$ matched).
+
+This states the identification problem as a trade rather than a failure. These data can
+support a credible comparison, or they can speak to the neighborhoods the policy is about,
+but not both at once, and no reweighting of the units that exist can manufacture a
+counterfactual for units that have none.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Matching on the placement propensity: what it buys and what it costs. The pre-trend
+test is a joint Wald test on treated-by-year interactions in the 2009--2016 pre-period, a
+simpler statistic than the cohort event study reported above and not directly comparable to
+it. The full-sample DiD is the staggered, cohort-specific specification.}
+\label{tab:matching}
+\begin{tabular}{lccccc}
+\toprule
+Sample & Treated & Control & Study-6 kept & Pre-trend $F$ ($p$) & Poisson IRR [95\% CI] \\
+\midrule
+Full panel      & 51 & 26 & 6/6 & 2.67 (0.016) & 1.02 $[0.84, 1.22]$ \\
+Common support  & 15 & 17 & 0/6 & 0.66 (0.704) & 1.31 $[0.97, 1.76]$ \\
+NN matched      & 17 & \phantom{0}8 & 0/6 & 0.87 (0.545) & 1.24 $[0.86, 1.78]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{matched_did.png}
+\caption{Left: the estimated propensity to receive ShotSpotter. The six study neighborhoods
+sit in a band (shaded) that no never-treated area reaches, so they cannot be matched. Right:
+DiD estimates across the three samples. Trimming to comparable units restores parallel
+pre-trends, but discards all six study neighborhoods and two thirds of the treated areas,
+and leaves the effect null and less precisely estimated.}
+\label{fig:matched}
+\end{figure}
+
 \subsection{Synthetic control is infeasible}
 
 For each of the six study neighborhoods, the synthetic-control optimizer concentrates
