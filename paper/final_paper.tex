@@ -239,8 +239,12 @@ from the Chicago Data Portal:
 \begin{itemize}
 \itemsep0.1em
 \item \textbf{Violence Reduction: Victims of Homicides and Non-Fatal Shootings}
-(61,450 incidents, 1991--2025), filtered to gun homicides ($n \approx 7{,}600$ in
-2009--2023) and non-fatal gunshot injuries ($n \approx 30{,}000$).
+(61,450 incidents, 1991--2025), filtered to gun homicides ($n = 7{,}568$ in
+2009--2023) and non-fatal gunshot injuries ($n = 37{,}107$ in 2010--2023).
+\emph{Coverage note:} the file records homicides from 1991 but non-fatal shootings only
+from 2010; counts for every community area in 2009 are exactly zero. We therefore estimate
+gun-homicide models on 2009--2023 and all non-fatal models on 2010--2023, rather than
+treating the missing year as a year of true zeros.
 \item \textbf{Violence Reduction: ShotSpotter Alerts (Historical)} (222,108 alerts,
 2017-01-13 to 2024-09-22, when the city ended ShotSpotter; the 191,824 alerts through 2023
 fall in our analysis window).
@@ -466,10 +470,19 @@ extended two-way fixed-effects model (Wooldridge, 2023) that saturates the treat
 cohort and calendar time, returns the same null: an overall ATT incidence-rate ratio of
 $1.05$ (95\% CI $[0.79, 1.33]$), with cohort-time effects at one at every horizon
 (Appendix~\ref{app:supporting}, Figure~\ref{fig:etwfe} and Table~\ref{tab:etwfe}). The null is therefore not an artifact
-of the plain PPML's weighting. Second, non-fatal gunshot injuries, a four-times-larger
-sample, yield $\beta = +7.51$ under OLS ($p = 0.009$) and an even starker correction: every
-count model flips the point estimate \emph{below} one and is null (IRRs $0.84$--$0.92$, $p
-\geq 0.23$; Appendix~\ref{app:supporting}, Table~\ref{tab:nfs}). Third, the identical
+of the plain PPML's weighting. Second, the pattern is not confined to homicides: on
+non-fatal gunshot injuries, a nearly five times larger sample, the additive OLS estimate is
+$+3.09$ and already statistically indistinguishable from zero ($p = 0.24$), while every
+count model puts the point estimate \emph{below} one (IRRs $0.84$--$0.92$, $p \geq 0.23$;
+Appendix~\ref{app:supporting}, Table~\ref{tab:nfs}). We flag one caution about this outcome
+rather than lean on it. The victims file begins recording non-fatal shootings only in 2010,
+and an earlier version of this analysis built its panel from 2009, filling the missing year
+with zeros; that single empty year raised the additive estimate to $+7.51$ ($p = 0.009$)
+while leaving the count models unchanged to four decimals, because the year fixed effect
+absorbs an all-zero year multiplicatively but not additively. The corrected series is
+reported here. It is a reminder that additive specifications are sensitive to exactly the
+kind of scale and coverage variation this section is about, but for that reason it
+corroborates the argument less cleanly than the homicide series does. Third, the identical
 difference-in-differences run on weapons-violation enforcement rather than homicides
 reproduces the distortion unchanged, an order-of-magnitude-larger OLS coefficient that again
 collapses to a null incidence-rate ratio (Appendix~\ref{app:procedural}). The inflation is a
@@ -1124,25 +1137,27 @@ rejection of parallel trends.
 \centering
 \small
 \caption{Cohort-specific event study, aggregated ATT by event time $k$ (years from
-install), sample-weighted, bootstrap CIs.}
+install), sample-weighted. Confidence intervals come from a bootstrap that resamples
+community areas, carrying each area's event-time and base-year observations together, so
+that the within-area correlation across adjacent years is preserved.}
 \label{tab:eventstudy}
 \begin{tabular}{ccc}
 \toprule
 $k$ (years from install) & ATT & 95\% CI \\
 \midrule
-$-7$ & $-5.46$ & $[-9.30, -1.62]$ \\
-$-6$ & $-4.54$ & $[-8.53, -0.56]$ \\
-$-5$ & $-5.09$ & $[-8.97, -1.20]$ \\
-$-4$ & $-6.25$ & $[-10.04, -2.46]$ \\
-$-3$ & $-6.09$ & $[-10.01, -2.17]$ \\
-$-2$ & $-4.92$ & $[-8.92, -0.93]$ \\
+$-7$ & $-5.46$ & $[-8.08, -2.83]$ \\
+$-6$ & $-4.54$ & $[-6.89, -2.19]$ \\
+$-5$ & $-5.09$ & $[-7.38, -2.79]$ \\
+$-4$ & $-6.25$ & $[-8.50, -4.00]$ \\
+$-3$ & $-6.09$ & $[-8.40, -3.78]$ \\
+$-2$ & $-4.92$ & $[-6.83, -3.02]$ \\
 $-1$ (base) & $0$ & n/a \\
-$\phantom{+}0$ & $-1.95$ & $[-6.57, +2.68]$ \\
-$+1$ & $-4.65$ & $[-8.79, -0.51]$ \\
-$+2$ & $-3.83$ & $[-8.12, +0.47]$ \\
-$+3$ & $+0.10$ & $[-4.85, +5.05]$ \\
-$+4$ & $-0.43$ & $[-5.25, +4.39]$ \\
-$+5$ & $-2.99$ & $[-7.19, +1.22]$ \\
+$\phantom{+}0$ & $-1.95$ & $[-3.71, -0.19]$ \\
+$+1$ & $-4.65$ & $[-6.18, -3.13]$ \\
+$+2$ & $-3.83$ & $[-5.79, -1.87]$ \\
+$+3$ & $+0.10$ & $[-1.89, +2.09]$ \\
+$+4$ & $-0.43$ & $[-2.24, +1.39]$ \\
+$+5$ & $-2.99$ & $[-5.06, -0.91]$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1232,15 +1247,17 @@ $+62\%$) shows how heavily the pooled headline leans on a few high-count neighbo
 \begin{table}[H]
 \centering
 \small
-\caption{Non-fatal gunshot injuries (a four-times-larger sample) under count models, same
-two-way fixed effects and cluster-robust SEs. The OLS coefficient is positive and
-significant; every count model is null with a point estimate \emph{below} one.}
+\caption{Non-fatal gunshot injuries (a nearly five times larger sample) under count models,
+same two-way fixed effects and cluster-robust SEs, estimated on 2010--2023 because the
+source does not record non-fatal shootings before 2010. Neither the additive nor the
+multiplicative estimate is distinguishable from zero, and every count model puts the point
+estimate \emph{below} one.}
 \label{tab:nfs}
 \begin{tabular}{llcccc}
 \toprule
 Model & Specification & $\beta$ & IRR & 95\% CI on IRR & $p$ \\
 \midrule
-OLS (TWFE)     & full panel   & $+7.51$  & n/a   & n/a              & 0.009 \\
+OLS (TWFE)     & full panel   & $+3.09$  & n/a   & n/a              & 0.239 \\
 \midrule
 Poisson        & full panel   & $-0.102$ & 0.903 & $[0.691, 1.181]$ & 0.457 \\
 Neg.\ Binomial & full panel   & $-0.168$ & 0.845 & $[0.640, 1.115]$ & 0.234 \\

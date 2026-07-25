@@ -102,7 +102,20 @@ for col, src in [("gun_hom", gun), ("nfs", nfs)]:
     cnt = src.groupby([src["CA_num"].astype(int), "year"]).size().rename(col).reset_index()
     cnt.columns = ["ca_num", "year", col]
     panel = panel.merge(cnt, on=["ca_num", "year"], how="left")
-    panel[col] = panel[col].fillna(0).astype(int)
+    panel[col] = panel[col].fillna(0).astype(float)
+
+# COVERAGE: non-fatal shootings appear in the victims file only from 2010 (homicides run
+# back to 1991). Zero-filling 2009 puts 77 fabricated zeros in the panel, which with year
+# fixed effects mechanically inflates the additive NFS estimate. Mark those rows missing
+# so they are dropped; gun homicides keep the full 2009-2023 window.
+NFS_FIRST_YEAR = 2010
+panel.loc[panel["year"] < NFS_FIRST_YEAR, "nfs"] = np.nan
+for _c in ("gun_hom", "nfs"):
+    _obs = panel.dropna(subset=[_c])
+    _empty = [int(y) for y, v in _obs.groupby("year")[_c].sum().items() if v == 0]
+    if _empty:
+        raise ValueError(f"'{_c}' is zero across all areas in {_empty}: a coverage gap, "
+                         f"not a citywide zero. Exclude rather than zero-fill.")
 
 panel["treat"] = panel["ca_name"].isin(ALL_SS).astype(int)
 panel["post"] = (panel["year"] >= 2017).astype(int)
@@ -121,11 +134,14 @@ print(f"  Panel: {len(panel)} rows; treated={len(ALL_SS)} (2017 cohort {len(COHO
 print("\n" + "=" * 72)
 print("1. NON-FATAL GUNSHOT INJURIES: Poisson / Negative Binomial TWFE")
 print("=" * 72)
-print("  (Note: the source records non-fatal shootings from 2010; 2009 counts")
-print("   are near zero, matching the OLS specification already in the paper.)")
+print("  (Coverage: the source records non-fatal shootings only from 2010. 2009 counts")
+print("   are exactly zero for all 77 areas, so 2009 is excluded from every NFS model.)")
 
 def count_did(df, outcome, label, exclude_years=None):
     d = df if not exclude_years else df[~df["year"].isin(exclude_years)]
+    # Outcomes with a coverage gap (non-fatal shootings before 2010) carry NaN there.
+    # Drop those rows explicitly so the cluster labels stay aligned with the design matrix.
+    d = d.dropna(subset=[outcome]).copy()
     f = f"{outcome} ~ did + C(ca_num) + C(year)"
     pois = smf.glm(f, data=d, family=sm.families.Poisson()).fit(
         cov_type="cluster", cov_kwds={"groups": d["ca_num"]})

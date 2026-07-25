@@ -119,6 +119,26 @@ NUMERIC_CHECKS = [
         lambda g: [f"{float(g[0]):.3f}"[:4]],
     ),
     (
+        "Headline OLS DiD",
+        "results_summary_reanalysis.md",
+        r"\| All 51 SS areas, 2009-2023 \| \+([\d.]+) \|",
+        lambda g: [f"{float(g[0]):.2f}", f"{float(g[0]):.3f}"],
+    ),
+    (
+        "Non-fatal shootings OLS DiD (coverage-corrected window)",
+        "results_summary_reanalysis.md",
+        r"\| All 51 SS areas, NFS, 2010-2023 \| \+([\d.]+) \| [\d.]+ \| ([\d.]+)",
+        # truncate rather than re-round: the doc already shows a rounded value, so
+        # rounding it a second time can disagree with the paper by one in the last place
+        lambda g: [f"{float(g[0]):.3f}"[:4], f"{float(g[1]):.3f}"],
+    ),
+    (
+        "Parallel-trends Wald test",
+        "results_summary_reanalysis.md",
+        r"- F = ([\d.]+)",
+        lambda g: [f"{float(g[0]):.1f}"],
+    ),
+    (
         "Procedural weapons-incident IRR",
         "results_summary_procedural.md",
         r"Weapons-violation incidents \(process\) \| \+[\d.]+ \| ([\d.]+) \|",
@@ -240,6 +260,25 @@ if hits:
     fail(f"framing: the paper appears to claim the effectiveness null as its own finding ({hits})")
 else:
     ok("framing: no claim of the effectiveness null as the paper's own finding")
+
+
+# =====================================================================
+# 6b. COVERAGE GUARD: no outcome may be zero-filled across a whole year
+# =====================================================================
+# The victims file records non-fatal shootings only from 2010. An earlier version of the
+# pipeline built the panel from 2009 and zero-filled the gap, which put 77 fabricated
+# zeros in the panel and inflated the additive estimate from +3.09 to +7.51. Assert the
+# guard is still in place rather than trusting that nobody reintroduces the window.
+for fname, needle in (("econometric_analysis.py", "NFS_FIRST_YEAR"),
+                      ("robustness_closers.py", "NFS_FIRST_YEAR")):
+    src = read(os.path.join(P, "scripts", fname))
+    if needle not in src:
+        fail(f"{fname}: the non-fatal coverage guard (NFS_FIRST_YEAR) is gone; "
+             f"the 2009 gap may be zero-filled again")
+    elif "zero across all" not in src:
+        warn(f"{fname}: has NFS_FIRST_YEAR but no all-zero-year assertion")
+if not any("coverage guard" in f for f in FAILS):
+    ok("coverage guard: non-fatal shootings are excluded before 2010, not zero-filled")
 
 
 # =====================================================================
