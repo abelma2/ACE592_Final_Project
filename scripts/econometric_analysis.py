@@ -113,6 +113,31 @@ for h in ORIG_6:
 
 
 # Build panel: 77 community areas x years
+# The victims file records non-fatal shootings only from 2010; homicides run to 1991.
+NFS_FIRST_YEAR = 2010
+
+
+def _assert_no_empty_years(panel, col):
+    """Guard against zero-filling a year the outcome does not exist in.
+
+    A year in which an outcome is zero across all 77 community areas is almost never a
+    real citywide zero; it means the source stopped covering that outcome. Left in the
+    panel it is indistinguishable from genuine zeros and silently distorts any
+    fixed-effects estimate. Fail loudly instead.
+    """
+    obs = panel.dropna(subset=[col])
+    if obs.empty:
+        return
+    totals = obs.groupby("year")[col].sum()
+    empty = [int(y) for y, v in totals.items() if v == 0]
+    if empty:
+        raise ValueError(
+            f"build_panel: '{col}' is zero across all community areas in {empty}. "
+            f"That is a data-coverage gap, not a citywide zero. Exclude those years "
+            f"(set them to NaN) rather than zero-filling them."
+        )
+
+
 def build_panel(year_start, year_end, hom_df, treat_set, treat_year_map=None):
     """Build community-area x year panel with gun homicide counts."""
     gun = hom_df[
@@ -142,7 +167,16 @@ def build_panel(year_start, year_end, hom_df, treat_set, treat_year_map=None):
     n_counts = nfs.dropna(subset=["CA_num"]).groupby(["CA_num", "year"]).size().reset_index(name="nfs")
     n_counts["CA_num"] = n_counts["CA_num"].astype(int)
     panel = panel.merge(n_counts.rename(columns={"CA_num": "ca_num"}), on=["ca_num", "year"], how="left")
-    panel["nfs"] = panel["nfs"].fillna(0).astype(int)
+    panel["nfs"] = panel["nfs"].fillna(0).astype(float)
+    # COVERAGE: the victims file records non-fatal shootings only from 2010 onward
+    # (homicides run back to 1991). Zero-filling 2009 would put 77 fabricated zeros in
+    # the panel, and with year fixed effects that empty pre-year mechanically inflates
+    # the NFS difference-in-differences. Mark it missing so those rows are dropped
+    # rather than read as true zeros; gun homicides are unaffected and keep 2009.
+    panel.loc[panel["year"] < NFS_FIRST_YEAR, "nfs"] = np.nan
+
+    _assert_no_empty_years(panel, "gun_hom")
+    _assert_no_empty_years(panel, "nfs")
 
     panel["treat"] = panel["ca_name"].isin(treat_set).astype(int)
     if treat_year_map is None:
@@ -174,6 +208,9 @@ panel = build_panel(2009, 2023, hom_raw, ALL_SS)
 def run_twfe(df, outcome, treat_col, label, exclude_years=None):
     if exclude_years:
         df = df[~df["year"].isin(exclude_years)]
+    # Outcomes with a coverage gap (non-fatal shootings before 2010) carry NaN there.
+    # Drop those rows explicitly so the cluster labels stay aligned with the design matrix.
+    df = df.dropna(subset=[outcome]).copy()
     formula = f"{outcome} ~ {treat_col} + C(ca_num) + C(year)"
     model = smf.ols(formula, data=df).fit(
         cov_type="cluster", cov_kwds={"groups": df["ca_num"]})
@@ -195,7 +232,7 @@ twfe_results.append(run_twfe(panel.copy(), "gun_hom", "did", "All 51 SS areas, e
 
 print("\n--- Non-fatal gunshot injuries (TWFE) ---")
 twfe_results_nfs = []
-twfe_results_nfs.append(run_twfe(panel.copy(), "nfs", "did", "All 51 SS areas, NFS, 2009-2023"))
+twfe_results_nfs.append(run_twfe(panel.copy(), "nfs", "did", "All 51 SS areas, NFS, 2010-2023"))
 twfe_results_nfs.append(run_twfe(panel.copy(), "nfs", "did", "All 51 SS areas, NFS, excl COVID", [2020, 2021]))
 twfe_results_nfs.append(run_twfe(panel.copy(), "nfs", "did", "All 51 SS areas, NFS, excl 2016", [2016]))
 
@@ -216,31 +253,47 @@ print(f"  2018 cohort: {len(COHORT_2018)} areas")
 print(f"  Never-treated control:  {len(never_treated)} areas")
 
 
-def cohort_event_study(panel_df, cohort_areas, install_year, ctrl_areas, k_min=-7, k_max=6):
-    """Compute ATT(cohort, event-time k) using never-treated as controls."""
+def cohort_event_study(panel_df, cohort_areas, install_year, ctrl_areas,
+                       k_min=-7, k_max=6, n_boot=500, seed=0):
+    """Compute ATT(cohort, event-time k) using never-treated as controls.
+
+    Inference resamples COMMUNITY AREAS, carrying each sampled area's event-time and
+    base-year observations together. An earlier version resampled the four cell means
+    independently, which breaks the within-area correlation between an area's outcome in
+    adjacent years. Because that correlation is strong, ignoring it inflated every
+    standard error by roughly a factor of two and made these intervals disagree with the
+    Callaway--Sant'Anna estimates computed on the same data.
+    """
     coefs = {}
+    rng = np.random.default_rng(seed)
+    base_year = install_year - 1
+
+    def _paired(areas):
+        """(n_areas, 2) array of [event-time value, base-year value] per area."""
+        d = panel_df[panel_df["ca_name"].isin(areas)
+                     & panel_df["year"].isin([cal_year, base_year])]
+        w = d.pivot_table(index="ca_name", columns="year", values="gun_hom")
+        if cal_year not in w.columns or base_year not in w.columns:
+            return np.empty((0, 2))
+        return w[[cal_year, base_year]].dropna().to_numpy(dtype=float)
+
     for k in range(k_min, k_max + 1):
         cal_year = install_year + k
         if cal_year < panel_df["year"].min() or cal_year > panel_df["year"].max():
             continue
-        # Compare cohort and never-treated, in event-time k vs base year (k=-1)
-        base_year = install_year - 1
-        treat_post = panel_df[(panel_df["ca_name"].isin(cohort_areas)) & (panel_df["year"] == cal_year)]["gun_hom"]
-        treat_base = panel_df[(panel_df["ca_name"].isin(cohort_areas)) & (panel_df["year"] == base_year)]["gun_hom"]
-        ctrl_post = panel_df[(panel_df["ca_name"].isin(ctrl_areas)) & (panel_df["year"] == cal_year)]["gun_hom"]
-        ctrl_base = panel_df[(panel_df["ca_name"].isin(ctrl_areas)) & (panel_df["year"] == base_year)]["gun_hom"]
-        att = (treat_post.mean() - treat_base.mean()) - (ctrl_post.mean() - ctrl_base.mean())
-        # Bootstrap SE
-        rng = np.random.default_rng(0)
-        boots = []
-        for _ in range(500):
-            t_p = treat_post.sample(len(treat_post), replace=True, random_state=rng.integers(1e9))
-            t_b = treat_base.sample(len(treat_base), replace=True, random_state=rng.integers(1e9))
-            c_p = ctrl_post.sample(len(ctrl_post), replace=True, random_state=rng.integers(1e9))
-            c_b = ctrl_base.sample(len(ctrl_base), replace=True, random_state=rng.integers(1e9))
-            boots.append((t_p.mean() - t_b.mean()) - (c_p.mean() - c_b.mean()))
-        se = np.std(boots, ddof=1)
-        coefs[k] = (att, se)
+        if cal_year == base_year:          # k = -1 is the normalisation, zero by construction
+            coefs[k] = (0.0, 0.0)
+            continue
+        T, C = _paired(cohort_areas), _paired(ctrl_areas)
+        if len(T) == 0 or len(C) == 0:
+            continue
+        att = (T[:, 0].mean() - T[:, 1].mean()) - (C[:, 0].mean() - C[:, 1].mean())
+        boots = np.empty(n_boot)
+        for b in range(n_boot):
+            Tb = T[rng.integers(0, len(T), len(T))]
+            Cb = C[rng.integers(0, len(C), len(C))]
+            boots[b] = (Tb[:, 0].mean() - Tb[:, 1].mean()) - (Cb[:, 0].mean() - Cb[:, 1].mean())
+        coefs[k] = (att, float(np.std(boots, ddof=1)))
     return coefs
 
 

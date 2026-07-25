@@ -27,9 +27,9 @@ with cluster-robust SEs at the community-area level.
 
 | Specification | β (DiD) | SE | p | 95% CI | N |
 |---|---|---|---|---|---|
-| All 51 SS areas, NFS, 2009-2023 | +7.512 | 2.870 | 0.0089*** | [+1.886, +13.138] | 1,155 |
-| All 51 SS areas, NFS, excl COVID | +3.705 | 2.420 | 0.1258 | [-1.039, +8.449] | 1,001 |
-| All 51 SS areas, NFS, excl 2016 | +10.496 | 3.578 | 0.0034*** | [+3.483, +17.508] | 1,078 |
+| All 51 SS areas, NFS, 2010-2023 | +3.095 | 2.630 | 0.2393 | [-2.060, +8.249] | 1,078 |
+| All 51 SS areas, NFS, excl COVID | -0.712 | 2.408 | 0.7673 | [-5.432, +4.007] | 924 |
+| All 51 SS areas, NFS, excl 2016 | +5.839 | 3.240 | 0.0715* | [-0.511, +12.189] | 1,001 |
 
 ## 2. Cohort-Specific Event Study
 
@@ -39,19 +39,19 @@ Cohorts: 21 community areas treated in 2017, 30 in 2018, 26 never-treated contro
 
 | Event time k | ATT | SE | 95% CI |
 |---|---|---|---|
-| -7 | -5.456 | 1.959 | [-9.296, -1.615] |
-| -6 | -4.544 | 2.032 | [-8.527, -0.561] |
-| -5 | -5.086 | 1.983 | [-8.973, -1.199] |
-| -4 | -6.251 | 1.934 | [-10.041, -2.461] |
-| -3 | -6.090 | 1.999 | [-10.008, -2.173] |
-| -2 | -4.922 | 2.039 | [-8.919, -0.925] |
-| -1 | +0.000 | 2.480 | [-4.860, +4.860] |
-| +0 | -1.948 | 2.359 | [-6.572, +2.676] |
-| +1 | -4.652 | 2.113 | [-8.794, -0.510] |
-| +2 | -3.827 | 2.190 | [-8.119, +0.466] |
-| +3 | +0.101 | 2.526 | [-4.850, +5.052] |
-| +4 | -0.428 | 2.459 | [-5.248, +4.393] |
-| +5 | -2.985 | 2.145 | [-7.189, +1.219] |
+| -7 | -5.456 | 1.338 | [-8.078, -2.833] |
+| -6 | -4.544 | 1.199 | [-6.894, -2.193] |
+| -5 | -5.086 | 1.171 | [-7.381, -2.791] |
+| -4 | -6.251 | 1.147 | [-8.499, -4.004] |
+| -3 | -6.090 | 1.179 | [-8.401, -3.780] |
+| -2 | -4.922 | 0.971 | [-6.825, -3.020] |
+| -1 | +0.000 | 0.000 | [+0.000, +0.000] |
+| +0 | -1.948 | 0.899 | [-3.711, -0.185] |
+| +1 | -4.652 | 0.778 | [-6.177, -3.128] |
+| +2 | -3.827 | 1.000 | [-5.786, -1.867] |
+| +3 | +0.101 | 1.015 | [-1.889, +2.091] |
+| +4 | -0.428 | 0.926 | [-2.242, +1.387] |
+| +5 | -2.985 | 1.058 | [-5.059, -0.911] |
 
 ## 3. Synthetic Control
 
@@ -59,6 +59,11 @@ For each of the 6 study neighborhoods, weights over the 26 never-treated
 community areas are chosen to minimize the pre-treatment squared error on
 annual gun homicide counts. A positive 'gap' means the treated unit had
 more homicides post-treatment than its synthetic counterfactual.
+
+These six are carried over from the original analysis and are illustrative:
+six of the highest-violence coverage areas, retained because synthetic
+control needs a readable number of panels. They are not the six highest, and
+the identification argument does not rest on the particular six.
 
 | Neighborhood | Cohort | Pre-tx RMSE | Post-tx gap (per year) | Top donors |
 |---|---|---|---|---|
@@ -75,10 +80,13 @@ more homicides post-treatment than its synthetic counterfactual.
 > does not converge to an interior optimum. The pre-treatment RMSE is large relative
 > to the outcome level (e.g. Austin's pre-RMSE of ~34 against an actual level of
 > 15-70/yr), so the synthetic counterfactual cannot reproduce the treated series even
-> in the pre-period it was fit on. The 26 never-treated community areas are
-> systematically lower-violence than any treated neighborhood, so no convex
-> combination can match them. The positive 'gaps' below therefore reflect this
-> level mismatch, **not** a treatment effect. See NARRATIVE.md §5.5.
+> in the pre-period it was fit on. The 26 never-treated community areas sit far
+> below these treated neighborhoods in both violence and hardship, so no convex
+> combination can match them. The failure is not an artifact of picking these six:
+> in the placement model, 36 of the 51 treated areas carry a treatment propensity
+> above **every** one of the 26 never-treated units (whose maximum is 0.873), and
+> no never-treated area reaches 0.90. The positive 'gaps' below therefore reflect
+> this level mismatch, **not** a treatment effect. See NARRATIVE.md §5.5.
 
 ## 4. Pre-Period Placebo Tests
 

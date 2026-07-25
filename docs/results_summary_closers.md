@@ -11,12 +11,12 @@ Cameron–Trivedi auxiliary regression):
 
 | Model | Specification | β | IRR | 95% CI (IRR) | p |
 |---|---|---|---|---|---|
-| Poisson | full panel | -0.1017 | 0.903 | [0.691, 1.181] | 0.457 |
-| NegBin | full panel | -0.1684 | 0.845 | [0.640, 1.115] | 0.234 |
-| Poisson | excl COVID | -0.0926 | 0.912 | [0.710, 1.171] | 0.469 |
-| NegBin | excl COVID | -0.1573 | 0.854 | [0.653, 1.118] | 0.251 |
-| Poisson | excl 2016 | -0.0868 | 0.917 | [0.686, 1.226] | 0.558 |
-| NegBin | excl 2016 | -0.1748 | 0.840 | [0.623, 1.131] | 0.251 |
+| Poisson | full panel | -0.1017 | 0.903 | [0.690, 1.182] | 0.458 |
+| NegBin | full panel | -0.1684 | 0.845 | [0.640, 1.116] | 0.235 |
+| Poisson | excl COVID | -0.0926 | 0.912 | [0.709, 1.172] | 0.471 |
+| NegBin | excl COVID | -0.1573 | 0.854 | [0.653, 1.119] | 0.253 |
+| Poisson | excl 2016 | -0.0868 | 0.917 | [0.685, 1.227] | 0.560 |
+| NegBin | excl 2016 | -0.1748 | 0.840 | [0.623, 1.132] | 0.252 |
 
 Source note: the victims file records non-fatal shootings from 2010, so 2009 counts
 are near zero; this matches the OLS specification already reported.
