@@ -731,7 +731,7 @@ restriction. The
 design that satisfies parallel trends is a design about the marginal, lower-violence edge of
 coverage, not about the neighborhoods the program was built around. On that subsample the
 effect remains statistically null and less precisely estimated than before (IRR $1.31$, 95\%
-CI $[0.97, 1.76]$ on common support; $1.24$ $[0.86, 1.78]$ matched).
+CI $[0.97, 1.76]$ on common support; $1.20$ $[0.84, 1.72]$ matched).
 
 This states the identification problem as a trade rather than a failure. These data can
 support a credible comparison, or they can speak to the neighborhoods the policy is about,
@@ -752,7 +752,7 @@ Sample & Treated & Control & Study-6 kept & Pre-trend $F$ ($p$) & Poisson IRR [9
 \midrule
 Full panel      & 51 & 26 & 6/6 & 2.67 (0.016) & 1.02 $[0.84, 1.22]$ \\
 Common support  & 15 & 17 & 0/6 & 0.66 (0.704) & 1.31 $[0.97, 1.76]$ \\
-NN matched      & 17 & \phantom{0}8 & 0/6 & 0.87 (0.545) & 1.24 $[0.86, 1.78]$ \\
+NN matched      & 17 & \phantom{0}8 & 0/6 & 0.87 (0.545) & 1.20 $[0.84, 1.72]$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -824,20 +824,21 @@ argument.
 First, the common trend. Gun homicides had been falling city-wide from their 2021--2022
 peak for two full years before the shutoff, in ShotSpotter and never-treated areas alike.
 On a common (indexed) scale the two groups decline in near-lockstep straight through the
-removal date (Figure~\ref{fig:removal}): coverage-area homicides fell 37\% from the pre- to
-the post-removal window, but never-treated areas fell 31\% over the very same months. The
+removal date (Figure~\ref{fig:removal}): coverage-area homicides fell 32\% from the pre- to
+the post-removal window, but never-treated areas fell 23\% over the very same months. The
 naive ``crime fell after ShotSpotter left'' comparison attributes a city-wide trend to the
 shutoff, the exact inverse of the naive ``crime rose after ShotSpotter arrived'' comparison
 that would have credited the 2016--2021 rise to the rollout.
 
 Second, the scale artifact. Netting out the common trend with a difference-in-differences
 does not rescue identification, because the additive DiD reproduces the very artifact of
-Section~\ref{sec:count}: it returns a ``significant'' removal \emph{benefit} of $-0.25$ gun
+Section~\ref{sec:count}: it returns a ``significant'' removal \emph{benefit} of $-0.23$ gun
 homicides per area-month ($p < 0.001$), but only because coverage areas start from a far
 higher baseline ($0.85$ versus $0.20$ gun homicides per area-month) and so move more in
 absolute terms for the same proportional change. On the correct multiplicative scale the
-removal effect is null (Poisson IRR $0.91$, 95\% CI $[0.54, 1.52]$; Table~\ref{tab:removal}). The post window is also
-short (seven complete months, with 2025 only partially observed) so the estimate is
+removal effect is null (Poisson IRR $0.88$, 95\% CI $[0.53, 1.46]$; Table~\ref{tab:removal}). The post window is also
+short (six complete months; because administrative victim records are added
+retroactively, the two months nearest the data export are discarded as provisional) so the estimate is
 under-powered on top of being non-identified. Both the raw drop and the additive DiD are
 mirages: these data can no more identify the removal effect than the installation effect, in
 either direction. The public debate has confidently drawn both unwarranted inferences.
@@ -852,14 +853,14 @@ in ShotSpotter and never-treated areas alike, straight through the removal date 
 post-removal window (shaded). The naive ``crime fell after removal'' claim mistakes a
 city-wide decline for a removal effect; the additive difference-in-differences that nets out
 that trend reproduces the paper's scale artifact (a ``significant'' $-0.25$/area-month that
-is null on the multiplicative scale, IRR $0.91$).}
+is null on the multiplicative scale, IRR $0.88$).}
 \label{fig:removal}
 \end{figure}
 
 \begin{table}[H]
 \centering
 \small
-\caption{The September 2024 removal (monthly panel; seven complete post-removal months,
+\caption{The September 2024 removal (monthly panel; six complete post-removal months,
 2025 partial). Both groups fall in near-identical proportion, so the naive drop is a
 city-wide trend; the additive DiD is ``significant'' only because coverage areas have a
 higher baseline, while the multiplicative model is null.}
@@ -869,14 +870,14 @@ higher baseline, while the multiplicative model is null.}
 \multicolumn{4}{l}{\emph{Panel A. Gun homicides per area-month, before vs.\ after the shutoff}} \\
 Group & Pre & Post & \% change \\
 \midrule
-ShotSpotter areas ($n=51$) & 0.849 & 0.532 & $-37\%$ \\
-Never-treated ($n=26$)     & 0.199 & 0.137 & $-31\%$ \\
+ShotSpotter areas ($n=51$) & 0.849 & 0.575 & $-32\%$ \\
+Never-treated ($n=26$)     & 0.199 & 0.154 & $-23\%$ \\
 \midrule
 \multicolumn{4}{l}{\emph{Panel B. Removal difference-in-differences (treated $\times$ post)}} \\
 Estimator & Estimate (SE) & 95\% CI & $p$ \\
 \midrule
-OLS (additive, per area-month) & $-0.255\ (0.069)$ & n/a & $<0.001$ \\
-Poisson (IRR)                  & $0.909$ & $[0.545, 1.518]$ & 0.717 \\
+OLS (additive, per area-month) & $-0.229\ (0.070)$ & n/a & $0.001$ \\
+Poisson (IRR)                  & $0.878$ & $[0.526, 1.464]$ & 0.617 \\
 \bottomrule
 \end{tabular}
 \end{table}

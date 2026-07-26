@@ -253,7 +253,7 @@ common-support region does restore parallel trends (the joint pre-trend Wald tes
 areas, including *every one* of the six study neighborhoods, because no never-treated area
 exists at their propensity level. Only 17 of 51 covered areas find any control inside the
 caliper. On the surviving subsample the effect is still null and less precisely estimated
-(IRR 1.31 [0.97, 1.76] on common support; 1.24 [0.86, 1.78] matched).
+(IRR 1.31 [0.97, 1.76] on common support; 1.20 [0.84, 1.72] matched).
 
 So these data can support a credible comparison, **or** they can speak to the neighborhoods
 the policy is about, but not both at once. That is the identification problem stated as a
@@ -284,11 +284,11 @@ followed has been read in public commentary as proof the technology never worked
 the same discipline to the *removal* shows it is no more identifiable than the installation,
 and it fails in the same two ways, which is the cleanest confirmation of the whole argument.
 Gun homicides were already falling city-wide from the 2021–22 peak, in ShotSpotter and
-never-treated areas alike (coverage areas **−37%**, never-treated **−31%** over the same
+never-treated areas alike (coverage areas **−32%**, never-treated **−23%** over the same
 post-removal months), so the raw "crime fell after ShotSpotter left" is a city-wide trend,
 not a removal effect. And the additive removal DiD even manufactures a "significant" benefit
-(**−0.25 homicides/area-month, p < 0.001**) that vanishes on the multiplicative scale
-(**Poisson IRR 0.91, 95% CI [0.54, 1.52]**), the identical scale artifact as the
+(**−0.23 homicides/area-month, p = 0.001**) that vanishes on the multiplicative scale
+(**Poisson IRR 0.88, 95% CI [0.53, 1.46]**), the identical scale artifact as the
 installation. Both the raw drop and the additive DiD are mirages; the public debate has
 confidently drawn both unwarranted inferences.
 

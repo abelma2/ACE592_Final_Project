@@ -14,7 +14,7 @@ placement on standardized pre-period gun homicides, hardship, and per-capita inc
 |---|---|---|---|---|---|---|---|
 | Full sample | 51 | 26 | 6/6 | 2.67 | 0.0160 | +2.481 (0.725) | 1.016 [0.843, 1.224] |
 | Common support | 15 | 17 | 0/6 | 0.66 | 0.7044 | +0.812 (0.459) | 1.306 [0.967, 1.762] |
-| NN matched | 17 | 8 | 0/6 | 0.87 | 0.5453 | +0.579 (0.517) | 1.237 [0.861, 1.779] |
+| NN matched | 17 | 8 | 0/6 | 0.87 | 0.5453 | +0.397 (0.479) | 1.201 [0.841, 1.715] |
 
 Common-support region: propensity in [0.124, 0.873].
 Nearest-neighbour matching used a caliper of 0.634 (0.2 SD of the linearized
@@ -45,7 +45,7 @@ program was built around, and not the ones the procurement debate was about.
 
 **On that subsample the effect is still not estimable in any useful sense.** The
 multiplicative estimate is IRR 1.31 [0.97, 1.76] on common
-support and 1.24 [0.86, 1.78] matched, against 1.02 [0.84, 1.22] on the full panel. Both intervals
+support and 1.20 [0.84, 1.72] matched, against 1.02 [0.84, 1.22] on the full panel. Both intervals
 still span one, and both are wider than the full-sample interval, so trimming buys internal
 validity and pays for it in precision.
 

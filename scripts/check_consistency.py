@@ -263,6 +263,32 @@ else:
 
 
 # =====================================================================
+# 6a. MULTI-WRITER DOC: results_summary_reanalysis.md must be complete
+# =====================================================================
+# Three scripts write this file and econometric_analysis.py opens it with mode "w", so
+# re-running that one alone silently deletes sections 5-8 (the count models, the Wald
+# test, permutation inference and Callaway-Sant'Anna) that the paper cites. Detect the
+# truncation rather than shipping a doc missing half its content.
+REANALYSIS_SECTIONS = [
+    "1. Two-Way Fixed Effects DiD", "2. Cohort-Specific Event Study",
+    "3. Synthetic Control", "4. Pre-Period Placebo Tests",
+    "5. Count-Data Regression", "6. Joint Wald Test for Pre-Trends",
+    "7. Permutation Inference for Synthetic Control",
+    "8. Callaway-Sant'Anna",
+]
+_rean_path = os.path.join(DOCS, "results_summary_reanalysis.md")
+if os.path.exists(_rean_path):
+    _rean = read(_rean_path)
+    _missing = [s for s in REANALYSIS_SECTIONS if f"## {s}" not in _rean]
+    if _missing:
+        fail("results_summary_reanalysis.md is truncated, missing " + str(_missing) +
+             ". Three scripts write this doc; re-run econometric_analysis.py, then "
+             "econometric_robustness.py, then did_callaway_santanna.py, in that order.")
+    else:
+        ok(f"results_summary_reanalysis.md: all {len(REANALYSIS_SECTIONS)} sections present")
+
+
+# =====================================================================
 # 6b. COVERAGE GUARD: no outcome may be zero-filled across a whole year
 # =====================================================================
 # The victims file records non-fatal shootings only from 2010. An earlier version of the
