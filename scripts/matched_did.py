@@ -169,13 +169,21 @@ def pretrend_wald(sub):
     except Exception:
         return np.nan, np.nan, len(terms)
 
-def did(sub):
-    """TWFE DiD on the additive (OLS) and multiplicative (Poisson) scales."""
+def did(sub, weights=None):
+    """TWFE DiD on the additive (OLS) and multiplicative (Poisson) scales.
+
+    `weights` maps ca_num -> match frequency. It is supplied only for the
+    matched-with-replacement sample, where a control reused by several treated units must
+    count once per use; the full and trimmed samples are unweighted.
+    """
     sub = sub.copy()
     sub["did"] = sub["post"]
+    w = None if weights is None else sub["ca_num"].map(weights).fillna(1.0).to_numpy(dtype=float)
     out = {}
     try:
-        m = smf.ols("gun_hom ~ did + C(ca_num) + C(year)", data=sub).fit(
+        m = (smf.wls("gun_hom ~ did + C(ca_num) + C(year)", data=sub, weights=w)
+             if w is not None else
+             smf.ols("gun_hom ~ did + C(ca_num) + C(year)", data=sub)).fit(
             cov_type="cluster", cov_kwds={"groups": sub.ca_num})
         ci = m.conf_int().loc["did"]
         out["ols"] = (m.params["did"], m.bse["did"], m.pvalues["did"], ci[0], ci[1])
@@ -183,7 +191,7 @@ def did(sub):
         out["ols"] = (np.nan,) * 5
     try:
         g = smf.glm("gun_hom ~ did + C(ca_num) + C(year)", data=sub,
-                    family=sm.families.Poisson()).fit(
+                    family=sm.families.Poisson(), freq_weights=w).fit(
             cov_type="cluster", cov_kwds={"groups": sub.ca_num})
         lo, hi = np.exp(g.conf_int().loc["did"])
         out["pois"] = (np.exp(g.params["did"]), lo, hi, g.pvalues["did"])
@@ -220,8 +228,19 @@ for _, r in tr.iterrows():
         unmatched.append(r["ca_name"])
 matched_ids = sorted(set([p[0] for p in pairs]) | set([p[1] for p in pairs]))
 samples["NN matched"] = matched_ids
+# Matching is WITH replacement, so a control can serve several treated units. Ignoring
+# that would silently under-weight the controls that do most of the work, so we carry
+# each unit's match frequency as a regression weight: 1 for every treated unit, and for
+# each control the number of treated units matched to it.
+from collections import Counter
+_ctrl_use = Counter(c for _, c in pairs)
+MATCH_W = {t: 1.0 for t, _ in pairs}
+MATCH_W.update({c: float(n) for c, n in _ctrl_use.items()})
 print(f"  Caliper = {caliper:.3f} (0.2 SD of linearized propensity)")
 print(f"  Treated units finding a control within caliper: {len(pairs)} of {n_t_full}")
+print(f"  Matching is with replacement: {len(_ctrl_use)} distinct controls serve "
+      f"{len(pairs)} treated units (max reuse {max(_ctrl_use.values())}x); "
+      f"match frequencies are carried as regression weights.")
 
 # =====================================================================
 # RUN
@@ -236,7 +255,7 @@ for name, ids in samples.items():
     nt, nc = int(xs.treated.sum()), int((1 - xs.treated).sum())
     kept6 = sorted(set(STUDY6) & set(xs.ca_name))
     F, pF, k = pretrend_wald(sub)
-    est = did(sub)
+    est = did(sub, weights=MATCH_W if name == "NN matched" else None)
     b, se, pb, blo, bhi = est["ols"]
     irr, ilo, ihi, pi = est["pois"]
     rows.append(dict(sample=name, n_t=nt, n_c=nc, study6=len(kept6), study6_names=kept6,

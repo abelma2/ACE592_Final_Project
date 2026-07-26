@@ -12,9 +12,9 @@ Gun homicides per ShotSpotter area peaked in 2021 (13.7/yr) and had already fall
 
 ## 2. Naive before/after vs. difference-in-differences
 
-The commentary's comparison---gun homicides in coverage areas before vs.\ after the shutoff---shows a drop (0.849 to 0.532 per area-month, -37%). But never-treated areas dropped almost identically in proportional terms (0.199 to 0.137, -31%): the decline is city-wide, not a removal effect.
+The commentary's comparison---gun homicides in coverage areas before vs.\ after the shutoff---shows a drop (0.849 to 0.575 per area-month, -32%). But never-treated areas dropped almost identically in proportional terms (0.199 to 0.154, -23%): the decline is city-wide, not a removal effect.
 
-The removal even reproduces the paper's *scale* artifact. The additive OLS difference-in-differences returns a 'significant' removal benefit of -0.255 gun homicides per area-month (p = 0.000)---but only because coverage areas start from a far higher baseline (0.85 vs 0.20 per area-month) and so swing more in absolute terms for the same proportional move. On the correct multiplicative scale the removal effect is null: Poisson IRR 0.91 (95% CI [0.54, 1.52], p = 0.72). This is the identical additive-vs-multiplicative divergence documented for the installation in the count-data section, now recurring on the removal.
+The removal even reproduces the paper's *scale* artifact. The additive OLS difference-in-differences returns a 'significant' removal benefit of -0.228 gun homicides per area-month (p = 0.001)---but only because coverage areas start from a far higher baseline (0.85 vs 0.20 per area-month) and so swing more in absolute terms for the same proportional move. On the correct multiplicative scale the removal effect is null: Poisson IRR 0.88 (95% CI [0.53, 1.46], p = 0.62). This is the identical additive-vs-multiplicative divergence documented for the installation in the count-data section, now recurring on the removal.
 
 ## Reading
 

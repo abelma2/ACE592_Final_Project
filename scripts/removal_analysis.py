@@ -61,8 +61,15 @@ gun = hom[(hom["VICTIMIZATION_PRIMARY"] == "HOMICIDE") & (hom["GUNSHOT_INJURY_I"
 gun["CA_num"] = gun["CA_num"].astype(int)
 gun["year"] = gun["DATE"].dt.year
 gun["month"] = gun["DATE"].dt.to_period("M").dt.to_timestamp()
-last_full = (gun["month"].max() - pd.offsets.MonthBegin(1))  # drop the partial final month
-print(f"  Homicide data spans to {gun['DATE'].max().date()}; last complete month = {last_full.date()}")
+# Administrative victim records are added retroactively, so the months nearest the export
+# date are undercounted even when the calendar month is fully inside the file's range. In
+# this extract the final complete month (April 2025) records 15 gun homicides against 34 in
+# April 2024, while October is flat year over year: that is reporting lag, not a real 56%
+# drop. We therefore discard a buffer of months at the end rather than only the partial one.
+LAG_BUFFER_MONTHS = 2
+last_full = (gun["month"].max() - pd.offsets.MonthBegin(LAG_BUFFER_MONTHS))
+print(f"  Homicide data spans to {gun['DATE'].max().date()}; discarding the last "
+      f"{LAG_BUFFER_MONTHS} months as provisional; analysis ends {last_full.date()}")
 
 ss = pd.read_csv(os.path.join(DATA, "Violence_Reduction_-_Shotspotter_Alerts_-_Historical_20250408.csv"))
 ss["DATE"] = pd.to_datetime(ss["DATE"], format="%m/%d/%Y %I:%M:%S %p", errors="coerce")
